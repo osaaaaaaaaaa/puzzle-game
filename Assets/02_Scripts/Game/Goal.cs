@@ -4,7 +4,12 @@ using UnityEngine;
 
 public class Goal : MonoBehaviour
 {
-    [SerializeField] GameManager manager;
+    GameManager m_gameManager;
+
+    private void Start()
+    {
+        m_gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+    }
 
     /// <summary>
     /// 除外レイヤーでSonレイヤーのみ接触判定を拾うよう設定済み
@@ -13,6 +18,6 @@ public class Goal : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         // ゲームクリア処理
-        manager.GameClear();
+        m_gameManager.GameClear();
     }
 }
