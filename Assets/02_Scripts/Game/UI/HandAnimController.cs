@@ -59,9 +59,10 @@ public class HandAnimController : MonoBehaviour
         Vector3[] path =
 {
             transform.position,
-            new Vector3(-7.06f,-2.58f,0f),
-            new Vector3(-6.91f,0.23f,0f),
-            new Vector3(-1.91f,0.76f,0f)
+            new Vector3(-3.08f,-0.77f,0f),
+            new Vector3(-6.14f,0.9f,0f),
+            new Vector3(-5.83f,4.1f,0f),
+            new Vector3(-1.39f,4.33f,0f),
         };
 
         //Sequenceê∂ê¨

@@ -1,59 +1,64 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using DG.Tweening;
 
 public class GameManager : MonoBehaviour
 {
-    // ステージのプレファブ
-    [SerializeField] GameObject[] m_stagePrefabs;
+    // ポーズ中かどうか
+    public bool m_isPause;
+
     // UIコントローラー
     [SerializeField] UiController m_UiController;
-
-    [SerializeField] 
-
-    // 息子
-    GameObject m_son;
+    // プレイヤー
+    GameObject m_player;
 
     #region メインカメラのアニメーション関係
-    [SerializeField] GameObject m_mainCamera;   // メインカメラ
-    GameObject goal;                            // ゴール地点
-    public bool m_isEndAnim;                    // アニメーションが終了したかどうか
+    GameObject m_mainCamera;   // メインカメラ
+    GameObject goal;           // ゴール地点
+    public bool m_isEndAnim;   // アニメーションが終了したかどうか
     #endregion
+
+    // ゲームをクリアしたかどうか
+    public bool m_isStageClear;
 
     private void Awake()
     {
         // トップ画面を非表示にする
         if (Singleton.Instance != null) Singleton.Instance.ChangeActive(false);
 
-        // ステージを生成する
-        if (TopManager.stageID != 0)
-        {
-            Instantiate(m_stagePrefabs[TopManager.stageID - 1], Vector3.zero, Quaternion.identity);
-        }
-
         // 壁を非表示にする
         GameObject.Find("Wall_R").GetComponent<Renderer>().enabled = false;
+        GameObject.Find("Wall_T").GetComponent<Renderer>().enabled = false;
         GameObject.Find("Wall_L").GetComponent<Renderer>().enabled = false;
 
         // ゲームオブジェクト取得
-        m_son = GameObject.Find("Son");
+        m_mainCamera = GameObject.Find("MainCamera_Game");
+        m_player = GameObject.Find("Player");
         goal = GameObject.Find("Goal");
+
+        // フラグOFF
+        m_isPause = false;
+        m_isStageClear = false;
     }
 
     // Start is called before the first frame update
     void Start()
     {
 #if !UNITY_EDITOR
-        // メインカメラの初期地点
+        // カメラの初期地点を取得
+        Vector3 startPos = m_mainCamera.transform.position;
+
+        // カメラをアニメーションする開始座標を設定
         float posX = goal.transform.position.x;
-        float posY = goal.transform.position.y < 0 ? 0 : goal.transform.position.y + 2; // +2は調整
+        float posY = goal.transform.position.y;
         m_mainCamera.transform.position = new Vector3(posX, posY, -10);
 
         // メインカメラのアニメーション
         var sequence = DOTween.Sequence();
-        sequence.Append(m_mainCamera.transform.DOMove(new Vector3(0f, 0f, -10f), 2f).SetEase(Ease.InOutSine).SetDelay(1f))
+        sequence.Append(m_mainCamera.transform.DOMove(startPos, 2f).SetEase(Ease.InOutSine).SetDelay(1f))
                 .OnComplete(() => m_isEndAnim = true);
         sequence.Play();
 #else
@@ -61,7 +66,7 @@ public class GameManager : MonoBehaviour
 #endif
 
         // 最終ステージの場合
-        if (TopManager.stageID >= m_stagePrefabs.Length)
+        if (TopManager.stageID >= TopManager.stageMax)
         {
             // 次のステージへ遷移するボタンを無効化する
             m_UiController.DisableNextStageButton();
@@ -73,6 +78,9 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void GameClear()
     {
+        // ステージをクリアしたことにする
+        m_isStageClear = true;
+
         // UIをゲームクリア用に設定する
         m_UiController.SetGameClearUI();
     }
@@ -82,7 +90,7 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void OnRetryButton()
     {
-        SceneManager.LoadScene("02_GameScene");
+        Initiate.Fade(TopManager.stageID + "_GameScene", Color.black, 1.0f);
     }
 
     /// <summary>
@@ -92,7 +100,7 @@ public class GameManager : MonoBehaviour
     {
         TopManager.stageID++;   // ステージIDを更新する
 
-        SceneManager.LoadScene("02_GameScene");
+        Initiate.Fade(TopManager.stageID + "_GameScene", Color.black, 1.0f);
     }
 
     /// <summary>
@@ -100,7 +108,7 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void OnTopButton()
     {
-        SceneManager.LoadScene("01_TopScene");
+        Initiate.Fade("01_TopScene", Color.black, 1.0f);
     }
 
     /// <summary>
@@ -108,6 +116,6 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void OnGameReset()
     {
-        m_son.GetComponent<Son>().Reset();
+        m_player.GetComponent<Player>().ResetPlayer();
     }
 }

@@ -10,17 +10,26 @@ public class SimulationController : MonoBehaviour
     [SerializeField] Transform m_obstacleParent;    // ステージの障害物
 
     [SerializeField] LineRenderer m_line;
-    [SerializeField] int m_iMaxPhysicsFrame;    // ラインを描画するフレーム数
+    const int m_iMaxPhysicsFrame = 8;    // ラインを描画するフレーム数
 
     #region 息子関係
-    [SerializeField] Transform m_tfSonPos;      // シュミレーション開始地点
-    [SerializeField] GameObject m_sonPrefab;    // シュミレーション対象プレファブ
-    public Vector2 m_sonVelocity;               // 対象オブジェクトの移動ベクトル
+    [SerializeField] GameObject m_somPrefab;           // シュミレーション対象オブジェクト
+    GameObject m_som;             // 息子
+    public Vector3 m_kickDir;     // 対象オブジェクトのベクトル
+    public float m_kickPower;     // 力の大きさ
     #endregion
+
+    GameObject m_player;
 
     void Start()
     {
-        m_sonVelocity = Vector2.zero;
+        // 初期化
+        m_kickDir = Vector3.zero;
+        m_kickPower = 0;
+
+        // オブジェクトを取得する
+        m_som = GameObject.Find("Son");
+        m_player = GameObject.Find("Player");
 
         // シュミレーションで使用するシーンを作成する
         CreatePhysicsScene();
@@ -29,9 +38,9 @@ public class SimulationController : MonoBehaviour
     void Update()
     {
         // まだ蹴っていない && 移動ベクトルが0以外のとき
-        if (!GetComponent<Player>().m_isKicked && m_sonVelocity != Vector2.zero)
+        if (!m_player.GetComponent<Player>().m_isKicked && m_kickDir != Vector3.zero)
         {
-            Simulation(m_sonPrefab, m_tfSonPos.position, m_sonVelocity);
+            Simulation(m_somPrefab, m_som.transform.position, m_kickDir,m_kickPower);
         }
         else
         {
@@ -62,17 +71,27 @@ public class SimulationController : MonoBehaviour
     /// <summary>
     /// 軌道予測線を描画する
     /// </summary>
-    /// <param name="_ballPrefab">シュミレーション対象オブジェクト</param>
+    /// <param name="_somPrefab">シュミレーション対象オブジェクト</param>
     /// <param name="_pos"></param>
     /// <param name="_velocity">移動量</param>
-    void Simulation(GameObject _ballPrefab, Vector2 _pos, Vector2 _velocity)
+    void Simulation(GameObject _somPrefab, Vector2 _pos, Vector3 _dir, float _power)
     {
         // 息子のゴースト作成(非表示にする)
-        var ghost = Instantiate(_ballPrefab, _pos, Quaternion.identity);
+        var ghost = Instantiate(_somPrefab, _pos, Quaternion.identity);
         ghost.GetComponent<Renderer>().enabled = false;
         // オブジェクトをシュミレーション用シーンへ移動する
         SceneManager.MoveGameObjectToScene(ghost.gameObject, m_simulationScene);
-        ghost.GetComponent<Rigidbody2D>().AddForce(_velocity, ForceMode2D.Impulse);     // ※シュミレーションシーンに移動させてから力を加える
+
+        //=====================================
+        // ※シーンに移動させてから力を加える
+        //=====================================
+        var rb = ghost.GetComponent<Rigidbody2D>();
+        rb.drag = ghost.GetComponent<Son>().m_dragNum;  // 空気抵抗を設定
+        rb.velocity = transform.forward * ghost.GetComponent<Son>().m_initialSpeed; // 速度を設定
+        Vector3 force = new Vector3(_dir.x * _power, _dir.y * _power);  // 力を設定
+
+        // 力を加える
+        rb.AddForce(force, ForceMode2D.Impulse);
 
         //---------------------------------------------------------
         // 指定したフレーム数の間でどのくらい動いたかの軌道を作成

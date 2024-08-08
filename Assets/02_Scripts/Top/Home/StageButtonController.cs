@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class StageButtonController : MonoBehaviour
 {
     [SerializeField] TopManager manager;
+    public int m_stageCount;
 
     // Start is called before the first frame update
     void Start()
@@ -17,6 +18,10 @@ public class StageButtonController : MonoBehaviour
             int id = new int();
             id = i + 1;
             buttons[i].onClick.AddListener(() => manager.OnSelectStageButton(id));
+            buttons[i].GetComponentInChildren<Text>().text = "" + (i + 1);
         }
+
+        // ステージ数を取得する
+        TopManager.stageMax = buttons.Length;
     }
 }
