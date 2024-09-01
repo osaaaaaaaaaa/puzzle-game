@@ -12,15 +12,25 @@ public class UiController : MonoBehaviour
     [SerializeField] GameObject m_uiPanelResult;    // リザルトのUI
     #endregion
 
-    #region
+    #region ボタン
     [SerializeField] GameObject m_buttonReset;      // リセットボタン
     [SerializeField] GameObject m_buttonNextStage;  // 次のステージへ進むボタン
+
+    [SerializeField] GameObject m_buttonZoomIn;     // ズームインボタン
+    public GameObject ButtonZoomIn { get { return m_buttonZoomIn; }}
+    [SerializeField] GameObject m_buttonZoomOut;    // ズームアウトボタン
+    public GameObject ButtonZoomOut { get { return m_buttonZoomOut; } }
     #endregion
 
     #region 非アクティブにするUIシーンのオブジェクト
     [SerializeField] Image m_uiPanelImage;
     [SerializeField] GameObject m_uiCamera;
     [SerializeField] GameObject m_uiClearCamera;
+    #endregion
+
+    #region 鍵のUI
+    [SerializeField] GameObject m_uiKeyParent;
+    [SerializeField] GameObject m_uiKeyPrefab;
     #endregion
 
     // ゲームマネージャー
@@ -36,6 +46,15 @@ public class UiController : MonoBehaviour
 
         // 無効化する
         m_buttonReset.GetComponent<Button>().interactable = false;
+    }
+
+    /// <summary>
+    /// ゲームのパネルUIを表示切り替え
+    /// </summary>
+    /// <param name="isActive"></param>
+    public void SetActiveGameUI(bool isActive)
+    {
+        m_uiPanelGame.SetActive(isActive);
     }
 
     /// <summary>
@@ -105,10 +124,35 @@ public class UiController : MonoBehaviour
     }
 
     /// <summary>
+    /// 鍵のUIを更新する
+    /// </summary>
+    public void UpdateKeyUI(int keyNum)
+    {
+        switch (keyNum)
+        {
+            case -1:    // 破棄する
+                Destroy(m_uiKeyParent.transform.GetChild(0).gameObject);
+                break;
+            case 1:     // 追加する
+                Instantiate(m_uiKeyPrefab, m_uiKeyParent.transform.position, Quaternion.Euler(0f, 0f, -45f), m_uiKeyParent.transform);
+                break;
+        }
+    }
+
+    /// <summary>
+    /// 鍵の個数を取得する
+    /// </summary>
+    /// <returns></returns>
+    public int GetKeyCount()
+    {
+        return m_uiKeyParent.transform.childCount;
+    }
+
+    /// <summary>
     /// ボタンにカーソルが入ったor抜けたときに処理
     /// </summary>
-    public void EventPause()
+    public void EventPause(bool frag)
     {
-        gameManager.m_isPause = true;
+        gameManager.m_isPause = frag;
     }
 }

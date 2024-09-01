@@ -7,15 +7,22 @@ public class Player : MonoBehaviour
 {
     #region 息子関係
     [SerializeField] GameObject m_prefabArrow;
+    [SerializeField] GameObject m_sonController;
     [SerializeField] GameObject m_son;
-    float m_son_defaultGravityScale;
+    [SerializeField] GameObject m_ride_cow;
+    public float m_sonOffsetX;    // 息子とのオフセット
+    public float m_sonCowOffsetX; // 息子とのオフセット
     #endregion
 
     #region プレイヤー関係
     const float m_dragSpeed = 100f;    // ドラッグスピード
-    Vector2 m_offsetPlayer;            // 母親と息子とのオフセット
-    float m_mom_defaultGravityScale;   // 母親の重量
     public bool m_canDragPlayer;       // プレイヤーをドラッグできるかどうか
+    #endregion
+
+    #region SE
+    AudioSource m_audioSouse;
+    [SerializeField] AudioClip m_kickSE;
+    [SerializeField] AudioClip m_cowSE;
     #endregion
 
     // ゲームマネージャー
@@ -30,24 +37,20 @@ public class Player : MonoBehaviour
     // 蹴り飛ばしたかどうか
     public bool m_isKicked;
     // 蹴り飛ばすときに乗算する値
-    public int m_mulPower = 10;
+    public int m_mulPower = 50;
 
     private void Start()
     {
         m_canDragPlayer = false;
         m_isKicked = false;
 
-        // 重量スケールを取得する
-        m_mom_defaultGravityScale = GetComponent<Rigidbody2D>().gravityScale;
-        m_son_defaultGravityScale = m_son.GetComponent<Rigidbody2D>().gravityScale;
-
         // オブジェクト・コンポーネントを取得する
         m_gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         uiController = GameObject.Find("UiController").GetComponent<UiController>();
         m_cameraController = GameObject.Find("CameraController").GetComponent<CameraController>();
+        m_audioSouse = GetComponent<AudioSource>();
 
-        // オフセットを取得する
-        m_offsetPlayer = new Vector2(transform.position.x - m_son.transform.position.x, transform.position.y - m_son.transform.position.y);
+        m_sonOffsetX = (transform.position - m_son.transform.position).x;
     }
 
     // Update is called once per frame
@@ -79,7 +82,18 @@ public class Player : MonoBehaviour
         else
         {
             // 息子を固定する
-            m_son.transform.position = new Vector2(transform.position.x - m_offsetPlayer.x, transform.position.y - m_offsetPlayer.y);
+            m_son.GetComponent<Son>().Reset();
+            m_ride_cow.GetComponent<SonCow>().ResetSonCow();
+
+            if(m_arrow != null)
+            {
+                // 牛の向きを更新する
+                if (m_ride_cow.activeSelf)
+                {
+                    var cowDir = m_arrow.GetComponent<Arrow>().dir.x < 0 ? -1 : 1;
+                    m_ride_cow.GetComponent<SonCow>().m_direction = cowDir;
+                }
+            }
         }
 
         // 画面タッチした&&現在矢印を生成できる場合
@@ -89,29 +103,34 @@ public class Player : MonoBehaviour
             Vector2 worldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             RaycastHit2D hit2d = Physics2D.Raycast(worldPos, Vector2.zero);
 
+            // プレイヤータグを持つコライダーの場合
             if (hit2d)
             {
-                GameObject targetObj = hit2d.collider.gameObject;
-                if (targetObj.tag == "StartArea")
-                {// スタートエリアと重なっていた場合
-
-                    // 矢印を生成
-                    m_arrow = Instantiate(m_prefabArrow, m_son.transform.position, Quaternion.identity);
-
-                    // カメラをズームアウトさせる
-                    m_cameraController.ZoomoOut();
-
-                    // リセットボタンを非表示にする
-                    uiController.SetActiveButtonReset(false);
-                }
-                else if (targetObj.tag == "Player")
-                {// プレイヤータグを持つコライダーの場合
-
+                if (hit2d.collider.gameObject.tag == "Player")
+                {
                     // ドラッグする準備
                     m_canDragPlayer = true;
-                    GetComponent<Rigidbody2D>().gravityScale = 0;
-                    m_son.GetComponent<Rigidbody2D>().gravityScale = 0;
                 }
+            }
+
+            // ドラッグ状態ではない場合
+            if(!m_canDragPlayer)
+            {
+                Vector3 pivotSon;
+                if (m_son.activeSelf)
+                {
+                    pivotSon = m_son.transform.position;
+                }
+                else
+                {
+                    pivotSon = m_ride_cow.GetComponent<SonCow>().GetPivotPos();
+                }
+
+                // 矢印を生成
+                m_arrow = Instantiate(m_prefabArrow, pivotSon, Quaternion.identity);
+
+                // リセットボタンを非表示にする
+                uiController.SetActiveButtonReset(false);
             }
         }
 
@@ -120,8 +139,6 @@ public class Player : MonoBehaviour
         {
             // ドラッグ処理のパラメータを初期化
             m_canDragPlayer = false;
-            GetComponent<Rigidbody2D>().gravityScale = m_mom_defaultGravityScale;
-            m_son.GetComponent<Rigidbody2D>().gravityScale = m_son_defaultGravityScale;
             GetComponent<Rigidbody2D>().velocity = Vector2.zero;
             m_son.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
 
@@ -172,7 +189,17 @@ public class Player : MonoBehaviour
 
         // 息子を蹴り飛ばす処理
         Debug.Log("方角：" + dir + " , パワー：" + power);
-        m_son.GetComponent<Son>().BeKicked(dir, power);
+
+        if (m_son.activeSelf)
+        {
+            m_son.GetComponent<Son>().DOKick(dir, power, true);
+        }
+        else
+        {
+            m_ride_cow.GetComponent<SonCow>().DOKick(dir, power);
+            m_audioSouse.PlayOneShot(m_cowSE);
+        }
+        m_audioSouse.PlayOneShot(m_kickSE);
 
         // 生成した矢印を破棄する
         Destroy(m_arrow);
@@ -185,13 +212,22 @@ public class Player : MonoBehaviour
     public void ResetPlayer()
     {
         // 息子をリセットする
-        m_son.GetComponent<Son>().Reset();
+        m_sonController.GetComponent<SonController>().ResetSon();
 
         // 再度蹴ることができるようにする
         m_isKicked = false;
+        m_canDragPlayer = false;
 
-        // カメラをズームインする
-        m_cameraController.ZoomIn();
+        // カメラをズームイン・ズームアウトする
+        switch (m_cameraController.m_cameraMode)
+        {
+            case CameraController.CAMERAMODE.ZOOMIN:
+                m_cameraController.ZoomIn();
+                break;
+            case CameraController.CAMERAMODE.ZOOMOUT:
+                m_cameraController.ZoomOut(0.3f);
+                break;
+        }
 
         // 母親のアニメーションを再生する
         GetComponent<MomAnimController>().PlayStandbyAnim();  // 通常スキンのIdleアニメ

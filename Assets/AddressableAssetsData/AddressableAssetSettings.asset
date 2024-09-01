@@ -1,0 +1,138 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 468a46d0ae32c3544b7d98094e6448a9, type: 3}
+  m_Name: AddressableAssetSettings
+  m_EditorClassIdentifier: 
+  m_DefaultGroup: 2e884de88749f5242b49bb4f623ce6c2
+  m_currentHash:
+    serializedVersion: 2
+    Hash: fb23f9fb1b6f06ecdb193f1031f6fcdd
+  m_OptimizeCatalogSize: 0
+  m_BuildRemoteCatalog: 1
+  m_BundleLocalCatalog: 0
+  m_CatalogRequestsTimeout: 0
+  m_DisableCatalogUpdateOnStart: 1
+  m_IgnoreUnsupportedFilesInBuild: 0
+  m_UniqueBundleIds: 0
+  m_NonRecursiveBuilding: 1
+  m_CCDEnabled: 0
+  m_maxConcurrentWebRequests: 3
+  m_ContiguousBundles: 1
+  m_StripUnityVersionFromBundleBuild: 0
+  m_DisableVisibleSubAssetRepresentations: 0
+  m_ShaderBundleNaming: 0
+  m_ShaderBundleCustomNaming: 
+  m_MonoScriptBundleNaming: 0
+  m_CheckForContentUpdateRestrictionsOption: 0
+  m_MonoScriptBundleCustomNaming: 
+  m_RemoteCatalogBuildPath:
+    m_Id: 5d0a2b10ce9e3b149966c044371387c0
+  m_RemoteCatalogLoadPath:
+    m_Id: 61aed478b020618499d23c5ea280ac8f
+  m_ContentStateBuildPathProfileVariableName: <default settings path>
+  m_CustomContentStateBuildPath: 
+  m_ContentStateBuildPath: 
+  m_BuildAddressablesWithPlayerBuild: 0
+  m_overridePlayerVersion: 1
+  m_GroupAssets:
+  - {fileID: 11400000, guid: 4691d1e60c8d81e4c8d2da102b7f3603, type: 2}
+  - {fileID: 11400000, guid: 35027a24bd1b06e469ff6f886b6e1347, type: 2}
+  - {fileID: 11400000, guid: 7f3b4e45aa841b54083145cee7c46a59, type: 2}
+  m_BuildSettings:
+    m_CompileScriptsInVirtualMode: 0
+    m_CleanupStreamingAssetsAfterBuilds: 1
+    m_LogResourceManagerExceptions: 1
+    m_BundleBuildPath: Temp/com.unity.addressables/AssetBundles
+  m_ProfileSettings:
+    m_Profiles:
+    - m_InheritedParent: 
+      m_Id: b9d8b03a851c87542a87b4710b8d3afe
+      m_ProfileName: Default
+      m_Values:
+      - m_Id: 0492a739c686e164093094ce90395560
+        m_Value: '[UnityEditor.EditorUserBuildSettings.activeBuildTarget]'
+      - m_Id: 2dedcc2882dd94d44b52638e87c5ad9f
+        m_Value: '[UnityEngine.AddressableAssets.Addressables.BuildPath]/[BuildTarget]'
+      - m_Id: f6135bf3c78a4ce4ca97b23849fd0fba
+        m_Value: '{UnityEngine.AddressableAssets.Addressables.RuntimePath}/[BuildTarget]'
+      - m_Id: 5d0a2b10ce9e3b149966c044371387c0
+        m_Value: ServerData/[BuildTarget]
+      - m_Id: 61aed478b020618499d23c5ea280ac8f
+        m_Value: https://tikokukaihistorage.blob.core.windows.net/puzzle-data/Windows
+    - m_InheritedParent: 
+      m_Id: 2cdff23cf73fd3041863719e6ba24455
+      m_ProfileName: Android
+      m_Values:
+      - m_Id: 0492a739c686e164093094ce90395560
+        m_Value: '[UnityEditor.EditorUserBuildSettings.activeBuildTarget]'
+      - m_Id: 2dedcc2882dd94d44b52638e87c5ad9f
+        m_Value: '[UnityEngine.AddressableAssets.Addressables.BuildPath]/[BuildTarget]'
+      - m_Id: f6135bf3c78a4ce4ca97b23849fd0fba
+        m_Value: '{UnityEngine.AddressableAssets.Addressables.RuntimePath}/[BuildTarget]'
+      - m_Id: 5d0a2b10ce9e3b149966c044371387c0
+        m_Value: ServerData/[BuildTarget]
+      - m_Id: 61aed478b020618499d23c5ea280ac8f
+        m_Value: https://tikokukaihistorage.blob.core.windows.net/puzzle-data/Android
+    - m_InheritedParent: 
+      m_Id: dfc26a60bcbad8e4785f075bcebc3eb9
+      m_ProfileName: iOS
+      m_Values:
+      - m_Id: 0492a739c686e164093094ce90395560
+        m_Value: '[UnityEditor.EditorUserBuildSettings.activeBuildTarget]'
+      - m_Id: 2dedcc2882dd94d44b52638e87c5ad9f
+        m_Value: '[UnityEngine.AddressableAssets.Addressables.BuildPath]/[BuildTarget]'
+      - m_Id: f6135bf3c78a4ce4ca97b23849fd0fba
+        m_Value: '{UnityEngine.AddressableAssets.Addressables.RuntimePath}/[BuildTarget]'
+      - m_Id: 5d0a2b10ce9e3b149966c044371387c0
+        m_Value: ServerData/[BuildTarget]
+      - m_Id: 61aed478b020618499d23c5ea280ac8f
+        m_Value: https://tikokukaihistorage.blob.core.windows.net/puzzle-data/iOS
+    m_ProfileEntryNames:
+    - m_Id: 0492a739c686e164093094ce90395560
+      m_Name: BuildTarget
+      m_InlineUsage: 0
+    - m_Id: 2dedcc2882dd94d44b52638e87c5ad9f
+      m_Name: Local.BuildPath
+      m_InlineUsage: 0
+    - m_Id: f6135bf3c78a4ce4ca97b23849fd0fba
+      m_Name: Local.LoadPath
+      m_InlineUsage: 0
+    - m_Id: 5d0a2b10ce9e3b149966c044371387c0
+      m_Name: Remote.BuildPath
+      m_InlineUsage: 0
+    - m_Id: 61aed478b020618499d23c5ea280ac8f
+      m_Name: Remote.LoadPath
+      m_InlineUsage: 0
+    m_ProfileVersion: 1
+  m_LabelTable:
+    m_LabelNames:
+    - default
+  m_SchemaTemplates: []
+  m_GroupTemplateObjects:
+  - {fileID: 11400000, guid: 53daebca107fa1442b56081ed7ef1bf7, type: 2}
+  m_InitializationObjects: []
+  m_CertificateHandlerType:
+    m_AssemblyName: 
+    m_ClassName: 
+  m_ActivePlayerDataBuilderIndex: 3
+  m_DataBuilders:
+  - {fileID: 11400000, guid: b8811e8d05bb99a43b16219ce494a86a, type: 2}
+  - {fileID: 11400000, guid: ed531abf7e231bc419c5d87c2ab1dd02, type: 2}
+  - {fileID: 11400000, guid: 2b80ae07176dae64c91f73e33ee73d68, type: 2}
+  - {fileID: 11400000, guid: e975b7516afb16e42ace86edc59ba7ae, type: 2}
+  m_ActiveProfileId: b9d8b03a851c87542a87b4710b8d3afe
+  m_HostingServicesManager:
+    m_HostingServiceInfos: []
+    m_Settings: {fileID: 11400000}
+    m_NextInstanceId: 0
+    m_RegisteredServiceTypeRefs: []
+    m_PingTimeoutInMilliseconds: 5000

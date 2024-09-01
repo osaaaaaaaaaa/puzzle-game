@@ -9,14 +9,14 @@ public class Goal : MonoBehaviour
     GameManager m_gameManager;
     // カウンター用のテキスト
     GameObject m_textCounter;
+    // UIコントローラー
+    UiController m_uiController;
 
     // カウンター
     int m_timer;
 
     private void Start()
     {
-        m_gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
-        m_textCounter = GameObject.Find("TextCounter");
         m_timer = 3;
     }
 
@@ -26,21 +26,33 @@ public class Goal : MonoBehaviour
     /// <param name="collision"></param>
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (m_gameManager.m_isStageClear) return;
+        if (m_gameManager.m_isStageClear || collision.gameObject.tag == "Ghost" 
+            || collision.gameObject.layer != 6 && collision.gameObject.layer != 10) return;
 
+        if(m_textCounter == null)
+        {
+            m_textCounter = GameObject.Find("TextCounter");
+        }
         // カウント開始
         m_textCounter.SetActive(true);
         InvokeRepeating("StartCountDown", 0, 1);
+
+        // リセットボタンを無効にする
+        m_uiController.SetInteractableButtonReset(false);
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (m_gameManager.m_isStageClear) return;
+        if (m_gameManager.m_isStageClear || collision.gameObject.tag == "Ghost"
+            || collision.gameObject.layer != 6 && collision.gameObject.layer != 10) return;
 
         // カウントキャンセル
         m_textCounter.SetActive(false);
         CancelInvoke("StartCountDown");
         m_timer = 3;
+
+        // リセットボタンを有効にする
+        m_uiController.SetInteractableButtonReset(true);
     }
 
     /// <summary>
@@ -63,5 +75,15 @@ public class Goal : MonoBehaviour
         {
             m_textCounter.GetComponent<Text>().text = "" + m_timer;
         }
+    }
+
+    /// <summary>
+    /// メンバ変数初期化処理
+    /// </summary>
+    public void InitMemberVariable()
+    {
+        m_gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        m_textCounter = GameObject.Find("TextCounter");
+        m_uiController = GameObject.Find("UiController").GetComponent<UiController>();
     }
 }

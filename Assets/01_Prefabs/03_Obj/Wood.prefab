@@ -11,9 +11,11 @@ GameObject:
   - component: {fileID: 1362544550259025639}
   - component: {fileID: 1342193973013542535}
   - component: {fileID: 4871179345137163861}
+  - component: {fileID: -543114293482164133}
+  - component: {fileID: 6264172337585893151}
   - component: {fileID: 8343279784207990483}
   - component: {fileID: 8269605023947569941}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Wood
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -94,13 +96,48 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5997879825216211380}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e453e00a33749d645a8fcd20d29b40f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_endPos: {x: 11, y: 5}
   m_endTime: 2
+--- !u!114 &-543114293482164133
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5997879825216211380}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d8df5577527f7bf48a1faaeffadfbe7f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_rootPath: []
+  m_time: 0
+  m_loopType: 1
+--- !u!114 &6264172337585893151
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5997879825216211380}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77fc170f8073be3469a6e66d27a063ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_isMoveX: 0
+  m_isMoveY: 0
+  m_isInverseX: 0
+  m_isInverseY: 0
+  m_mulNumX: 1
+  m_mulNumY: 1
+  m_minPos: {x: 0, y: 0}
+  m_maxPos: {x: 0, y: 0}
 --- !u!50 &8343279784207990483
 Rigidbody2D:
   serializedVersion: 4
@@ -117,7 +154,7 @@ Rigidbody2D:
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 1
-  m_Material: {fileID: 6200000, guid: 425a9341817f8ac439c50f8180185c51, type: 2}
+  m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0

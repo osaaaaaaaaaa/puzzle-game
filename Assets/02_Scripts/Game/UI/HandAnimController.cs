@@ -39,14 +39,14 @@ public class HandAnimController : MonoBehaviour
         Vector3[] path =
 {
             transform.position,
-            new Vector3(-2f,-0.73f,0f),
+            new Vector3(7f,-1f,0f),
         };
 
         //Sequence生成
         Sequence sequence = DOTween.Sequence();
         // アニメーションさせてからPath移動する
         sequence.Append(transform.GetComponent<SpriteRenderer>().DOFade(1.0f, 0.5f).SetDelay(4f).OnComplete(PlayAnim))
-            .Append(transform.DOPath(path, 3f).SetDelay(2f).SetEase(Ease.InOutSine))
+            .Append(transform.DOPath(path, 3f, PathType.CatmullRom).SetDelay(2f).SetEase(Ease.InOutSine))
             .Append(transform.GetComponent<SpriteRenderer>().DOFade(0f, 0.5f).SetDelay(2f));
         sequence.SetLoops(3);
     }
@@ -59,7 +59,7 @@ public class HandAnimController : MonoBehaviour
         Vector3[] path =
 {
             transform.position,
-            new Vector3(-3.08f,-0.77f,0f),
+            new Vector3(-3.36f,-1.54f,0f),
             new Vector3(-6.14f,0.9f,0f),
             new Vector3(-5.83f,4.1f,0f),
             new Vector3(-1.39f,4.33f,0f),
@@ -68,7 +68,9 @@ public class HandAnimController : MonoBehaviour
         //Sequence生成
         Sequence sequence = DOTween.Sequence();
         // アニメーションさせてからPath移動する
-        sequence.Append(transform.GetComponent<SpriteRenderer>().DOFade(1.0f, 0.5f).SetDelay(4f).OnComplete(PlayAnim))
+        sequence
+            .Append(transform.GetComponent<SpriteRenderer>().DOFade(1.0f, 0.5f).SetDelay(4f))
+            .Append(transform.DORotate(new Vector3(0f, 0f, 0f), 0.5f).OnComplete(PlayAnim))
             .Append(transform.DOPath(path, 3f,PathType.CatmullRom).SetDelay(2f).SetEase(Ease.InOutSine))
             .Append(transform.GetComponent<SpriteRenderer>().DOFade(0f, 0.5f).SetDelay(2f));
         sequence.SetLoops(3);

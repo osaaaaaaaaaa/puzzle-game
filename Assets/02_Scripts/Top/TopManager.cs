@@ -4,24 +4,31 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using DG.Tweening;
+using System;
+using UnityEngine.AddressableAssets;
 
 public class TopManager : MonoBehaviour
 {
-    [SerializeField] GameObject m_selectStageButtonParent;
     [SerializeField] GameObject m_parent_top;
-    [SerializeField] GameObject m_ui_start;
-    [SerializeField] Image m_panelImage;        // 非表示にするパネルのイメージ
-
-    bool isClickTitle;  // タイトルをクリックしたかどうか
+    [SerializeField] GameObject m_ui_startTextParent;
+    [SerializeField] Image m_panelImage;            // 非表示にするパネルのイメージ
+    [SerializeField] Text m_uiUserName;             // ユーザー名
+    [SerializeField] AssetDownLoader m_assetDownLoader;  // アセットダウンローダー
 
     // システム画面のパネルリスト
     [SerializeField] List<GameObject> m_sys_panelList;
-    // システム画面の連番
+    // システムボタンの連番
     public enum SYSTEM
     {
         PROFILE = 0,
         MAILBOX,
+        FOLLOWBOX
     }
+
+    /// <summary>
+    /// タイトルをクリックしたかどうか
+    /// </summary>
+    public static bool m_isClickTitle { get; private set; } = false;
 
     /// <summary>
     /// 最大ステージ数
@@ -36,18 +43,46 @@ public class TopManager : MonoBehaviour
     void Start()
     {
         stageID = 0;
-        isClickTitle = false;
         m_panelImage.enabled = false;
-        m_ui_start.GetComponent<CanvasGroup>().DOFade(0.0f, 1).SetEase(Ease.InCubic).SetLoops(-1, LoopType.Yoyo);
     }
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0) && isClickTitle == false)
+        if (Input.GetMouseButtonDown(0) && !m_isClickTitle)
         {
-            // 表示するUIをホームへ移動する
-            m_parent_top.transform.DOLocalMove(new Vector3(m_parent_top.transform.localPosition.x - 1980f, 0, 0), 0.5f).SetEase(Ease.Linear);
-            isClickTitle = true;
+            m_isClickTitle = true;
+
+#if !UNITY_EDITOR
+            DOTween.Kill(m_ui_startTextParent.transform);
+            m_ui_startTextParent.SetActive(false);
+
+            // アセットバンドルが更新可能かどうかチェック
+            m_assetDownLoader.StartCoroutine(m_assetDownLoader.checkCatalog());
+#else
+            StoreUser();
+#endif
+        }
+    }
+
+    /// <summary>
+    /// ユーザー登録処理
+    /// </summary>
+    public void StoreUser()
+    {
+        // ユーザーデータが保存されていない場合
+        if (!NetworkManager.Instance.LoadUserData())
+        {
+            // ユーザー登録処理
+            StartCoroutine(NetworkManager.Instance.StoreUser(
+                Guid.NewGuid().ToString(),
+                result =>
+                {
+                    if (result) OnClickTitleWindow();
+                }));    // 登録処理後の処理
+        }
+        else
+        {
+            OnClickTitleWindow();
         }
     }
 
@@ -57,8 +92,22 @@ public class TopManager : MonoBehaviour
     public void OnSelectStageButton(int id)
     {
         stageID = id;
+
+#if !UNITY_EDITOR
+        // ゲームUIシーンに遷移する
+        Initiate.Fade("02_UIScene", Color.black, 1.0f);
+#else
         // ゲームシーンに遷移する
         Initiate.Fade(stageID + "_GameScene", Color.black, 1.0f);
+#endif
+    }
+
+    /// <summary>
+    /// タイトル画面からホーム画面へ移動する
+    /// </summary>
+    void OnClickTitleWindow()
+    {
+        GetComponent<UserController>().UpdateUserDataUI(true, m_parent_top);
     }
 
     /// <summary>
@@ -66,13 +115,16 @@ public class TopManager : MonoBehaviour
     /// </summary>
     public void OnBackButtonHome()
     {
+        m_ui_startTextParent.SetActive(true);
+
         m_parent_top.transform.DOLocalMove(new Vector3(m_parent_top.transform.localPosition.x + 1980f, 0, 0), 0.5f).SetEase(Ease.Linear)
-            .OnComplete(()=> { isClickTitle = false; });
+            .OnComplete(()=> { m_isClickTitle = false; });
     }
 
     /// <summary>
-    /// システム画面(プロフィール、メールボックスなど)を表示する
+    /// ホーム画面からシステム画面(プロフィール、メールボックスなど)へ移動する
     /// </summary>
+    /// <param name="systemNum">SYSTEM（システムボタンの連番）参照</param>
     public void OnButtonSystemPanel(int systemNum)
     {
         // 全てのシステム画面を非表示にする
@@ -87,10 +139,11 @@ public class TopManager : MonoBehaviour
     }
 
     /// <summary>
-    /// プロフィールからホーム画面へ戻る
+    /// システム画面からホーム画面へ戻る
     /// </summary>
     public void OnBackButtonSystemPanel()
     {
+        GetComponent<UserController>().ResetErrorText();
         m_parent_top.transform.DOLocalMove(new Vector3(m_parent_top.transform.localPosition.x, 0, 0), 0.5f).SetEase(Ease.Linear);
     }
 }

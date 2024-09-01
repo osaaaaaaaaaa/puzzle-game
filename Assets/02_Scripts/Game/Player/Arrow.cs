@@ -107,7 +107,7 @@ public class Arrow : MonoBehaviour
             // ‹O“¹—\‘ªü‚ğ•`‰æ‚·‚éƒpƒ‰ƒ[ƒ^‚ğİ’è‚·‚é
             //--------------------------------------------
             m_lineGuide.GetComponent<SimulationController>().enabled = true;
-            m_lineGuide.GetComponent<SimulationController>().m_kickDir = dir.normalized;
+            m_lineGuide.GetComponent<SimulationController>().m_kickDir = dir;
             m_lineGuide.GetComponent<SimulationController>().m_kickPower = dis * m_player.GetComponent<Player>().m_mulPower;
         }
     }

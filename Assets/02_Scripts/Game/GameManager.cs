@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using DG.Tweening;
+using UnityEngine.AddressableAssets;
 
 public class GameManager : MonoBehaviour
 {
@@ -12,8 +13,18 @@ public class GameManager : MonoBehaviour
 
     // UIコントローラー
     [SerializeField] UiController m_UiController;
+    // SEマネージャー
+    [SerializeField] SEManager m_seManager;
     // プレイヤー
     GameObject m_player;
+    // カメラコントローラ
+    CameraController m_cameraController;
+
+    #region ゲームクリア時の演出
+    [SerializeField] GameObject m_stageClearEffect;
+    Vector3 m_offsetEffectL = new Vector3(-10.43f, -7.48999f,5);
+    Vector3 m_offsetEffectR = new Vector3(10.39f, -7.48999f,5);
+    #endregion
 
     #region メインカメラのアニメーション関係
     GameObject m_mainCamera;   // メインカメラ
@@ -26,8 +37,38 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
+        m_isEndAnim = false;
+
+#if UNITY_EDITOR
+        // 各種スクリプトのメンバ変数初期化処理
+        GameObject.Find("CameraController").GetComponent<CameraController>().
+            InitMemberVariable(m_UiController.ButtonZoomIn, m_UiController.ButtonZoomOut);
+        GameObject.Find("ride_cow").GetComponent<SonCow>().InitMemberVariable();
+        GameObject.Find("Goal").GetComponent<Goal>().InitMemberVariable();
+        GameObject.Find("SonController").GetComponent<SonController>().InitMemberVariable();
+#endif
+
         // トップ画面を非表示にする
         if (Singleton.Instance != null) Singleton.Instance.ChangeActive(false);
+    }
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        // アセットバンドルを使用する場合、Startメソッドの型をIEnumeratorに変更すること
+        // ビルドするときは、全体に!をつけること
+#if !UNITY_EDITOR
+        // ゲームシーンを読み込むまで待機する
+        var op = Addressables.LoadSceneAsync(TopManager.stageID + "_GameScene", LoadSceneMode.Additive);
+        yield return op;
+
+        // 各種スクリプトのメンバ変数初期化処理
+        GameObject.Find("CameraController").GetComponent<CameraController>().
+            InitMemberVariable(m_UiController.ButtonZoomIn, m_UiController.ButtonZoomOut);
+        GameObject.Find("ride_cow").GetComponent<SonCow>().InitMemberVariable();
+        GameObject.Find("Goal").GetComponent<Goal>().InitMemberVariable();
+        GameObject.Find("SonController").GetComponent<SonController>().InitMemberVariable();
+#endif
 
         // 壁を非表示にする
         GameObject.Find("Wall_R").GetComponent<Renderer>().enabled = false;
@@ -37,16 +78,13 @@ public class GameManager : MonoBehaviour
         // ゲームオブジェクト取得
         m_mainCamera = GameObject.Find("MainCamera_Game");
         m_player = GameObject.Find("Player");
+        m_cameraController = GameObject.Find("CameraController").GetComponent<CameraController>();
         goal = GameObject.Find("Goal");
 
         // フラグOFF
         m_isPause = false;
         m_isStageClear = false;
-    }
 
-    // Start is called before the first frame update
-    void Start()
-    {
 #if !UNITY_EDITOR
         // カメラの初期地点を取得
         Vector3 startPos = m_mainCamera.transform.position;
@@ -59,10 +97,10 @@ public class GameManager : MonoBehaviour
         // メインカメラのアニメーション
         var sequence = DOTween.Sequence();
         sequence.Append(m_mainCamera.transform.DOMove(startPos, 2f).SetEase(Ease.InOutSine).SetDelay(1f))
-                .OnComplete(() => m_isEndAnim = true);
+                .OnComplete(StartGame) ;
         sequence.Play();
 #else
-        m_isEndAnim = true;
+        StartGame();
 #endif
 
         // 最終ステージの場合
@@ -74,15 +112,80 @@ public class GameManager : MonoBehaviour
     }
 
     /// <summary>
+    /// ゲーム開始処理
+    /// </summary>
+    public void StartGame()
+    {
+        m_cameraController.ZoomOut(1f);
+
+        m_UiController.GetComponent<UiController>().SetActiveGameUI(true);
+
+        m_isEndAnim = true;
+    }
+
+    /// <summary>
     /// ゲームクリア処理
     /// </summary>
     public void GameClear()
     {
-        // ステージをクリアしたことにする
-        m_isStageClear = true;
+        bool isUpdateStageID = NetworkManager.Instance.StageID < TopManager.stageMax && NetworkManager.Instance.StageID == TopManager.stageID;
 
-        // UIをゲームクリア用に設定する
-        m_UiController.SetGameClearUI();
+        // 最新のステージをクリアした場合
+        if (isUpdateStageID)
+        {
+            // ユーザー更新処理
+            StartCoroutine(NetworkManager.Instance.UpdateUser(
+                NetworkManager.Instance.UserName,
+                NetworkManager.Instance.AchievementID,
+                NetworkManager.Instance.StageID + 1,
+                NetworkManager.Instance.IconID,
+                result =>
+                {
+                    // ステージをクリアしたことにする
+                    m_isStageClear = true;
+
+                    // UIをゲームクリア用に設定する
+                    m_UiController.SetGameClearUI();
+
+                    // 初クリア演出
+                    PlayStageClearEffect();
+                }));
+        }
+        else
+        {
+            // ステージをクリアしたことにする
+            m_isStageClear = true;
+
+            // UIをゲームクリア用に設定する
+            m_UiController.SetGameClearUI();
+
+            // 初クリア演出
+            PlayStageClearEffect();
+        }
+    }
+
+    /// <summary>
+    /// ステージクリアの演出
+    /// </summary>
+    void PlayStageClearEffect()
+    {
+        // エフェクトを生成する
+        GameObject effectL = Instantiate(m_stageClearEffect, m_mainCamera.transform);
+        effectL.transform.localPosition = m_offsetEffectL;
+        GameObject effectR = Instantiate(m_stageClearEffect, m_mainCamera.transform);
+        effectR.transform.localPosition = m_offsetEffectR;
+        effectR.transform.localScale = new Vector3(-effectR.transform.localScale.x, effectR.transform.localScale.y, effectR.transform.localScale.z);
+
+        if(m_cameraController.m_cameraMode == CameraController.CAMERAMODE.ZOOMOUT)
+        {
+            // 現在のカメラがズームアウト状態の場合
+            effectL.transform.localScale *= 2;
+            effectL.transform.localPosition *= 2;
+            effectR.transform.localScale *= 2;
+            effectR.transform.localPosition *= 2;
+        }
+
+        m_seManager.PlayStageClearSE();
     }
 
     /// <summary>
@@ -90,7 +193,11 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void OnRetryButton()
     {
+#if !UNITY_EDITOR
+        Initiate.Fade("02_UIScene", Color.black, 1.0f);
+#else
         Initiate.Fade(TopManager.stageID + "_GameScene", Color.black, 1.0f);
+#endif
     }
 
     /// <summary>
@@ -100,7 +207,11 @@ public class GameManager : MonoBehaviour
     {
         TopManager.stageID++;   // ステージIDを更新する
 
+#if !UNITY_EDITOR
+        Initiate.Fade("02_UIScene", Color.black, 1.0f);
+#else
         Initiate.Fade(TopManager.stageID + "_GameScene", Color.black, 1.0f);
+#endif
     }
 
     /// <summary>

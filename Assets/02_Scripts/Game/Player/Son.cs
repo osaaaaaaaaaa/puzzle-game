@@ -5,24 +5,22 @@ using UnityEngine;
 public class Son : MonoBehaviour
 {
     GameObject m_player;
-    PhysicsMaterial2D m_material;  // 物理マテリアル
     Rigidbody2D m_rb;
-    Vector2 m_startPos;
-    Vector3 m_offsetStartPos;      // 母親とのオフセット
+    Vector3 m_offset;      // 母親とのオフセット
 
     // 初速度
     public float m_initialSpeed = 50f;
     // 空気抵抗
     public float m_dragNum = 3f;
+    // 重量スケール
+    public float m_gravityScale = 10f;
 
     // Start is called before the first frame update
     void Start()
     {
         m_player = GameObject.Find("Player");
-        m_startPos = transform.position;
         m_rb = GetComponent<Rigidbody2D>();
-        m_material = m_rb.sharedMaterial;
-        m_offsetStartPos = transform.position - m_player.transform.position;
+        m_offset = transform.position - m_player.transform.position;
 
         // リセットする
         Reset();
@@ -36,14 +34,28 @@ public class Son : MonoBehaviour
     /// </summary>
     /// <param name="dir">方角</param>
     /// <param name="power">パワー</param>
-    public void BeKicked(Vector3 dir, float power)
+    public void DOKick(Vector3 dir, float power, bool isSetSpeed)
     {
-        // 速度を設定する
-        m_rb.velocity = transform.forward * m_initialSpeed;
+        var rb = GetComponent<Rigidbody2D>();
 
-        m_rb.sharedMaterial = m_material;   // 物理マテリアルセット
-        Vector3 force = new Vector3(dir.x * power, dir.y * power);  // 力を設定
-        m_rb.AddForce(force, ForceMode2D.Impulse);  // 力を加える
+        // 力を設定
+        Vector3 force = new Vector3(dir.x * power, dir.y * power);
+
+        // 重力を設定する
+        rb.gravityScale = m_gravityScale;
+
+        if (isSetSpeed)
+        {
+            // 初速度を設定する
+            rb.velocity = transform.forward * m_initialSpeed;
+            // 力を加える
+            rb.AddForce(force, ForceMode2D.Impulse);
+        }
+        else
+        {
+            // 力を加える
+            rb.AddForce(force, ForceMode2D.Force);
+        }
     }
 
     /// <summary>
@@ -51,7 +63,7 @@ public class Son : MonoBehaviour
     /// </summary>
     public void Reset()
     {
-        m_rb.sharedMaterial = null;   // 物理マテリアルを外す
-        transform.position = m_player.transform.position + m_offsetStartPos;
+        m_rb.gravityScale = 0;
+        transform.position = m_player.transform.position + m_offset;
     }
 }
