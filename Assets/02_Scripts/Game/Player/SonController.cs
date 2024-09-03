@@ -58,6 +58,7 @@ public class SonController : MonoBehaviour
         m_son_run.SetActive(false);
         m_son.SetActive(false);
         m_ride_cow.SetActive(true);
+        m_ride_cow.GetComponent<SonCow>().InitState();
     }
 
     /// <summary>

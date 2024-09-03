@@ -15,20 +15,6 @@ public class Son : MonoBehaviour
     // 重量スケール
     public float m_gravityScale = 10f;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        m_player = GameObject.Find("Player");
-        m_rb = GetComponent<Rigidbody2D>();
-        m_offset = transform.position - m_player.transform.position;
-
-        // リセットする
-        Reset();
-
-        // 空気抵抗を設定する
-        m_rb.drag = m_dragNum;
-    }
-
     /// <summary>
     /// 蹴り飛ばされる処理
     /// </summary>
@@ -65,5 +51,21 @@ public class Son : MonoBehaviour
     {
         m_rb.gravityScale = 0;
         transform.position = m_player.transform.position + m_offset;
+    }
+
+    /// <summary>
+    /// メンバ変数初期化処理
+    /// </summary>
+    public void InitMemberVariable()
+    {
+        m_player = GameObject.Find("Player");
+        m_rb = GetComponent<Rigidbody2D>();
+        m_offset = transform.position - m_player.transform.position;
+
+        // リセットする
+        Reset();
+
+        // 空気抵抗を設定する
+        m_rb.drag = m_dragNum;
     }
 }

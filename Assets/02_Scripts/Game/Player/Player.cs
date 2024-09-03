@@ -61,7 +61,7 @@ public class Player : MonoBehaviour
 #endif
 
         // ゲーム開始していない || ポーズ中の場合
-        if (!m_gameManager.m_isEndAnim || m_gameManager.m_isPause) return;
+        if (!m_gameManager.m_isEndAnim || m_gameManager.m_isPause || m_gameManager.m_isEndGame) return;
 
         // プレイヤーをドラッグしている場合
         if (m_canDragPlayer)
@@ -175,6 +175,8 @@ public class Player : MonoBehaviour
     /// </summary>
     void DOKick()
     {
+        if (m_gameManager.m_isEndGame) return;
+
         // 蹴るときのパラメータ取得(ラムダ式を使用するためnewでアドレス変更)
         Vector3 dir = new Vector3();
         dir = m_arrow.GetComponent<Arrow>().dir.normalized;

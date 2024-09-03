@@ -21,10 +21,13 @@ public class Key : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.tag == "Ghost" || collision.gameObject.layer != 6 && collision.gameObject.layer != 10) return;
+        if (collision.gameObject.tag == "Ghost") return;
 
-        // 鍵を追加し、自身を破棄する
-        m_uiController.UpdateKeyUI(1);
-        Destroy(this.transform.gameObject);
+        if (collision.gameObject.layer == 6 || collision.gameObject.layer == 10 || collision.gameObject.layer == 11)
+        {
+            // 鍵を追加し、自身を破棄する
+            m_uiController.UpdateKeyUI(1);
+            Destroy(this.transform.gameObject);
+        }
     }
 }

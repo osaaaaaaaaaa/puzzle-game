@@ -21,7 +21,7 @@ public class NetworkManager : MonoBehaviour
             {
                 GameObject gameObj = new GameObject("NetworkManager");
                 instance = gameObj.AddComponent<NetworkManager>();
-                DontDestroyOnLoad(gameObj);                       
+                DontDestroyOnLoad(gameObj);
             }
             return instance;
         }
@@ -36,12 +36,13 @@ public class NetworkManager : MonoBehaviour
     #endregion
 
     #region ユーザー情報
-    int UserID = 0;
+    public int UserID { get; private set; } = 0;
     public string UserName { get; private set; } = "";
     public int AchievementID { get; private set; } = 0;
     public int StageID { get; private set; } = 0;
     public int IconID { get; private set; } = 0;
     public int TotalScore { get; private set; } = 0;
+    public List<ShowStageResultResponse> StageResults { get; private set; } = new List<ShowStageResultResponse>();
     #endregion
 
     /// <summary>
@@ -50,7 +51,7 @@ public class NetworkManager : MonoBehaviour
     /// <param name="name"></param>
     /// <param name="result"></param>
     /// <returns></returns>
-    public IEnumerator StoreUser(string name,Action<bool> result)
+    public IEnumerator StoreUser(string name, Action<bool> result)
     {
         // サーバーに送信するオブジェクトを作成
         StoreUserRequest requestData = new StoreUserRequest();
@@ -64,7 +65,7 @@ public class NetworkManager : MonoBehaviour
         yield return request.SendWebRequest();
         bool isSuccess = false;
 
-        if(request.result == UnityWebRequest.Result.Success
+        if (request.result == UnityWebRequest.Result.Success
             && request.responseCode == 200)
         {
             // 通信が成功した場合、返ってきたJSONをオブジェクトに変換
@@ -155,7 +156,7 @@ public class NetworkManager : MonoBehaviour
     /// <param name="name"></param>
     /// <param name="result"></param>
     /// <returns></returns>
-    public IEnumerator UpdateUser(string name,int achievement_id,int stage_id,int icon_id,Action<ErrorResponse> result)
+    public IEnumerator UpdateUser(string name, int achievement_id, int stage_id, int icon_id, Action<ErrorResponse> result)
     {
         // サーバーに送信するオブジェクトを作成
         UpdateUserData requestData = new UpdateUserData();
@@ -237,7 +238,7 @@ public class NetworkManager : MonoBehaviour
     /// </summary>
     /// <param name="result"></param>
     /// <returns></returns>
-    public IEnumerator GetUserItem(int type,Action<ShowUserItemResponse[]> result)
+    public IEnumerator GetUserItem(int type, Action<ShowUserItemResponse[]> result)
     {
         // 送信
         UnityWebRequest request = UnityWebRequest.Get(API_BASE_URL + "users/item/show?user_id=" + UserID + "&type=" + type);
@@ -388,5 +389,149 @@ public class NetworkManager : MonoBehaviour
 
         // 呼び出し元のresult処理を呼び出す
         result?.Invoke(isSuccess);
+    }
+
+    /// <summary>
+    /// ステージリザルトの取得処理
+    /// </summary>
+    /// <param name="result"></param>
+    /// <returns></returns>
+    public IEnumerator GetStageResults(Action<ShowStageResultResponse[]> result)
+    {
+        // 送信
+        UnityWebRequest request = UnityWebRequest.Get(API_BASE_URL + "users/stage/result/show?user_id=" + UserID);
+
+        // 結果を受信するまで待機
+        yield return request.SendWebRequest();
+
+        if (request.result == UnityWebRequest.Result.Success
+            && request.responseCode == 200)
+        {
+            // 通信が成功した場合、返ってきたJSONをオブジェクトに変換
+            string resultJson = request.downloadHandler.text;
+            ShowStageResultResponse[] response = JsonConvert.DeserializeObject<ShowStageResultResponse[]>(resultJson);
+            this.StageResults = new (response);
+
+            // 呼び出し元のresult処理を呼び出す
+            result?.Invoke(response);
+        }
+        else
+        {
+            // 呼び出し元のresult処理を呼び出す
+            result?.Invoke(null);
+        }
+    }
+
+    /// <summary>
+    /// ステージクリア処理
+    /// </summary>
+    /// <returns></returns>
+    public IEnumerator UpdateStageClear(bool isUpdateUserStageID, ShowStageResultResponse clearData , Action<UpdateStageClearRequest> result)
+    {
+        // サーバーに送信するオブジェクトを作成
+        UpdateStageClearRequest requestData = new UpdateStageClearRequest();
+        requestData.UserID = this.UserID;
+        requestData.StageID = clearData.StageID;
+        requestData.IsMedal1 = clearData.IsMedal1;
+        requestData.IsMedal2 = clearData.IsMedal2;
+        requestData.Time = clearData.Time;
+        requestData.Score = clearData.Score;
+        // サーバーに送信オブジェクトをJSONに変換
+        string json = JsonConvert.SerializeObject(requestData);
+        // 送信
+        UnityWebRequest request = UnityWebRequest.Post(API_BASE_URL + "users/stage/clear/update", json, "application/json");
+
+        // 結果を受信するまで待機
+        yield return request.SendWebRequest();
+
+        if (request.result == UnityWebRequest.Result.Success
+            && request.responseCode == 200)
+        {
+            // 通信が成功した場合、返ってきたJSONをオブジェクトに変換
+            string resultJson = request.downloadHandler.text;
+            ShowStageResultResponse response = JsonConvert.DeserializeObject<ShowStageResultResponse>(resultJson);
+
+            if(this.StageResults.Count < clearData.StageID)
+            {
+                // データが存在しない場合は追加
+                this.StageResults.Add(response);
+            }
+            else
+            {
+                // データが存在する場合は更新
+                this.StageResults[clearData.StageID - 1] = response;
+            }
+
+            // ユーザーがステージを初クリアした場合
+            if (isUpdateUserStageID) this.StageID++;
+
+            // 呼び出し元のresult処理を呼び出す
+            result?.Invoke(null);
+        }
+        else
+        {
+            // 呼び出し元のresult処理を呼び出す
+            result?.Invoke(null);
+        }
+    }
+
+    /// <summary>
+    /// ランキング取得処理
+    /// </summary>
+    /// <param name="result"></param>
+    /// <returns></returns>
+    public IEnumerator GetRankingList(Action<ShowRankingResponse[]> result)
+    {
+        // 送信
+        UnityWebRequest request = UnityWebRequest.Get(API_BASE_URL + "users/ranking/show?user_id=" + UserID);
+
+        // 結果を受信するまで待機
+        yield return request.SendWebRequest();
+
+        if (request.result == UnityWebRequest.Result.Success
+            && request.responseCode == 200)
+        {
+            // 通信が成功した場合、返ってきたJSONをオブジェクトに変換
+            string resultJson = request.downloadHandler.text;
+            ShowRankingResponse[] response = JsonConvert.DeserializeObject<ShowRankingResponse[]>(resultJson);
+
+            // 呼び出し元のresult処理を呼び出す
+            result?.Invoke(response);
+        }
+        else
+        {
+            // 呼び出し元のresult処理を呼び出す
+            result?.Invoke(null);
+        }
+    }
+
+    /// <summary>
+    /// フォロー内でのランキング取得処理
+    /// </summary>
+    /// <param name="result"></param>
+    /// <returns></returns>
+    public IEnumerator GetFollowRankingList(Action<ShowRankingResponse[]> result)
+    {
+        // 送信
+        UnityWebRequest request = UnityWebRequest.Get(API_BASE_URL + "users/follow/ranking/show?user_id=" + UserID);
+
+        // 結果を受信するまで待機
+        yield return request.SendWebRequest();
+
+        if (request.result == UnityWebRequest.Result.Success
+            && request.responseCode == 200)
+        {
+            // 通信が成功した場合、返ってきたJSONをオブジェクトに変換
+            string resultJson = request.downloadHandler.text;
+            ShowRankingResponse[] response = JsonConvert.DeserializeObject<ShowRankingResponse[]>(resultJson);
+
+            // 呼び出し元のresult処理を呼び出す
+            result?.Invoke(response);
+        }
+        else
+        {
+            // 呼び出し元のresult処理を呼び出す
+            result?.Invoke(null);
+        }
     }
 }

@@ -11,9 +11,11 @@ public class TopManager : MonoBehaviour
 {
     [SerializeField] GameObject m_parent_top;
     [SerializeField] GameObject m_ui_startTextParent;
-    [SerializeField] Image m_panelImage;            // 非表示にするパネルのイメージ
-    [SerializeField] Text m_uiUserName;             // ユーザー名
+    [SerializeField] Image m_panelImage;                 // 非表示にするパネルのイメージ
+    [SerializeField] Text m_uiUserName;                  // ユーザー名
     [SerializeField] AssetDownLoader m_assetDownLoader;  // アセットダウンローダー
+    [SerializeField] GameObject m_boxStage;              // ステージシーンに入る前のウインドウ
+    bool isOnStageButton;   //ステージシーンに遷移するボタンをクリックしたかどうか
 
     // システム画面のパネルリスト
     [SerializeField] List<GameObject> m_sys_panelList;
@@ -22,7 +24,8 @@ public class TopManager : MonoBehaviour
     {
         PROFILE = 0,
         MAILBOX,
-        FOLLOWBOX
+        FOLLOWBOX,
+        RANKING
     }
 
     /// <summary>
@@ -39,6 +42,19 @@ public class TopManager : MonoBehaviour
     /// 選択したステージID
     /// </summary>
     public static int stageID { get; set; }
+
+    public enum ScoreRank
+    {
+        S = 9999,
+        A = 1200,
+        B = 800,
+        C = 500
+    }
+
+    private void OnEnable()
+    {
+        isOnStageButton = false;
+    }
 
     void Start()
     {
@@ -82,7 +98,12 @@ public class TopManager : MonoBehaviour
         }
         else
         {
-            OnClickTitleWindow();
+            // ステージのリザルト情報を取得する
+            StartCoroutine(NetworkManager.Instance.GetStageResults(
+                result =>
+                {
+                    OnClickTitleWindow();
+                }));
         }
     }
 
@@ -91,7 +112,25 @@ public class TopManager : MonoBehaviour
     /// </summary>
     public void OnSelectStageButton(int id)
     {
+        if (isOnStageButton) return;
+
         stageID = id;
+
+        // ステージに入る前のウインドウを表示する
+        ShowStageResultResponse resultData = NetworkManager.Instance.StageResults.Count < stageID ? null : NetworkManager.Instance.StageResults[stageID - 1];
+        m_boxStage.SetActive(true);
+        m_boxStage.GetComponent<StageBox>().InitStatus(resultData);
+    }
+
+    /// <summary>
+    /// ステージシーンに遷移する
+    /// </summary>
+    public void OnPlayStageButton()
+    {
+        if (isOnStageButton) return;
+
+        isOnStageButton = true;
+        m_boxStage.GetComponent<StageBox>().OnCloseButton();
 
 #if !UNITY_EDITOR
         // ゲームUIシーンに遷移する
@@ -107,6 +146,12 @@ public class TopManager : MonoBehaviour
     /// </summary>
     void OnClickTitleWindow()
     {
+        if (isOnStageButton) return;
+
+        // 自信の救難信号(募集中)のリストを取得する
+
+
+
         GetComponent<UserController>().UpdateUserDataUI(true, m_parent_top);
     }
 
@@ -115,6 +160,8 @@ public class TopManager : MonoBehaviour
     /// </summary>
     public void OnBackButtonHome()
     {
+        if (isOnStageButton) return;
+
         m_ui_startTextParent.SetActive(true);
 
         m_parent_top.transform.DOLocalMove(new Vector3(m_parent_top.transform.localPosition.x + 1980f, 0, 0), 0.5f).SetEase(Ease.Linear)
@@ -127,8 +174,10 @@ public class TopManager : MonoBehaviour
     /// <param name="systemNum">SYSTEM（システムボタンの連番）参照</param>
     public void OnButtonSystemPanel(int systemNum)
     {
+        if (isOnStageButton) return;
+
         // 全てのシステム画面を非表示にする
-        foreach(GameObject item in m_sys_panelList)
+        foreach (GameObject item in m_sys_panelList)
         {
             item.SetActive(false);
         }
@@ -143,7 +192,30 @@ public class TopManager : MonoBehaviour
     /// </summary>
     public void OnBackButtonSystemPanel()
     {
+        if (isOnStageButton) return;
+
         GetComponent<UserController>().ResetErrorText();
         m_parent_top.transform.DOLocalMove(new Vector3(m_parent_top.transform.localPosition.x, 0, 0), 0.5f).SetEase(Ease.Linear);
+    }
+
+    /// <summary>
+    /// ランクを取得
+    /// </summary>
+    /// <returns></returns>
+    public static Sprite GetScoreRank(List<Sprite> spriteRanks, int score)
+    {
+        // 呼び出しがCから行われる , spriteRanksは上からS~Cの順で格納されている
+        int i = spriteRanks.Count - 1;
+        foreach (var value in Enum.GetValues(typeof(TopManager.ScoreRank)))
+        {
+            if ((int)value > score)
+            {
+                return spriteRanks[i];
+            }
+            i--;
+        }
+
+        // どれにも当てはまらなかった場合は最低値のランク
+        return spriteRanks[spriteRanks.Count - 1];
     }
 }

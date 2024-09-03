@@ -215,4 +215,10 @@ public class SonCow : MonoBehaviour
         m_gameManager = GameObject.Find("GameManager");
         m_offset = transform.position - m_player.transform.position;
     }
+
+    public void InitState()
+    {
+        m_isBeKicked = true;
+        m_rb.gravityScale = m_gravityScale;
+    }
 }

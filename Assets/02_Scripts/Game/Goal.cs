@@ -15,9 +15,21 @@ public class Goal : MonoBehaviour
     // カウンター
     int m_timer;
 
+    bool isInit = false;
+
     private void Start()
     {
         m_timer = 3;
+    }
+
+    private void Update()
+    {
+        if (!isInit) return;
+
+        if (m_gameManager.m_isEndGame)
+        {
+            CancelCountDown();
+        }
     }
 
     /// <summary>
@@ -26,7 +38,7 @@ public class Goal : MonoBehaviour
     /// <param name="collision"></param>
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (m_gameManager.m_isStageClear || collision.gameObject.tag == "Ghost" 
+        if (m_gameManager.m_isEndGame || collision.gameObject.tag == "Ghost" 
             || collision.gameObject.layer != 6 && collision.gameObject.layer != 10) return;
 
         if(m_textCounter == null)
@@ -43,13 +55,10 @@ public class Goal : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (m_gameManager.m_isStageClear || collision.gameObject.tag == "Ghost"
+        if (m_gameManager.m_isEndGame || collision.gameObject.tag == "Ghost"
             || collision.gameObject.layer != 6 && collision.gameObject.layer != 10) return;
 
-        // カウントキャンセル
-        m_textCounter.SetActive(false);
-        CancelInvoke("StartCountDown");
-        m_timer = 3;
+        CancelCountDown();
 
         // リセットボタンを有効にする
         m_uiController.SetInteractableButtonReset(true);
@@ -78,6 +87,17 @@ public class Goal : MonoBehaviour
     }
 
     /// <summary>
+    /// カウンターをキャンセルする
+    /// </summary>
+    private void CancelCountDown()
+    {
+        // カウントキャンセル
+        m_textCounter.SetActive(false);
+        CancelInvoke("StartCountDown");
+        m_timer = 3;
+    }
+
+    /// <summary>
     /// メンバ変数初期化処理
     /// </summary>
     public void InitMemberVariable()
@@ -85,5 +105,6 @@ public class Goal : MonoBehaviour
         m_gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         m_textCounter = GameObject.Find("TextCounter");
         m_uiController = GameObject.Find("UiController").GetComponent<UiController>();
+        isInit = true;
     }
 }

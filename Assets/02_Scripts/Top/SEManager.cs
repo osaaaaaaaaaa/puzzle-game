@@ -9,6 +9,7 @@ public class SEManager : MonoBehaviour
     [SerializeField] AudioClip m_buttonSE;
     [SerializeField] AudioClip m_canselSE;
     [SerializeField] AudioClip m_stageClearSE;
+    [SerializeField] AudioClip m_stageGameOverSE;
 
     private void Start()
     {
@@ -33,5 +34,10 @@ public class SEManager : MonoBehaviour
     public void PlayStageClearSE()
     {
         m_audio.PlayOneShot(m_stageClearSE);
+    }
+
+    public void PlayGameOverSE()
+    {
+        m_audio.PlayOneShot(m_stageGameOverSE);
     }
 }

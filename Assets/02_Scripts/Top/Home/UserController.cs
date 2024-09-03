@@ -18,6 +18,7 @@ public class UserController : MonoBehaviour
     #endregion
 
     #region 編集モードで使用するオブジェクト
+    [SerializeField] List<Sprite> m_texTabs;    // タブの画像 [1:アクティブな画像,0:非アクティブな画像]
     #region プロフィール
     [SerializeField] GameObject m_editProfileWindow;        // プロフィールの編集ウィンドウ
     [SerializeField] Text m_errorTextProfile;
@@ -32,22 +33,27 @@ public class UserController : MonoBehaviour
     [SerializeField] GameObject m_recommendedUserScloleView;    // おすすめのユーザーリスト
     [SerializeField] GameObject m_tabFollow;                    // フォローリストを表示するタブ
     [SerializeField] GameObject m_tabCandidate;                 // おすすめのユーザーリストを表示するタブ
-    [SerializeField] List<Sprite> m_texTabs;                    // タブの画像 [1:アクティブな画像,0:非アクティブな画像]
     [SerializeField] GameObject m_profileFollowPrefab;          // フォローしているユーザーのプロフィールプレファブ
     [SerializeField] GameObject m_profileRecommendedPrefab;     // おすすめのユーザーのプロフィールプレファブ
     [SerializeField] Text m_followCntText;                      // フォローしている人数を示すテキスト
     [SerializeField] Text m_errorTextFollow;
     #endregion
+    #region ランキング
+    [SerializeField] GameObject m_rankingScloleView;            // 全ユーザー内でのランキングビュー
+    [SerializeField] GameObject m_followRankingScloleView;      // フォロー内でのランキングビュー
+    [SerializeField] GameObject m_tabRanking;                   // 全ユーザー内を表示するタブ
+    [SerializeField] GameObject m_tabFollowRanking;             // フォロー内を表示するタブ
+    [SerializeField] GameObject m_profileRankingPrefab;         // ランキングに表示するユーザープロフィールプレファブ
+    #endregion
     #endregion
 
     /// <summary>
-    /// 編集モード
+    /// プロフィールの編集モード
     /// </summary>
     public enum EDITMODE
     {
         PROFILE = 0,
         ICON,
-        FOLLOW,
         ACHIEVE
     }
 
@@ -58,6 +64,15 @@ public class UserController : MonoBehaviour
     { 
         FOLLOW = 0,       // フォローリスト
         RECOMMENDED       // おすすめのユーザー
+    }
+
+    /// <summary>
+    /// ランキングの表示モード
+    /// </summary>
+    enum RANKINF_MODE
+    {
+        USERS = 0,        // 全ユーザー内
+        FOLLOW            // フォロー内
     }
 
     void OnEnable()
@@ -177,6 +192,78 @@ public class UserController : MonoBehaviour
                 break;
         }
     }
+
+    /// <summary>
+    /// フォローリストを更新する
+    /// </summary>
+    void UpdateRankingUI(RANKINF_MODE mode)
+    {
+        switch (mode)
+        {
+            case RANKINF_MODE.USERS:
+
+                // プロフィールのプレファブの格納先を取得する
+                GameObject contentRanking = m_rankingScloleView.transform.GetChild(0).transform.GetChild(0).gameObject;
+
+                // 現在、存在する古いプロフィールを全て削除する
+                foreach (Transform oldProfile in contentRanking.transform)
+                {
+                    Destroy(oldProfile.gameObject);
+                }
+
+                // ランキング取得処理
+                StartCoroutine(NetworkManager.Instance.GetRankingList(
+                    result =>
+                    {
+                        m_followCntText.text = "" + result.Length;
+
+                        // 取得したフォローリストの情報を元に各ユーザーのプロフィールを作成する(最後尾に自信のデータがある)
+                        int i = 0;
+                        foreach (ShowRankingResponse user in result)
+                        {
+                            bool isMyData = NetworkManager.Instance.UserID == user.UserID ? true : false;
+
+                            // プロフィールを生成する
+                            GameObject profile = Instantiate(m_profileRankingPrefab, contentRanking.transform);
+                            profile.GetComponent<RankingUserProfile>().UpdateProfile(i+1, isMyData,
+                                user.Name, user.AchievementTitle, user.StageID, user.TotalScore,
+                                m_texIcons[user.IconID - 1], user.IsAgreement);
+                            i++;
+                        }
+                    }));
+                break;
+            case RANKINF_MODE.FOLLOW:
+
+                // プロフィールのプレファブの格納先を取得する
+                GameObject contentRecommended = m_followRankingScloleView.transform.GetChild(0).transform.GetChild(0).gameObject;
+
+                // 現在、存在する古いプロフィールを全て削除する
+                foreach (Transform oldProfile in contentRecommended.transform)
+                {
+                    Destroy(oldProfile.gameObject);
+                }
+
+                // おすすめのユーザーリスト取得処理
+                StartCoroutine(NetworkManager.Instance.GetFollowRankingList(
+                    result =>
+                    {
+                        // 取得したフォローリストの情報を元に各ユーザーのプロフィールを作成する
+                        int i = 0;
+                        foreach (ShowRankingResponse user in result)
+                        {
+                            bool isMyData = NetworkManager.Instance.UserID == user.UserID ? true : false;
+                            // プロフィールを生成する
+                            GameObject profile = Instantiate(m_profileRankingPrefab, contentRecommended.transform);
+                            profile.GetComponent<RankingUserProfile>().UpdateProfile(i+1, isMyData,
+                                user.Name, user.AchievementTitle, user.StageID, user.TotalScore,
+                                m_texIcons[user.IconID - 1], user.IsAgreement);
+                            i++;
+                        }
+                    }));
+                break;
+        }
+    }
+
 
     public void ResetErrorText()
     {
@@ -387,6 +474,38 @@ public class UserController : MonoBehaviour
                 }));
         }
     }
+
+    /// <summary>
+    /// ランキングの内容を切り替える
+    /// </summary>
+    /// <param name="mode">FOLLOW_LIST_MODE参照</param>
+    public void OnRankingTabButton(int mode)
+    {
+        m_errorTextFollow.text = "";
+
+        switch (mode)
+        {
+            case 0: // 全ユーザー内のランキングを表示する
+                m_rankingScloleView.SetActive(true);
+                m_followRankingScloleView.SetActive(false);
+                m_tabRanking.GetComponent<Image>().sprite = m_texTabs[1];
+                m_tabFollowRanking.GetComponent<Image>().sprite = m_texTabs[0];
+
+                // ランキングリストを取得
+                UpdateRankingUI(RANKINF_MODE.USERS);
+                break;
+            case 1: // フォロー内のランキングを表示する
+                m_rankingScloleView.SetActive(false);
+                m_followRankingScloleView.SetActive(true);
+                m_tabRanking.GetComponent<Image>().sprite = m_texTabs[0];
+                m_tabFollowRanking.GetComponent<Image>().sprite = m_texTabs[1];
+
+                // フォロー内でのランキング取得
+                UpdateRankingUI(RANKINF_MODE.FOLLOW);
+                break;
+        }
+    }
+
 
     /// <summary>
     /// アチーブメントのリストを表示する

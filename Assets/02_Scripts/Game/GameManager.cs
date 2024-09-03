@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using DG.Tweening;
 using UnityEngine.AddressableAssets;
+using System;
 
 public class GameManager : MonoBehaviour
 {
@@ -20,6 +21,13 @@ public class GameManager : MonoBehaviour
     // カメラコントローラ
     CameraController m_cameraController;
 
+    #region ステージの進捗情報
+    bool m_isMedal1;
+    bool m_isMedal2;
+    float m_gameTimer;
+    public bool m_isEndGame { get; private set; }
+    #endregion
+
     #region ゲームクリア時の演出
     [SerializeField] GameObject m_stageClearEffect;
     Vector3 m_offsetEffectL = new Vector3(-10.43f, -7.48999f,5);
@@ -28,24 +36,33 @@ public class GameManager : MonoBehaviour
 
     #region メインカメラのアニメーション関係
     GameObject m_mainCamera;   // メインカメラ
-    GameObject goal;           // ゴール地点
     public bool m_isEndAnim;   // アニメーションが終了したかどうか
     #endregion
-
-    // ゲームをクリアしたかどうか
-    public bool m_isStageClear;
 
     private void Awake()
     {
         m_isEndAnim = false;
+        m_isEndGame = false;
+        m_isMedal1 = false;
+        m_isMedal2 = false;
+        m_gameTimer = 40;
 
 #if UNITY_EDITOR
         // 各種スクリプトのメンバ変数初期化処理
         GameObject.Find("CameraController").GetComponent<CameraController>().
             InitMemberVariable(m_UiController.ButtonZoomIn, m_UiController.ButtonZoomOut);
         GameObject.Find("ride_cow").GetComponent<SonCow>().InitMemberVariable();
+        GameObject.Find("Son").GetComponent<Son>().InitMemberVariable();
         GameObject.Find("Goal").GetComponent<Goal>().InitMemberVariable();
         GameObject.Find("SonController").GetComponent<SonController>().InitMemberVariable();
+
+        // 前回メダルを取得している場合は表示を変更する 、 リザルトが存在しない場合は必ずfalse
+        bool isMedal1 = NetworkManager.Instance.StageResults.Count < TopManager.stageID ? 
+            false : NetworkManager.Instance.StageResults[TopManager.stageID - 1].IsMedal1; 
+        bool isMedal2 = NetworkManager.Instance.StageResults.Count < TopManager.stageID ? 
+            false : NetworkManager.Instance.StageResults[TopManager.stageID - 1].IsMedal2;
+        GameObject.Find("Medal1").GetComponent<Medal>().InitMemberVariable(isMedal1);
+        GameObject.Find("Medal2").GetComponent<Medal>().InitMemberVariable(isMedal2);
 #endif
 
         // トップ画面を非表示にする
@@ -66,8 +83,17 @@ public class GameManager : MonoBehaviour
         GameObject.Find("CameraController").GetComponent<CameraController>().
             InitMemberVariable(m_UiController.ButtonZoomIn, m_UiController.ButtonZoomOut);
         GameObject.Find("ride_cow").GetComponent<SonCow>().InitMemberVariable();
+        GameObject.Find("Son").GetComponent<Son>().InitMemberVariable();
         GameObject.Find("Goal").GetComponent<Goal>().InitMemberVariable();
         GameObject.Find("SonController").GetComponent<SonController>().InitMemberVariable();
+
+        // 前回メダルを取得している場合は表示を変更する 、 リザルトが存在しない場合は必ずfalse
+        bool isMedal1 = NetworkManager.Instance.StageResults.Count < TopManager.stageID ? 
+            false : NetworkManager.Instance.StageResults[TopManager.stageID - 1].IsMedal1; 
+        bool isMedal2 = NetworkManager.Instance.StageResults.Count < TopManager.stageID ? 
+            false : NetworkManager.Instance.StageResults[TopManager.stageID - 1].IsMedal2;
+        GameObject.Find("Medal1").GetComponent<Medal>().InitMemberVariable(isMedal1);
+        GameObject.Find("Medal2").GetComponent<Medal>().InitMemberVariable(isMedal2);
 #endif
 
         // 壁を非表示にする
@@ -79,11 +105,10 @@ public class GameManager : MonoBehaviour
         m_mainCamera = GameObject.Find("MainCamera_Game");
         m_player = GameObject.Find("Player");
         m_cameraController = GameObject.Find("CameraController").GetComponent<CameraController>();
-        goal = GameObject.Find("Goal");
 
         // フラグOFF
         m_isPause = false;
-        m_isStageClear = false;
+        m_isEndGame = false;
 
 #if !UNITY_EDITOR
         // カメラの初期地点を取得
@@ -111,6 +136,22 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    private void Update()
+    {
+        // カウントダウン
+        if (m_isEndAnim && !m_isEndGame)
+        {
+            m_gameTimer -= Time.deltaTime;
+            m_gameTimer = m_gameTimer <= 0 ? 0 : m_gameTimer;
+            m_isEndGame = m_gameTimer <= 0 ? true : false;
+
+            // タイマーテキストを更新
+            m_UiController.UpdateTextTimer(m_gameTimer);
+
+            if (m_isEndGame) GameOver();
+        }
+    }
+
     /// <summary>
     /// ゲーム開始処理
     /// </summary>
@@ -124,28 +165,69 @@ public class GameManager : MonoBehaviour
     }
 
     /// <summary>
+    /// 集計したスコア取得
+    /// </summary>
+    /// <returns></returns>
+    int GetResultScore(float time)
+    {
+        // スコア集計
+        int medalCnt = m_isMedal1 ? 1 : 0;
+        medalCnt += m_isMedal2 ? 1 : 0;
+        int score = (int)(time * 15) + (medalCnt * 500);
+        score = score <= 0 ? 0 : score;
+        return score;
+    }
+
+    /// <summary>
+    /// ゲームオーバー処理
+    /// </summary>
+    public void GameOver()
+    {
+        m_seManager.PlayGameOverSE();
+        m_UiController.SetGameOverUI(m_isMedal1, m_isMedal2, m_gameTimer, GetResultScore(m_gameTimer), false);
+    }
+
+    /// <summary>
     /// ゲームクリア処理
     /// </summary>
     public void GameClear()
     {
+        float time = m_gameTimer;
+        int score = GetResultScore(time);
+
+        // 現在のステージが上限以下＆＆最新のステージをクリアしたかどうか
         bool isUpdateStageID = NetworkManager.Instance.StageID < TopManager.stageMax && NetworkManager.Instance.StageID == TopManager.stageID;
 
-        // 最新のステージをクリアした場合
-        if (isUpdateStageID)
+        // メダルを初獲得した||ハイスコアを上回ったかどうか
+        bool isUpdateResult = false;
+        if (!isUpdateStageID)
         {
-            // ユーザー更新処理
-            StartCoroutine(NetworkManager.Instance.UpdateUser(
-                NetworkManager.Instance.UserName,
-                NetworkManager.Instance.AchievementID,
-                NetworkManager.Instance.StageID + 1,
-                NetworkManager.Instance.IconID,
+            ShowStageResultResponse currentResult = NetworkManager.Instance.StageResults[TopManager.stageID - 1];
+            isUpdateResult = !currentResult.IsMedal1 && m_isMedal1
+                || !currentResult.IsMedal2 && m_isMedal2
+                || currentResult.Score < score;
+        }
+
+        // リザルトを更新する必要がある場合
+        if (isUpdateStageID || isUpdateResult)
+        {
+            // ステージクリア処理
+            StartCoroutine(NetworkManager.Instance.UpdateStageClear(
+                isUpdateStageID,
+                new ShowStageResultResponse { 
+                    StageID = TopManager.stageID, 
+                    IsMedal1 = m_isMedal1, 
+                    IsMedal2 = m_isMedal2, 
+                    Time = time,
+                    Score = score 
+                },
                 result =>
                 {
                     // ステージをクリアしたことにする
-                    m_isStageClear = true;
+                    m_isEndGame = true;
 
                     // UIをゲームクリア用に設定する
-                    m_UiController.SetGameClearUI();
+                    m_UiController.SetResultUI(m_isMedal1,m_isMedal2, m_gameTimer, score, true);
 
                     // 初クリア演出
                     PlayStageClearEffect();
@@ -154,10 +236,10 @@ public class GameManager : MonoBehaviour
         else
         {
             // ステージをクリアしたことにする
-            m_isStageClear = true;
+            m_isEndGame = true;
 
             // UIをゲームクリア用に設定する
-            m_UiController.SetGameClearUI();
+            m_UiController.SetResultUI(m_isMedal1, m_isMedal2,m_gameTimer, score,true);
 
             // 初クリア演出
             PlayStageClearEffect();
@@ -227,6 +309,21 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void OnGameReset()
     {
+        m_gameTimer -= 2f;
+        m_UiController.GetComponent<UiController>().GenerateSubTimeText(2);
         m_player.GetComponent<Player>().ResetPlayer();
+    }
+
+    public void UpdateMedalFrag(int medarID)
+    {
+        switch (medarID)
+        {
+            case 1:
+                m_isMedal1 = true;
+                break;
+            case 2:
+                m_isMedal2 = true;
+                break;
+        }
     }
 }
