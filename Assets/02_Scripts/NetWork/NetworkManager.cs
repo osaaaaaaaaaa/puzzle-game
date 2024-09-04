@@ -534,4 +534,64 @@ public class NetworkManager : MonoBehaviour
             result?.Invoke(null);
         }
     }
+
+    /// <summary>
+    /// 救難信号のログ(ホスト)取得処理
+    /// </summary>
+    /// <param name="result"></param>
+    /// <returns></returns>
+    public IEnumerator GetSignalHostLogList(Action<ShowHostLogResponse[]> result)
+    {
+        // 送信
+        UnityWebRequest request = UnityWebRequest.Get(API_BASE_URL + "distress_signals/host_log?user_id=" + UserID);
+
+        // 結果を受信するまで待機
+        yield return request.SendWebRequest();
+
+        if (request.result == UnityWebRequest.Result.Success
+            && request.responseCode == 200)
+        {
+            // 通信が成功した場合、返ってきたJSONをオブジェクトに変換
+            string resultJson = request.downloadHandler.text;
+            ShowHostLogResponse[] response = JsonConvert.DeserializeObject<ShowHostLogResponse[]>(resultJson);
+
+            // 呼び出し元のresult処理を呼び出す
+            result?.Invoke(response);
+        }
+        else
+        {
+            // 呼び出し元のresult処理を呼び出す
+            result?.Invoke(null);
+        }
+    }
+
+    /// <summary>
+    /// 救難信号のログ(ゲスト)取得処理
+    /// </summary>
+    /// <param name="result"></param>
+    /// <returns></returns>
+    public IEnumerator GetSignalGuestLogList(Action<ShowGuestLogResponse[]> result)
+    {
+        // 送信
+        UnityWebRequest request = UnityWebRequest.Get(API_BASE_URL + "distress_signals/guest_log?user_id=" + UserID);
+
+        // 結果を受信するまで待機
+        yield return request.SendWebRequest();
+
+        if (request.result == UnityWebRequest.Result.Success
+            && request.responseCode == 200)
+        {
+            // 通信が成功した場合、返ってきたJSONをオブジェクトに変換
+            string resultJson = request.downloadHandler.text;
+            ShowGuestLogResponse[] response = JsonConvert.DeserializeObject<ShowGuestLogResponse[]>(resultJson);
+
+            // 呼び出し元のresult処理を呼び出す
+            result?.Invoke(response);
+        }
+        else
+        {
+            // 呼び出し元のresult処理を呼び出す
+            result?.Invoke(null);
+        }
+    }
 }

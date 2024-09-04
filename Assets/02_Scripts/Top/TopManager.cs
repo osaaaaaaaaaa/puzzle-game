@@ -25,7 +25,8 @@ public class TopManager : MonoBehaviour
         PROFILE = 0,
         MAILBOX,
         FOLLOWBOX,
-        RANKING
+        RANKING,
+        D_SIGNAL
     }
 
     /// <summary>
