@@ -6,7 +6,9 @@ using UnityEngine.UI;
 
 public class SignalGuestLogBar : MonoBehaviour
 {
-    [SerializeField] Text m_textDay;                      // 日付
+    [SerializeField] Image m_icon;                        // アイコン
+    [SerializeField] GameObject m_heart;                  // 相互フォローのマーク
+    [SerializeField] Text m_textDays;                     // 経過日数
     [SerializeField] Text m_textHostName;                 // ホスト名
     [SerializeField] Text m_textStageID;                  // ステージID
     [SerializeField] Text m_textGuestCnt;                 // ゲストの参加人数
@@ -15,11 +17,13 @@ public class SignalGuestLogBar : MonoBehaviour
     [SerializeField] Button m_btnDestroy;                 // 破棄するボタン
     int m_signalID;
 
-    public void UpdateLogBar(int signalID,DateTime created_at,string hostName, int stageID, int guestCnt, bool action,bool is_rewarded)
+    public void UpdateLogBar(int signalID, int elapsed_days, Sprite icon, bool isAgreement, string hostName, int stageID, int guestCnt, bool action,bool is_rewarded)
     {
-        m_textDay.text = created_at.ToString("yyyy/MM/dd HH:mm:ss");
+        m_textDays.text = elapsed_days + "日前";
+        m_icon.sprite = icon;
+        m_heart.SetActive(isAgreement);
         m_textHostName.text = hostName;
-        m_textStageID.text = "" + stageID;
+        m_textStageID.text = "ステージ  " + stageID;
         m_textGuestCnt.text = "" + guestCnt;
 
         if (action)

@@ -52,6 +52,8 @@ public class UserController : MonoBehaviour
     [SerializeField] GameObject m_barHostLogPrefab;          // ホストのログバー
     [SerializeField] GameObject m_barGuestLogPrefab;         // ゲストのログバー
     [SerializeField] GameObject m_tabRecruiting;             // 救難信号の募集リストを表示するタブ
+    [SerializeField] GameObject m_signalScloleView;          // 救難信号の募集を表示するビュー
+    [SerializeField] GameObject m_signalPrefab;              // 救難信号の募集のプレファブ
     #endregion
     #endregion
 
@@ -110,6 +112,12 @@ public class UserController : MonoBehaviour
             UpdateUserDataUI(false,null);
         }   
     }
+
+    public void ResetErrorText()
+    {
+        m_errorTextProfile.text = "";
+    }
+
 
     /// <summary>
     /// ユーザー情報を更新する
@@ -333,17 +341,43 @@ public class UserController : MonoBehaviour
                         {
                             // ログを生成する
                             GameObject logHost = Instantiate(m_barGuestLogPrefab, contentLog.transform);
-                            logHost.GetComponent<SignalGuestLogBar>().UpdateLogBar(
-                                log.SignalID, log.CreateDay,log.HostName, log.StageID, log.GuestCnt, log.IsStageClear,log.IsRewarded);
+                            logHost.GetComponent<SignalGuestLogBar>().UpdateLogBar(log.SignalID, log.ElapsedDay, 
+                                m_texIcons[log.IconID - 1], log.IsAgreement, log.HostName, log.StageID, log.GuestCnt, log.IsStageClear,log.IsRewarded);
                         }
                     }));
                 break;
         }
     }
 
-    public void ResetErrorText()
+    /// <summary>
+    /// 救難信号の募集リストを更新する
+    /// </summary>
+    void UpdateSignalListUI()
     {
-        m_errorTextProfile.text = "";
+        // 募救難信号のプレファブの格納先を取得する
+        GameObject content = m_signalScloleView.transform.GetChild(0).transform.GetChild(0).gameObject;
+
+        // 現在、存在する古い救難信号を全て削除する
+        foreach (Transform oldProfile in content.transform)
+        {
+            Destroy(oldProfile.gameObject);
+        }
+
+        // ランダムに救難信号取得処理
+        StartCoroutine(NetworkManager.Instance.GetRndSignalList(
+            result =>
+            {
+                if (result == null) return;
+
+                // 取得した情報を元に各救難信号を作成する
+                foreach (ShowRndSignalResponse signal in result)
+                {
+                    // 救難信号を生成する
+                    GameObject signalBar = Instantiate(m_signalPrefab, content.transform);
+                    signalBar.GetComponent<SignalBar>().UpdateSignalBar(signal.SignalID, signal.ElapsedDay,
+                        m_texIcons[signal.IconID - 1], signal.IsAgreement, signal.HostName, signal.StageID, signal.GuestCnt);
+                }
+            }));
     }
 
     /// <summary>
@@ -587,22 +621,22 @@ public class UserController : MonoBehaviour
     public void OnSignalTabButton(int mode)
     {
         m_logScloleView.SetActive(false);
+        m_signalScloleView.SetActive(false);
+        m_logMenuBtnParent.SetActive(false);
         switch (mode)
         {
             case 0: // ログの選択メニューを表示
                 m_logMenuBtnParent.SetActive(true);
                 m_tabLog.GetComponent<Image>().sprite = m_texTabs[1];
                 m_tabRecruiting.GetComponent<Image>().sprite = m_texTabs[0];
-
                 break;
             case 1: // 救難信号の募集リストを表示
-                //m_tabLog.SetActive(false);
-                //m_tabRecruiting.SetActive(true);
-                //m_tabRanking.GetComponent<Image>().sprite = m_texTabs[0];
-                //m_tabFollowRanking.GetComponent<Image>().sprite = m_texTabs[1];
+                m_signalScloleView.SetActive(true);
+                m_tabLog.GetComponent<Image>().sprite = m_texTabs[0];
+                m_tabRecruiting.GetComponent<Image>().sprite = m_texTabs[1];
 
                 // 募集一覧を取得
-                //UpdateRankingUI(RANKINF_MODE.FOLLOW);
+                UpdateSignalListUI();
                 break;
         }
     }
@@ -625,7 +659,6 @@ public class UserController : MonoBehaviour
                 break;
         }
     }
-
 
     /// <summary>
     /// アチーブメントのリストを表示する

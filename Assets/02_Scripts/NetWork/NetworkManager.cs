@@ -573,7 +573,7 @@ public class NetworkManager : MonoBehaviour
     public IEnumerator GetSignalGuestLogList(Action<ShowGuestLogResponse[]> result)
     {
         // 送信
-        UnityWebRequest request = UnityWebRequest.Get(API_BASE_URL + "distress_signals/guest_log?user_id=" + UserID);
+        UnityWebRequest request = UnityWebRequest.Get(API_BASE_URL + "distress_signals/guest_log?user_id=" + 1);
 
         // 結果を受信するまで待機
         yield return request.SendWebRequest();
@@ -594,4 +594,35 @@ public class NetworkManager : MonoBehaviour
             result?.Invoke(null);
         }
     }
+
+    /// <summary>
+    /// ランダムに救難信号取得処理
+    /// </summary>
+    /// <param name="result"></param>
+    /// <returns></returns>
+    public IEnumerator GetRndSignalList(Action<ShowRndSignalResponse[]> result)
+    {
+        // 送信
+        UnityWebRequest request = UnityWebRequest.Get(API_BASE_URL + "distress_signals/show?user_id=" + UserID);
+
+        // 結果を受信するまで待機
+        yield return request.SendWebRequest();
+
+        if (request.result == UnityWebRequest.Result.Success
+            && request.responseCode == 200)
+        {
+            // 通信が成功した場合、返ってきたJSONをオブジェクトに変換
+            string resultJson = request.downloadHandler.text;
+            ShowRndSignalResponse[] response = JsonConvert.DeserializeObject<ShowRndSignalResponse[]>(resultJson);
+
+            // 呼び出し元のresult処理を呼び出す
+            result?.Invoke(response);
+        }
+        else
+        {
+            // 呼び出し元のresult処理を呼び出す
+            result?.Invoke(null);
+        }
+    }
+
 }

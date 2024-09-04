@@ -19,7 +19,7 @@ public class Goal : MonoBehaviour
 
     private void Start()
     {
-        m_timer = 3;
+        m_timer = 6;
     }
 
     private void Update()
