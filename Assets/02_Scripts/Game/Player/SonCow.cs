@@ -30,7 +30,7 @@ public class SonCow : MonoBehaviour
     #endregion
 
     #region 蹴り飛ばすときに必要なパラメータ
-    Vector3 m_offset;      // 母親とのオフセット
+    public Vector3 m_offset { get; private set; }      // 母親とのオフセット
     // 初速度
     float m_initialSpeed = 50f;
     // 重量スケール
@@ -180,6 +180,24 @@ public class SonCow : MonoBehaviour
     }
 
     /// <summary>
+    /// ゲストに蹴り飛ばされる処理
+    /// </summary>
+    public void DOKick(Vector3 vecKick)
+    {
+        var rb = GetComponent<Rigidbody2D>();
+
+        // 重力を設定する
+        rb.gravityScale = m_gravityScale;
+        // 速度を設定する
+        rb.velocity = transform.forward * m_initialSpeed;
+
+        Vector3 force = vecKick;  // 力を設定
+        rb.AddForce(force, ForceMode2D.Impulse);  // 力を加える
+
+        m_isBeKicked = true;
+    }
+
+    /// <summary>
     /// リセット
     /// </summary>
     public void ResetSonCow()
@@ -194,6 +212,23 @@ public class SonCow : MonoBehaviour
         m_rb = GetComponent<Rigidbody2D>();
         m_rb.gravityScale = 0;
         transform.position = m_player.transform.position + m_offset;
+    }
+
+    /// <summary>
+    /// ゲストによるリセット処理
+    /// </summary>
+    public void ResetSonCow(Vector3 startPos)
+    {
+        m_isBeKicked = false;
+        m_isJump = false;
+
+        // 向きをリセットする
+        m_direction = 1;
+
+        m_son_cow.SetActive(true);
+        m_rb = GetComponent<Rigidbody2D>();
+        m_rb.gravityScale = 0;
+        transform.position = startPos + m_offset;
     }
 
     /// <summary>

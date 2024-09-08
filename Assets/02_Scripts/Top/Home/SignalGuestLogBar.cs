@@ -19,6 +19,7 @@ public class SignalGuestLogBar : MonoBehaviour
 
     public void UpdateLogBar(int signalID, int elapsed_days, Sprite icon, bool isAgreement, string hostName, int stageID, int guestCnt, bool action,bool is_rewarded)
     {
+        m_signalID = signalID;
         m_textDays.text = elapsed_days + "日前";
         m_icon.sprite = icon;
         m_heart.SetActive(isAgreement);
@@ -44,11 +45,29 @@ public class SignalGuestLogBar : MonoBehaviour
         else
         {
             m_textAction.text = "ステージへ移動";
+
             // 遷移イベント設定
+            var manager = GameObject.Find("TopManager").GetComponent<TopManager>();
+            m_btnAction.onClick.AddListener(() => manager.OnPlayStageButton(TopSceneDirector.PLAYMODE.GUEST, signalID, stageID));
         }
 
         // 一旦押せないようにしておく
-        m_btnAction.interactable = false;
-        m_btnDestroy.interactable = false;
+        // m_btnDestroy.interactable = false;
+    }
+
+    /// <summary>
+    /// 参加取り消し・ログ削除処理
+    /// </summary>
+    public void OnDestroyButton()
+    {
+        // ゲスト削除処理
+        StartCoroutine(NetworkManager.Instance.DestroySignalGuest(
+            m_signalID,
+            result =>
+            {
+                if (!result) return;
+                SEManager.Instance.PlayCanselSE();
+                Destroy(gameObject);
+            }));
     }
 }

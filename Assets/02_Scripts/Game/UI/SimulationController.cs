@@ -9,7 +9,7 @@ public class SimulationController : MonoBehaviour
     PhysicsScene2D m_physicsScene;      // 物理演算の再生
     Transform m_obstacleParent;         // ステージの障害物
 
-    LineRenderer m_line;
+    [SerializeField] LineRenderer m_line;
     const int m_iMaxPhysicsFrame = 5;    // ラインを描画するフレーム数
 
     #region 息子関係
@@ -17,27 +17,21 @@ public class SimulationController : MonoBehaviour
     [SerializeField] GameObject m_rideCowPrefab;       // シュミレーション対象オブジェクト
     GameObject m_son;             // 息子
     GameObject m_ride_cow;        // 牛に乗った息子
-    public Vector3 m_kickDir;     // 対象オブジェクトのベクトル
-    public float m_kickPower;     // 力の大きさ
+    public Vector3 vecKick;
     #endregion
 
     GameObject m_player;
+    [SerializeField] bool m_isTargetGuest = false;
 
     private void Awake()
     {
+        vecKick = Vector3.zero;
+
         // オブジェクトを取得する
         m_obstacleParent = GameObject.Find("ObstacleParent").transform;
-        m_line = GameObject.Find("LineGuide").GetComponent<LineRenderer>();
         m_player = GameObject.Find("Player");
         m_son = GameObject.Find("Son");
         m_ride_cow = GameObject.Find("ride_cow");
-    }
-
-    void Start()
-    {
-        // 初期化
-        m_kickDir = Vector3.zero;
-        m_kickPower = 0;
 
         // シュミレーションで使用するシーンを作成する
         CreatePhysicsScene();
@@ -45,18 +39,20 @@ public class SimulationController : MonoBehaviour
 
     void Update()
     {
-        // まだ蹴っていない && 移動ベクトルが0以外のとき
-        if (!m_player.GetComponent<Player>().m_isKicked && m_kickDir != Vector3.zero)
+        if (m_isTargetGuest) return;
+
+        // まだ蹴っていない && ベクトルが0以外のとき
+        if (!m_player.GetComponent<Player>().m_isKicked && vecKick != Vector3.zero)
         {
             // 通常スキンの息子がアクティブの場合
             if (m_son.activeSelf)
             {
-                Simulation(m_somPrefab, m_son.transform.position, m_kickDir, m_kickPower);
+                Simulation(m_son.transform.position);
             }
             // 牛に乗った息子がアクティブの場合
             else if (m_ride_cow.activeSelf)
             {
-                Simulation(m_rideCowPrefab, m_ride_cow.transform.position, m_kickDir, m_kickPower);
+                Simulation(m_ride_cow.transform.position);
             }
         }
         else
@@ -71,6 +67,15 @@ public class SimulationController : MonoBehaviour
     /// </summary>
     void CreatePhysicsScene()
     {
+        // シーンが既に存在するかチェック
+        Scene scene = SceneManager.GetSceneByName("Simulation");
+        if (scene.IsValid())
+        {
+            m_simulationScene = scene;
+            m_physicsScene = m_simulationScene.GetPhysicsScene2D();
+            return;
+        }
+
         m_simulationScene = SceneManager.CreateScene("Simulation", new CreateSceneParameters(LocalPhysicsMode.Physics2D));
         m_physicsScene = m_simulationScene.GetPhysicsScene2D();
 
@@ -98,8 +103,20 @@ public class SimulationController : MonoBehaviour
     /// <param name="_somPrefab">シュミレーション対象オブジェクト</param>
     /// <param name="_pos"></param>
     /// <param name="_velocity">移動量</param>
-    void Simulation(GameObject _somPrefab, Vector2 _pos, Vector3 _dir, float _power)
+    public void Simulation(Vector2 _pos)
     {
+        GameObject _somPrefab;
+        // 通常スキンの息子がアクティブの場合
+        if (m_son.activeSelf)
+        {
+            _somPrefab = m_somPrefab;
+        }
+        // 牛に乗った息子がアクティブの場合
+        else
+        {
+            _somPrefab = m_rideCowPrefab;
+        }
+
         // 息子のゴースト作成(非表示にする)
         var ghost = Instantiate(_somPrefab, _pos, Quaternion.identity);
         ghost.tag = "Ghost";
@@ -115,13 +132,13 @@ public class SimulationController : MonoBehaviour
         if (m_son.activeSelf)
         {
             // ※シーンに移動させてから力を加える
-            ghost.GetComponent<Son>().DOKick(_dir.normalized, _power,true);
+            ghost.GetComponent<Son>().DOKick(vecKick, true);
         }
         // 牛に乗った息子がアクティブの場合
         else
         {
             // ※シーンに移動させてから力を加える
-            ghost.GetComponent<SonCow>().DOKick(_dir.normalized, _power);
+            ghost.GetComponent<SonCow>().DOKick(vecKick);
         }
 
         //---------------------------------------------------------

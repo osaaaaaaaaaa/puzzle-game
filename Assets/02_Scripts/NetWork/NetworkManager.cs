@@ -5,6 +5,7 @@ using System;
 using Newtonsoft.Json;
 using UnityEngine.Networking;
 using System.IO;
+using System.Linq;
 
 public class NetworkManager : MonoBehaviour
 {
@@ -42,15 +43,30 @@ public class NetworkManager : MonoBehaviour
     public int StageID { get; private set; } = 0;
     public int IconID { get; private set; } = 0;
     public int TotalScore { get; private set; } = 0;
-    public List<ShowStageResultResponse> StageResults { get; private set; } = new List<ShowStageResultResponse>();
     #endregion
+
+    #region ステージリザルト情報・救難信号情報
+    public List<ShowStageResultResponse> StageResults { get; private set; } = new List<ShowStageResultResponse>();
+    public List<ShowDistressSignalResponse> dSignalList { get; private set; } = new List<ShowDistressSignalResponse>();
+    #endregion
+
+    /// <summary>
+    /// string型からVector3型に変換する
+    /// </summary>
+    public Vector3 StringToVector3(string strVector)
+    {
+        // 不要な()を削除
+        strVector = strVector.Replace("(", "").Replace(")", "");
+        // ，で分割してxyzを取得する
+        string[] strValues = strVector.Split(",");
+
+        // float型に変換してVector3を作成する
+        return new Vector3(float.Parse(strValues[0]), float.Parse(strValues[1]), float.Parse(strValues[2]));
+    }
 
     /// <summary>
     /// ユーザー登録処理
     /// </summary>
-    /// <param name="name"></param>
-    /// <param name="result"></param>
-    /// <returns></returns>
     public IEnumerator StoreUser(string name, Action<bool> result)
     {
         // サーバーに送信するオブジェクトを作成
@@ -101,7 +117,6 @@ public class NetworkManager : MonoBehaviour
     /// <summary>
     /// ユーザー情報をローカルから読み込む
     /// </summary>
-    /// <returns></returns>
     public bool LoadUserData()
     {
         // ファイルの存在チェック
@@ -119,8 +134,6 @@ public class NetworkManager : MonoBehaviour
     /// <summary>
     /// ユーザー情報取得処理
     /// </summary>
-    /// <param name="result"></param>
-    /// <returns></returns>
     public IEnumerator GetUserData(Action<ShowUserResponse> result)
     {
         // 送信
@@ -153,9 +166,6 @@ public class NetworkManager : MonoBehaviour
     /// <summary>
     /// ユーザー情報更新処理
     /// </summary>
-    /// <param name="name"></param>
-    /// <param name="result"></param>
-    /// <returns></returns>
     public IEnumerator UpdateUser(string name, int achievement_id, int stage_id, int icon_id, Action<ErrorResponse> result)
     {
         // サーバーに送信するオブジェクトを作成
@@ -200,9 +210,6 @@ public class NetworkManager : MonoBehaviour
     /// <summary>
     /// 所持アイテム更新処理
     /// </summary>
-    /// <param name="name"></param>
-    /// <param name="result"></param>
-    /// <returns></returns>
     public IEnumerator UpdateUserItem(int itemID, int optionID, int allieAmount, Action<bool> result)
     {
         // サーバーに送信するオブジェクトを作成
@@ -236,8 +243,6 @@ public class NetworkManager : MonoBehaviour
     /// <summary>
     /// 所持アイテム取得処理
     /// </summary>
-    /// <param name="result"></param>
-    /// <returns></returns>
     public IEnumerator GetUserItem(int type, Action<ShowUserItemResponse[]> result)
     {
         // 送信
@@ -266,8 +271,6 @@ public class NetworkManager : MonoBehaviour
     /// <summary>
     /// フォローリスト取得処理
     /// </summary>
-    /// <param name="result"></param>
-    /// <returns></returns>
     public IEnumerator GetFollowList(Action<ShowUserFollowResponse[]> result)
     {
         // 送信
@@ -296,8 +299,6 @@ public class NetworkManager : MonoBehaviour
     /// <summary>
     /// おすすめのユーザーリスト取得処理
     /// </summary>
-    /// <param name="result"></param>
-    /// <returns></returns>
     public IEnumerator GetRecommendedUserList(Action<ShowUserRecommendedResponse[]> result)
     {
         // 送信
@@ -326,9 +327,6 @@ public class NetworkManager : MonoBehaviour
     /// <summary>
     /// フォロー登録処理
     /// </summary>
-    /// <param name="name"></param>
-    /// <param name="result"></param>
-    /// <returns></returns>
     public IEnumerator StoreUserFollow(int following_user_id, Action<ErrorResponse> result)
     {
         // サーバーに送信するオブジェクトを作成
@@ -363,9 +361,6 @@ public class NetworkManager : MonoBehaviour
     /// <summary>
     /// フォロー解除処理
     /// </summary>
-    /// <param name="name"></param>
-    /// <param name="result"></param>
-    /// <returns></returns>
     public IEnumerator DestroyUserFollow(int following_user_id, Action<bool> result)
     {
         // サーバーに送信するオブジェクトを作成
@@ -394,8 +389,6 @@ public class NetworkManager : MonoBehaviour
     /// <summary>
     /// ステージリザルトの取得処理
     /// </summary>
-    /// <param name="result"></param>
-    /// <returns></returns>
     public IEnumerator GetStageResults(Action<ShowStageResultResponse[]> result)
     {
         // 送信
@@ -425,7 +418,6 @@ public class NetworkManager : MonoBehaviour
     /// <summary>
     /// ステージクリア処理
     /// </summary>
-    /// <returns></returns>
     public IEnumerator UpdateStageClear(bool isUpdateUserStageID, ShowStageResultResponse clearData , Action<UpdateStageClearRequest> result)
     {
         // サーバーに送信するオブジェクトを作成
@@ -478,9 +470,7 @@ public class NetworkManager : MonoBehaviour
     /// <summary>
     /// ランキング取得処理
     /// </summary>
-    /// <param name="result"></param>
-    /// <returns></returns>
-    public IEnumerator GetRankingList(Action<ShowRankingResponse[]> result)
+    public IEnumerator GetRankingList(Action<ShowUserProfileResponse[]> result)
     {
         // 送信
         UnityWebRequest request = UnityWebRequest.Get(API_BASE_URL + "users/ranking/show?user_id=" + UserID);
@@ -493,7 +483,7 @@ public class NetworkManager : MonoBehaviour
         {
             // 通信が成功した場合、返ってきたJSONをオブジェクトに変換
             string resultJson = request.downloadHandler.text;
-            ShowRankingResponse[] response = JsonConvert.DeserializeObject<ShowRankingResponse[]>(resultJson);
+            ShowUserProfileResponse[] response = JsonConvert.DeserializeObject<ShowUserProfileResponse[]>(resultJson);
 
             // 呼び出し元のresult処理を呼び出す
             result?.Invoke(response);
@@ -508,9 +498,7 @@ public class NetworkManager : MonoBehaviour
     /// <summary>
     /// フォロー内でのランキング取得処理
     /// </summary>
-    /// <param name="result"></param>
-    /// <returns></returns>
-    public IEnumerator GetFollowRankingList(Action<ShowRankingResponse[]> result)
+    public IEnumerator GetFollowRankingList(Action<ShowUserProfileResponse[]> result)
     {
         // 送信
         UnityWebRequest request = UnityWebRequest.Get(API_BASE_URL + "users/follow/ranking/show?user_id=" + UserID);
@@ -523,7 +511,7 @@ public class NetworkManager : MonoBehaviour
         {
             // 通信が成功した場合、返ってきたJSONをオブジェクトに変換
             string resultJson = request.downloadHandler.text;
-            ShowRankingResponse[] response = JsonConvert.DeserializeObject<ShowRankingResponse[]>(resultJson);
+            ShowUserProfileResponse[] response = JsonConvert.DeserializeObject<ShowUserProfileResponse[]>(resultJson);
 
             // 呼び出し元のresult処理を呼び出す
             result?.Invoke(response);
@@ -536,10 +524,214 @@ public class NetworkManager : MonoBehaviour
     }
 
     /// <summary>
+    /// 自分が募集中(未クリア)の救難信号取得処理
+    /// </summary>
+    public IEnumerator GetDistressSignalList(Action<ShowDistressSignalResponse[]> result)
+    {
+        // 送信
+        UnityWebRequest request = UnityWebRequest.Get(API_BASE_URL + "distress_signals/index?user_id=" + UserID);
+
+        // 結果を受信するまで待機
+        yield return request.SendWebRequest();
+
+        if (request.result == UnityWebRequest.Result.Success
+            && request.responseCode == 200)
+        {
+            // 通信が成功した場合、返ってきたJSONをオブジェクトに変換
+            string resultJson = request.downloadHandler.text;
+            ShowDistressSignalResponse[] response = JsonConvert.DeserializeObject<ShowDistressSignalResponse[]>(resultJson);
+            dSignalList = new (response);
+
+            // 呼び出し元のresult処理を呼び出す
+            result?.Invoke(response);
+        }
+        else
+        {
+            // 呼び出し元のresult処理を呼び出す
+            result?.Invoke(null);
+        }
+    }
+
+    /// <summary>
+    /// 救難信号登録処理
+    /// </summary>
+    public IEnumerator StoreDistressSignal(int stage_id, Action<ShowDistressSignalResponse> result)
+    {
+        // サーバーに送信するオブジェクトを作成
+        StoreDistressSignalRequest requestData = new StoreDistressSignalRequest();
+        requestData.UserID = UserID;
+        requestData.StageID = stage_id;
+        // サーバーに送信オブジェクトをJSONに変換
+        string json = JsonConvert.SerializeObject(requestData);
+        // 送信
+        UnityWebRequest request = UnityWebRequest.Post(API_BASE_URL + "distress_signals/store", json, "application/json");
+
+        // 結果を受信するまで待機
+        yield return request.SendWebRequest();
+
+        if (request.result == UnityWebRequest.Result.Success
+            && request.responseCode == 200)
+        {
+            // 通信が成功した場合、返ってきたJSONをオブジェクトに変換
+            string resultJson = request.downloadHandler.text;
+            ShowDistressSignalResponse response = JsonConvert.DeserializeObject<ShowDistressSignalResponse>(resultJson);
+            dSignalList.Add(response);
+            result?.Invoke(response);
+        }
+        else
+        {
+            result?.Invoke(null);
+        }
+    }
+
+    /// <summary>
+    /// ゲスト登録（救難信号参加）・配置情報更新処理
+    /// </summary>
+    public IEnumerator UpdateSignalGuest(int signalID,string pos, string vec, Action<bool> result)
+    {
+        // サーバーに送信するオブジェクトを作成
+        UpdateSignalGuestRequest requestData = new UpdateSignalGuestRequest();
+        requestData.SignalID = signalID;
+        requestData.UserID = UserID;
+        requestData.Pos = pos;
+        requestData.Vector = vec;
+        // サーバーに送信オブジェクトをJSONに変換
+        string json = JsonConvert.SerializeObject(requestData);
+        // 送信
+        UnityWebRequest request = UnityWebRequest.Post(API_BASE_URL + "distress_signals/guest/update", json, "application/json");
+
+        // 結果を受信するまで待機
+        yield return request.SendWebRequest();
+
+        bool isSuccess = false;
+        if (request.result == UnityWebRequest.Result.Success
+            && request.responseCode == 200)
+        {
+            isSuccess = true;
+        }
+
+        result?.Invoke(isSuccess);
+    }
+
+    /// <summary>
+    /// 募集中or募集した救難信号の削除処理
+    /// </summary>
+    public IEnumerator DestroyDistressSignal(int signalID, Action<bool> result)
+    {
+        // サーバーに送信するオブジェクトを作成
+        DestroySignalGuestRequest requestData = new DestroySignalGuestRequest();
+        requestData.SignalID = signalID;
+        // サーバーに送信オブジェクトをJSONに変換
+        string json = JsonConvert.SerializeObject(requestData);
+        // 送信
+        UnityWebRequest request = UnityWebRequest.Post(API_BASE_URL + "distress_signals/destroy", json, "application/json");
+
+        // 結果を受信するまで待機
+        yield return request.SendWebRequest();
+        bool isSuccess = false;
+
+        if (request.result == UnityWebRequest.Result.Success
+            && request.responseCode == 200)
+        {
+            isSuccess = true;
+
+            // 自分が募集中の救難信号リストから削除したい要素を検索して削除する
+            ShowDistressSignalResponse dSignal = dSignalList.FirstOrDefault(item => item.SignalID == signalID);
+            if (dSignal != null) dSignalList.Remove(dSignal);
+        }
+
+        // 呼び出し元のresult処理を呼び出す
+        result?.Invoke(isSuccess);
+    }
+
+    /// <summary>
+    /// ゲスト削除処理
+    /// </summary>
+    public IEnumerator DestroySignalGuest(int signalID, Action<bool> result)
+    {
+        // サーバーに送信するオブジェクトを作成
+        DestroySignalGuestRequest requestData = new DestroySignalGuestRequest();
+        requestData.SignalID = signalID;
+        requestData.UserID = UserID;
+        // サーバーに送信オブジェクトをJSONに変換
+        string json = JsonConvert.SerializeObject(requestData);
+        // 送信
+        UnityWebRequest request = UnityWebRequest.Post(API_BASE_URL + "distress_signals/guest/destroy", json, "application/json");
+
+        // 結果を受信するまで待機
+        yield return request.SendWebRequest();
+        bool isSuccess = false;
+
+        if (request.result == UnityWebRequest.Result.Success
+            && request.responseCode == 200)
+        {
+            isSuccess = true;
+        }
+
+        // 呼び出し元のresult処理を呼び出す
+        result?.Invoke(isSuccess);
+    }
+
+    /// <summary>
+    /// 救難信号に参加しているユーザーのプロフィール取得
+    /// </summary>
+    public IEnumerator GetSignalUserProfile(int signalID,Action<ShowUserProfileResponse[]> result)
+    {
+        // 送信
+        UnityWebRequest request = UnityWebRequest.Get(API_BASE_URL + "distress_signals/user/show?d_signal_id="+ signalID + "&user_id="+ UserID);
+
+        // 結果を受信するまで待機
+        yield return request.SendWebRequest();
+
+        if (request.result == UnityWebRequest.Result.Success
+            && request.responseCode == 200)
+        {
+            // 通信が成功した場合、返ってきたJSONをオブジェクトに変換
+            string resultJson = request.downloadHandler.text;
+            ShowUserProfileResponse[] response = JsonConvert.DeserializeObject<ShowUserProfileResponse[]>(resultJson);
+
+            // 呼び出し元のresult処理を呼び出す
+            result?.Invoke(response);
+        }
+        else
+        {
+            // 呼び出し元のresult処理を呼び出す
+            result?.Invoke(null);
+        }
+    }
+
+    /// <summary>
+    /// 救難信号に参加しているゲストの配置情報を取得する
+    /// </summary>
+    public IEnumerator GetSignalGuest(int signalID, Action<ShowSignalGuestResponse[]> result)
+    {
+        // 送信
+        UnityWebRequest request = UnityWebRequest.Get(API_BASE_URL + "distress_signals/guest/show?d_signal_id=" + signalID);
+
+        // 結果を受信するまで待機
+        yield return request.SendWebRequest();
+
+        if (request.result == UnityWebRequest.Result.Success
+            && request.responseCode == 200)
+        {
+            // 通信が成功した場合、返ってきたJSONをオブジェクトに変換
+            string resultJson = request.downloadHandler.text;
+            ShowSignalGuestResponse[] response = JsonConvert.DeserializeObject<ShowSignalGuestResponse[]>(resultJson);
+
+            // 呼び出し元のresult処理を呼び出す
+            result?.Invoke(response);
+        }
+        else
+        {
+            // 呼び出し元のresult処理を呼び出す
+            result?.Invoke(null);
+        }
+    }
+
+
+    /// <summary>
     /// 救難信号のログ(ホスト)取得処理
     /// </summary>
-    /// <param name="result"></param>
-    /// <returns></returns>
     public IEnumerator GetSignalHostLogList(Action<ShowHostLogResponse[]> result)
     {
         // 送信
@@ -568,12 +760,10 @@ public class NetworkManager : MonoBehaviour
     /// <summary>
     /// 救難信号のログ(ゲスト)取得処理
     /// </summary>
-    /// <param name="result"></param>
-    /// <returns></returns>
     public IEnumerator GetSignalGuestLogList(Action<ShowGuestLogResponse[]> result)
     {
         // 送信
-        UnityWebRequest request = UnityWebRequest.Get(API_BASE_URL + "distress_signals/guest_log?user_id=" + 1);
+        UnityWebRequest request = UnityWebRequest.Get(API_BASE_URL + "distress_signals/guest_log?user_id=" + UserID);
 
         // 結果を受信するまで待機
         yield return request.SendWebRequest();
@@ -598,8 +788,6 @@ public class NetworkManager : MonoBehaviour
     /// <summary>
     /// ランダムに救難信号取得処理
     /// </summary>
-    /// <param name="result"></param>
-    /// <returns></returns>
     public IEnumerator GetRndSignalList(Action<ShowRndSignalResponse[]> result)
     {
         // 送信
@@ -624,5 +812,4 @@ public class NetworkManager : MonoBehaviour
             result?.Invoke(null);
         }
     }
-
 }

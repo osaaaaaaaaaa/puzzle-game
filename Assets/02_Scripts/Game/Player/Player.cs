@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using DG.Tweening;
 
 public class Player : MonoBehaviour
 {
@@ -10,8 +9,6 @@ public class Player : MonoBehaviour
     [SerializeField] GameObject m_sonController;
     [SerializeField] GameObject m_son;
     [SerializeField] GameObject m_ride_cow;
-    public float m_sonOffsetX;    // 息子とのオフセット
-    public float m_sonCowOffsetX; // 息子とのオフセット
     #endregion
 
     #region プレイヤー関係
@@ -39,6 +36,11 @@ public class Player : MonoBehaviour
     // 蹴り飛ばすときに乗算する値
     public int m_mulPower = 50;
 
+    /// <summary>
+    /// 蹴るときのベクトル
+    /// </summary>
+    public Vector3 VectorKick { get; private set; }
+
     private void Start()
     {
         m_canDragPlayer = false;
@@ -49,8 +51,6 @@ public class Player : MonoBehaviour
         uiController = GameObject.Find("UiController").GetComponent<UiController>();
         m_cameraController = GameObject.Find("CameraController").GetComponent<CameraController>();
         m_audioSouse = GetComponent<AudioSource>();
-
-        m_sonOffsetX = (transform.position - m_son.transform.position).x;
     }
 
     // Update is called once per frame
@@ -60,8 +60,9 @@ public class Player : MonoBehaviour
         if(Input.GetKey(KeyCode.S)) UnityEditor.EditorApplication.isPaused = true;      // エディタを一時停止する
 #endif
 
-        // ゲーム開始していない || ポーズ中の場合
-        if (!m_gameManager.m_isEndAnim || m_gameManager.m_isPause || m_gameManager.m_isEndGame) return;
+        // ゲーム開始していない || ポーズ中 || ゲームが終了した || ゲームモードが編集完了モード
+        if (!m_gameManager.m_isEndAnim || m_gameManager.m_isPause 
+            || m_gameManager.m_isEndGame || m_gameManager.GameMode == GameManager.GAMEMODE.EditDone) return;
 
         // プレイヤーをドラッグしている場合
         if (m_canDragPlayer)
@@ -82,7 +83,7 @@ public class Player : MonoBehaviour
         else
         {
             // 息子を固定する
-            m_son.GetComponent<Son>().Reset();
+            m_son.GetComponent<Son>().ResetSon();
             m_ride_cow.GetComponent<SonCow>().ResetSonCow();
 
             if(m_arrow != null)
@@ -99,6 +100,8 @@ public class Player : MonoBehaviour
         // 画面タッチした&&現在矢印を生成できる場合
         if (Input.GetMouseButtonDown(0) && m_isKicked == false)
         {
+            Debug.Log(m_gameManager.GameMode);
+
             // タッチした場所にRayを飛ばす
             Vector2 worldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             RaycastHit2D hit2d = Physics2D.Raycast(worldPos, Vector2.zero);
@@ -130,7 +133,7 @@ public class Player : MonoBehaviour
                 m_arrow = Instantiate(m_prefabArrow, pivotSon, Quaternion.identity);
 
                 // リセットボタンを非表示にする
-                uiController.SetActiveButtonReset(false);
+                if (m_gameManager.GameMode == GameManager.GAMEMODE.Play) uiController.SetActiveButtonReset(false);
             }
         }
 
@@ -183,6 +186,12 @@ public class Player : MonoBehaviour
         float power = new float();
         power = m_arrow.GetComponent<Arrow>().dis * m_mulPower;
 
+        if(m_gameManager.GameMode == GameManager.GAMEMODE.Edit)
+        {
+            // 蹴るときのベクトルを保存する(ゲスト用)
+            VectorKick = new Vector3(dir.x * power, dir.y * power);
+        }
+
         // 母親のアニメーションを再生する
         GetComponent<MomAnimController>().PlayKickAnim();  // 蹴るアニメ
 
@@ -191,7 +200,7 @@ public class Player : MonoBehaviour
 
         // 息子を蹴り飛ばす処理
         Debug.Log("方角：" + dir + " , パワー：" + power);
-
+        Debug.Log("ベクトル：" + new Vector3(dir.x * power, dir.y * power).ToString());
         if (m_son.activeSelf)
         {
             m_son.GetComponent<Son>().DOKick(dir, power, true);

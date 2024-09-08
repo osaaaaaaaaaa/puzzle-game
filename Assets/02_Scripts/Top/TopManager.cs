@@ -9,6 +9,8 @@ using UnityEngine.AddressableAssets;
 
 public class TopManager : MonoBehaviour
 {
+    [SerializeField] UIUserManager m_uiUserManager;
+
     [SerializeField] GameObject m_parent_top;
     [SerializeField] GameObject m_ui_startTextParent;
     [SerializeField] Image m_panelImage;                 // 非表示にするパネルのイメージ
@@ -99,6 +101,11 @@ public class TopManager : MonoBehaviour
         }
         else
         {
+            // 自分が募集中の救難信号を取得する
+            StartCoroutine(NetworkManager.Instance.GetDistressSignalList(
+                result => { }
+                ));
+
             // ステージのリザルト情報を取得する
             StartCoroutine(NetworkManager.Instance.GetStageResults(
                 result =>
@@ -126,10 +133,12 @@ public class TopManager : MonoBehaviour
     /// <summary>
     /// ステージシーンに遷移する
     /// </summary>
-    public void OnPlayStageButton()
+    public void OnPlayStageButton(TopSceneDirector.PLAYMODE playMode,int signalID, int id)
     {
         if (isOnStageButton) return;
 
+        stageID = id == 0 ? stageID : id;   // ソロで遊ぶ場合(id=0)は更新しない
+        TopSceneDirector.Instance.SetPlayMode(playMode, signalID);
         isOnStageButton = true;
         m_boxStage.GetComponent<StageBox>().OnCloseButton();
 
@@ -149,11 +158,7 @@ public class TopManager : MonoBehaviour
     {
         if (isOnStageButton) return;
 
-        // 自信の救難信号(募集中)のリストを取得する
-
-
-
-        GetComponent<UserController>().UpdateUserDataUI(true, m_parent_top);
+        m_uiUserManager.UpdateUserDataUI(true, m_parent_top);
     }
 
     /// <summary>
@@ -195,7 +200,7 @@ public class TopManager : MonoBehaviour
     {
         if (isOnStageButton) return;
 
-        GetComponent<UserController>().ResetErrorText();
+        m_uiUserManager.ResetErrorText();
         m_parent_top.transform.DOLocalMove(new Vector3(m_parent_top.transform.localPosition.x, 0, 0), 0.5f).SetEase(Ease.Linear);
     }
 

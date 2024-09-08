@@ -14,12 +14,14 @@ public class GameManager : MonoBehaviour
 
     // UIコントローラー
     [SerializeField] UiController m_UiController;
-    // SEマネージャー
-    [SerializeField] SEManager m_seManager;
     // プレイヤー
     GameObject m_player;
     // カメラコントローラ
     CameraController m_cameraController;
+
+    // ゲスト
+    [SerializeField] GameObject m_guestSetPrefab;
+    List<Guest> m_guestList;
 
     #region ステージの進捗情報
     bool m_isMedal1;
@@ -39,8 +41,44 @@ public class GameManager : MonoBehaviour
     public bool m_isEndAnim;   // アニメーションが終了したかどうか
     #endregion
 
+    /// <summary>
+    /// ゲームモード
+    /// </summary>
+    public enum GAMEMODE
+    {
+        Play,       // 通常通りに遊べる
+        Edit,       // ゲストの編集モード
+        EditDone    // ゲストの編集完了モード
+    }
+    public GAMEMODE GameMode { get; private set; }
+
     private void Awake()
     {
+        m_guestList = new List<Guest>();
+
+        // ゲームモードの初期化
+        if (TopSceneDirector.Instance != null)
+        {
+            var playMode = TopSceneDirector.Instance.PlayMode;
+            var gameMode = playMode != TopSceneDirector.PLAYMODE.GUEST ? GAMEMODE.Play : GAMEMODE.EditDone;
+            GameMode = gameMode;
+
+            // 参加しているゲストの配置情報を取得する
+            StartCoroutine(NetworkManager.Instance.GetSignalGuest(
+                TopSceneDirector.Instance.DistressSignalID,
+                result =>
+                {
+                    if (result == null) return;
+
+                    // ゲストを生成する
+                }));
+        }
+        else
+        {
+            GameMode = GAMEMODE.Play;
+        }
+
+        // パラメータ初期化
         m_isEndAnim = false;
         m_isEndGame = false;
         m_isMedal1 = false;
@@ -57,16 +95,64 @@ public class GameManager : MonoBehaviour
         GameObject.Find("SonController").GetComponent<SonController>().InitMemberVariable();
 
         // 前回メダルを取得している場合は表示を変更する 、 リザルトが存在しない場合は必ずfalse
-        bool isMedal1 = NetworkManager.Instance.StageResults.Count < TopManager.stageID ? 
-            false : NetworkManager.Instance.StageResults[TopManager.stageID - 1].IsMedal1; 
-        bool isMedal2 = NetworkManager.Instance.StageResults.Count < TopManager.stageID ? 
-            false : NetworkManager.Instance.StageResults[TopManager.stageID - 1].IsMedal2;
-        GameObject.Find("Medal1").GetComponent<Medal>().InitMemberVariable(isMedal1);
-        GameObject.Find("Medal2").GetComponent<Medal>().InitMemberVariable(isMedal2);
+        if (TopSceneDirector.Instance != null)
+        {
+            bool isMedal1 = NetworkManager.Instance.StageResults.Count < TopManager.stageID ?
+            false : NetworkManager.Instance.StageResults[TopManager.stageID - 1].IsMedal1;
+            bool isMedal2 = NetworkManager.Instance.StageResults.Count < TopManager.stageID ?
+                false : NetworkManager.Instance.StageResults[TopManager.stageID - 1].IsMedal2;
+            GameObject.Find("Medal1").GetComponent<Medal>().InitMemberVariable(isMedal1);
+            GameObject.Find("Medal2").GetComponent<Medal>().InitMemberVariable(isMedal2);
+        }
+        else
+        {
+            GameObject.Find("Medal1").GetComponent<Medal>().InitMemberVariable(false);
+            GameObject.Find("Medal2").GetComponent<Medal>().InitMemberVariable(false);
+        }
+
+        if (TopSceneDirector.Instance != null)
+        {
+            if (TopSceneDirector.Instance.PlayMode != TopSceneDirector.PLAYMODE.SOLO)
+            {
+                // 参加しているゲストの配置情報を取得する
+                StartCoroutine(NetworkManager.Instance.GetSignalGuest(
+                    TopSceneDirector.Instance.DistressSignalID,
+                    result =>
+                    {
+                        if (result == null) return;
+
+                        foreach (ShowSignalGuestResponse user in result)
+                        {
+                            // 登録してまだ設置が完了していない場合はスキップ
+                            if (NetworkManager.Instance.StringToVector3(user.Pos) == Vector3.zero) continue;
+
+                            Vector3 pos = NetworkManager.Instance.StringToVector3(user.Pos);
+                            Vector3 vec = NetworkManager.Instance.StringToVector3(user.Vector);
+
+                            if (user.UserID == NetworkManager.Instance.UserID)
+                            {
+                                // 自分自身の場合は最後に登録した場所へ移動させる
+                                GameObject.Find("Player").transform.position = pos;
+                                continue;
+                            }
+
+                            // ゲストを生成する
+                            GameObject stage = GameObject.Find("Stage");
+                            GameObject guestSet = Instantiate(m_guestSetPrefab, stage.transform);
+                            guestSet.transform.position = Vector3.zero;
+                            GameObject guest = guestSet.transform.GetChild(0).gameObject;
+                            guest.GetComponent<Guest>().InitMemberVariable(user.UserName,pos, vec);
+
+                            // 生成して初期化が済んだらリストに追加
+                            m_guestList.Add(guest.GetComponent<Guest>());
+                        }
+                }));
+            }
+        }
 #endif
 
         // トップ画面を非表示にする
-        if (Singleton.Instance != null) Singleton.Instance.ChangeActive(false);
+        if (TopSceneDirector.Instance != null) TopSceneDirector.Instance.ChangeActive(false);
     }
 
     // Start is called before the first frame update
@@ -88,12 +174,42 @@ public class GameManager : MonoBehaviour
         GameObject.Find("SonController").GetComponent<SonController>().InitMemberVariable();
 
         // 前回メダルを取得している場合は表示を変更する 、 リザルトが存在しない場合は必ずfalse
-        bool isMedal1 = NetworkManager.Instance.StageResults.Count < TopManager.stageID ? 
-            false : NetworkManager.Instance.StageResults[TopManager.stageID - 1].IsMedal1; 
-        bool isMedal2 = NetworkManager.Instance.StageResults.Count < TopManager.stageID ? 
+        bool isMedal1 = NetworkManager.Instance.StageResults.Count < TopManager.stageID ?
+            false : NetworkManager.Instance.StageResults[TopManager.stageID - 1].IsMedal1;
+        bool isMedal2 = NetworkManager.Instance.StageResults.Count < TopManager.stageID ?
             false : NetworkManager.Instance.StageResults[TopManager.stageID - 1].IsMedal2;
         GameObject.Find("Medal1").GetComponent<Medal>().InitMemberVariable(isMedal1);
         GameObject.Find("Medal2").GetComponent<Medal>().InitMemberVariable(isMedal2);
+
+        if (TopSceneDirector.Instance.PlayMode != TopSceneDirector.PLAYMODE.SOLO)
+        {
+            // 参加しているゲストの配置情報を取得する
+            StartCoroutine(NetworkManager.Instance.GetSignalGuest(
+                TopSceneDirector.Instance.DistressSignalID,
+                result =>
+                {
+                    if (result == null) return;
+
+                    foreach (ShowSignalGuestResponse user in result)
+                    {
+                        // 登録してまだ設置が完了していない場合はスキップ
+                        if (NetworkManager.Instance.StringToVector3(user.Pos) == Vector3.zero) continue;
+
+                        // ゲストを生成する
+                        GameObject stage = GameObject.Find("Stage");
+                        GameObject guestSet = Instantiate(m_guestSetPrefab, stage.transform);
+                        guestSet.transform.position = Vector3.zero;
+
+                        GameObject guest = guestSet.transform.GetChild(0).gameObject;
+                        guest.GetComponent<Guest>().InitMemberVariable(user.UserName,
+                            NetworkManager.Instance.StringToVector3(user.Pos), 
+                            NetworkManager.Instance.StringToVector3(user.Vector));
+
+                        // 生成して初期化が済んだらリストに追加
+                        m_guestList.Add(guest.GetComponent<Guest>());
+                    }
+                }));
+        }
 #endif
 
         // 壁を非表示にする
@@ -138,6 +254,9 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
+        if (TopSceneDirector.Instance == null) return;
+        if (TopSceneDirector.Instance.PlayMode == TopSceneDirector.PLAYMODE.GUEST) return;
+
         // カウントダウン
         if (m_isEndAnim && !m_isEndGame)
         {
@@ -183,7 +302,7 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void GameOver()
     {
-        m_seManager.PlayGameOverSE();
+        SEManager.Instance.PlayGameOverSE();
         m_UiController.SetGameOverUI(m_isMedal1, m_isMedal2, m_gameTimer, GetResultScore(m_gameTimer), false);
     }
 
@@ -258,7 +377,7 @@ public class GameManager : MonoBehaviour
         effectR.transform.localPosition = m_offsetEffectR;
         effectR.transform.localScale = new Vector3(-effectR.transform.localScale.x, effectR.transform.localScale.y, effectR.transform.localScale.z);
 
-        if(m_cameraController.m_cameraMode == CameraController.CAMERAMODE.ZOOMOUT)
+        if (m_cameraController.m_cameraMode == CameraController.CAMERAMODE.ZOOMOUT)
         {
             // 現在のカメラがズームアウト状態の場合
             effectL.transform.localScale *= 2;
@@ -267,7 +386,7 @@ public class GameManager : MonoBehaviour
             effectR.transform.localPosition *= 2;
         }
 
-        m_seManager.PlayStageClearSE();
+        SEManager.Instance.PlayStageClearSE();
     }
 
     /// <summary>
@@ -312,6 +431,12 @@ public class GameManager : MonoBehaviour
         m_gameTimer -= 2f;
         m_UiController.GetComponent<UiController>().GenerateSubTimeText(2);
         m_player.GetComponent<Player>().ResetPlayer();
+
+        // ゲストの状態もリセット
+        foreach(Guest guest in m_guestList)
+        {
+            guest.ResetGuest();
+        }
     }
 
     public void UpdateMedalFrag(int medarID)
@@ -325,5 +450,28 @@ public class GameManager : MonoBehaviour
                 m_isMedal2 = true;
                 break;
         }
+    }
+
+    /// <summary>
+    /// ゲームモード更新
+    /// </summary>
+    public void UpdateGameMode(GAMEMODE mode)
+    {
+        GameMode = mode;
+    }
+
+    /// <summary>
+    /// ゲストの配置情報を取得
+    /// </summary>
+    /// <returns></returns>
+    public UpdateSignalGuestRequest GetGuestEditData()
+    {
+        return new UpdateSignalGuestRequest()
+        {
+            SignalID = TopSceneDirector.Instance.DistressSignalID,
+            UserID = NetworkManager.Instance.UserID,
+            Pos = m_player.transform.position.ToString(),
+            Vector = m_player.GetComponent<Player>().VectorKick.ToString()
+        };
     }
 }

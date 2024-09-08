@@ -16,11 +16,30 @@ public class SignalBar : MonoBehaviour
 
     public void UpdateSignalBar(int signalID, int elapsed_days, Sprite icon, bool isAgreement, string hostName, int stageID, int guestCnt)
     {
+        m_signalID = signalID;
         m_textDays.text = elapsed_days + "日前";
         m_icon.sprite = icon;
         m_heart.SetActive(isAgreement);
         m_textHostName.text = hostName;
         m_textStageID.text = "ステージ  " + stageID;
         m_textGuestCnt.text = "" + guestCnt;
+    }
+
+    /// <summary>
+    /// 救難信号のボタンを押して、ゲストとして参加する処理
+    /// </summary>
+    public void OnSignalBarButton()
+    {
+        // ゲスト登録(救難信号参加)処理
+        StartCoroutine(NetworkManager.Instance.UpdateSignalGuest(
+            m_signalID,
+            Vector3.zero.ToString(),
+            Vector3.zero.ToString(),
+            result =>
+            {
+                if (!result) return;
+                SEManager.Instance.PlayButtonSE();
+                Destroy(gameObject);
+            }));
     }
 }

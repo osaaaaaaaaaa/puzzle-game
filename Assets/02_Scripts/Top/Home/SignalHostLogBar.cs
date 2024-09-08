@@ -12,9 +12,11 @@ public class SignalHostLogBar : MonoBehaviour
     [SerializeField] Button m_btnAction;                  // ステージに遷移or無効化になるボタン
     [SerializeField] Text m_textAction;                   // 上のボタンのテキスト
     [SerializeField] Button m_btnDestroy;                 // 破棄するボタン
+    int m_signalID;
 
     public void UpdateLog(int signalID,DateTime created_at, int stageID, int guestCnt, bool isStageClear)
     {
+        m_signalID = signalID;
         m_textDay.text = created_at.ToString("yyyy/MM/dd HH:mm:ss");
         m_textStageID.text = "ステージ  " + stageID;
         m_textGuestCnt.text = "" + guestCnt;
@@ -27,11 +29,26 @@ public class SignalHostLogBar : MonoBehaviour
         else
         {
             m_textAction.text = "ステージへ移動";
-            // 遷移イベント設定
-        }
 
-        // 一旦押せないようにしておく
-        m_btnAction.interactable = false;
-        m_btnDestroy.interactable = false;
+            // 遷移イベント設定
+            var manager = GameObject.Find("TopManager").GetComponent<TopManager>();
+            m_btnAction.onClick.AddListener(() => manager.OnPlayStageButton(TopSceneDirector.PLAYMODE.HOST, signalID ,stageID));
+        }
+    }
+
+    /// <summary>
+    /// 募集取り消し、募集したログを削除処理
+    /// </summary>
+    public void OnDestroyButton()
+    {
+        // 救難信号削除処理
+        StartCoroutine(NetworkManager.Instance.DestroyDistressSignal(
+            m_signalID,
+            result =>
+            {
+                if (!result) return;
+                SEManager.Instance.PlayCanselSE();
+                Destroy(gameObject);
+            }));
     }
 }

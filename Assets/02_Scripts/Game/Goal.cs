@@ -13,13 +13,14 @@ public class Goal : MonoBehaviour
     UiController m_uiController;
 
     // カウンター
+    const int TIME_LIMIT_MAX = 3;
     int m_timer;
 
     bool isInit = false;
 
     private void Start()
     {
-        m_timer = 6;
+        m_timer = TIME_LIMIT_MAX;
     }
 
     private void Update()
@@ -39,7 +40,8 @@ public class Goal : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (m_gameManager.m_isEndGame || collision.gameObject.tag == "Ghost" 
-            || collision.gameObject.layer != 6 && collision.gameObject.layer != 10) return;
+            || collision.gameObject.layer != 6 && collision.gameObject.layer != 10
+            || TopSceneDirector.Instance.PlayMode == TopSceneDirector.PLAYMODE.GUEST) return;
 
         if(m_textCounter == null)
         {
@@ -78,7 +80,7 @@ public class Goal : MonoBehaviour
 
             // カウントキャンセル
             CancelInvoke("StartCountDown");
-            m_timer = 3;
+            m_timer = TIME_LIMIT_MAX;
         }
         else
         {
@@ -94,7 +96,7 @@ public class Goal : MonoBehaviour
         // カウントキャンセル
         m_textCounter.SetActive(false);
         CancelInvoke("StartCountDown");
-        m_timer = 3;
+        m_timer = TIME_LIMIT_MAX;
     }
 
     /// <summary>

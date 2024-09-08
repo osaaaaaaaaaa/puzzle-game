@@ -8,6 +8,8 @@ public class SonController : MonoBehaviour
     [SerializeField] GameObject m_son_run;
     [SerializeField] GameObject m_ride_cow;
 
+    public GameObject Son { get { return m_son; } }
+
     Vector3 m_offsetRun;    // 走るテクスチャのオフセット
 
     /// <summary>
@@ -24,6 +26,22 @@ public class SonController : MonoBehaviour
     private void Start()
     {
         m_offsetRun = m_son_run.transform.position - m_son.transform.position;
+    }
+
+    /// <summary>
+    /// 元のテクスチャに戻す
+    /// </summary>
+    public void ChangeDefaultTexture()
+    {
+        if (m_son_run.activeSelf)
+        {
+            m_son.transform.position = m_son_run.transform.position;
+        }
+
+        // テクスチャを切り替える
+        m_son.SetActive(true);
+        m_son_run.SetActive(false);
+        m_ride_cow.SetActive(false);
     }
 
     /// <summary>
@@ -76,7 +94,7 @@ public class SonController : MonoBehaviour
         {
             m_son_run.SetActive(false);
             m_son.SetActive(true);
-            m_son.GetComponent<Son>().Reset();
+            m_son.GetComponent<Son>().ResetSon();
         }
     }
 
@@ -95,6 +113,22 @@ public class SonController : MonoBehaviour
                 m_son_run.SetActive(false);
                 m_son.SetActive(false);
                 break;
+        }
+    }
+
+    /// <summary>
+    /// ゲストが    シュミレーションするときに使用する情報
+    /// </summary>
+    public Vector3 GetSonOfset()
+    {
+        switch (m_startSonTex)
+        {
+            case STARTSON_TEXTURE.SON:
+                return m_son.GetComponent<Son>().m_offset;
+            case STARTSON_TEXTURE.SON_COW:
+                return m_ride_cow.GetComponent<SonCow>().m_offset;
+            default:
+                return Vector3.zero;
         }
     }
 }

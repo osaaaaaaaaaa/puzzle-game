@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -14,6 +15,10 @@ public class StageBox : MonoBehaviour
     [SerializeField] Image m_imgRank;
     [SerializeField] List<Sprite> m_texRanks;
     [SerializeField] Button m_btnRecruiting;
+    [SerializeField] Text m_textRecruiting;
+
+    [SerializeField] TopManager managerTop;
+    ShowDistressSignalResponse m_distressSignal;
 
     public void InitStatus(ShowStageResultResponse resultData)
     {
@@ -49,14 +54,23 @@ public class StageBox : MonoBehaviour
         m_imgRank.color = new Color(1, 1, 1, 1);
         m_imgRank.sprite = TopManager.GetScoreRank(m_texRanks, resultData.Score);
 
-        // 募集ボタンを編集 (募集済の場合=> text = 募集中 & 押せなくする)
-        // m_btnRecruiting
+        // 募集ボタンを編集 (募集済の場合=> textを募集中 & ボタンを押せなくする)
+        m_distressSignal = NetworkManager.Instance.dSignalList.FirstOrDefault(item => item.StageID == TopManager.stageID);    // リストから検索して取得
+        m_textRecruiting.text = m_distressSignal != null ? "募集中" : "募集する";
+        m_btnRecruiting.interactable = m_distressSignal != null ? false : true;
+
+        if(m_distressSignal != null)
+        {
+            Debug.Log("信号ID:" + m_distressSignal.SignalID);
+            Debug.Log("ステージID:" + m_distressSignal.StageID);
+        }
 
         gameObject.SetActive(true);
     }
 
     public void OnCloseButton()
     {
+        SEManager.Instance.PlayCanselSE();
         m_medalContainers[0].sprite = m_texMedalContainer;
         m_medalContainers[1].sprite = m_texMedalContainer;
         m_textClearTime.text = "クリアタイム";
@@ -64,5 +78,29 @@ public class StageBox : MonoBehaviour
         m_imgRank.color = new Color(1, 1, 1, 0);
         m_imgRank.sprite = null;
         gameObject.SetActive(false);
+    }
+
+    public void OnRecruiting()
+    {
+        SEManager.Instance.PlayButtonSE();
+        // 救難信号登録処理
+        StartCoroutine(NetworkManager.Instance.StoreDistressSignal(
+            TopManager.stageID,
+            result =>
+            {
+                if (result == null) return;
+                m_textRecruiting.text = "募集中";
+                m_btnRecruiting.interactable = false;
+                m_distressSignal = result;
+            }));
+    }
+
+    public void OnTransitionButton()
+    {
+        // 募集中の場合はホストモード、募集していない場合はソロモード
+        var mode = m_distressSignal != null ? TopSceneDirector.PLAYMODE.HOST : TopSceneDirector.PLAYMODE.SOLO;
+        int signalID = m_distressSignal != null ? m_distressSignal.SignalID : 0;
+        int stageID = m_distressSignal != null ? m_distressSignal.StageID : 0;
+        managerTop.OnPlayStageButton(mode, signalID, stageID);
     }
 }

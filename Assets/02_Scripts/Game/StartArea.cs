@@ -6,6 +6,11 @@ public class StartArea : MonoBehaviour
 {
     private void Start()
     {
+        if (TopSceneDirector.Instance != null)
+        {
+            if (TopSceneDirector.Instance.PlayMode == TopSceneDirector.PLAYMODE.GUEST) return;
+        }
+
         // äiî[êÊ
         List<Vector2> points = new List<Vector2>();
 

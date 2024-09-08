@@ -66,7 +66,7 @@ public class Arrow : MonoBehaviour
                 // isKickをfalse
                 isKick = false;
                 // シュミレーションの描画OFF
-                m_lineGuide.GetComponent<SimulationController>().m_kickDir = Vector3.zero;
+                m_lineGuide.GetComponent<SimulationController>().vecKick = Vector3.zero;
                 return;
             }
 
@@ -107,8 +107,7 @@ public class Arrow : MonoBehaviour
             // 軌道予測線を描画するパラメータを設定する
             //--------------------------------------------
             m_lineGuide.GetComponent<SimulationController>().enabled = true;
-            m_lineGuide.GetComponent<SimulationController>().m_kickDir = dir;
-            m_lineGuide.GetComponent<SimulationController>().m_kickPower = dis * m_player.GetComponent<Player>().m_mulPower;
+            m_lineGuide.GetComponent<SimulationController>().vecKick = dir.normalized * dis * m_player.GetComponent<Player>().m_mulPower;
         }
     }
 }

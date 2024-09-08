@@ -13,9 +13,9 @@ public class FollowActionButton : MonoBehaviour
     bool m_isActive;
     int m_userID;
 
-    public void Init(GameObject userController, int user_id)
+    public void Init(GameObject uiUserManager, int user_id)
     {
-        m_userController = userController;
+        m_userController = uiUserManager;
         m_userID = user_id;
 
         // アクティブなときの画像を設定している場合
@@ -32,13 +32,14 @@ public class FollowActionButton : MonoBehaviour
 
     public void OnTaskButton()
     {
+        SEManager.Instance.PlayButtonSE();
         if (m_isActive)
         {
-            m_userController.GetComponent<UserController>().ActionFollow(m_isActive, m_userID,transform.gameObject);
+            m_userController.GetComponent<UIUserManager>().ActionFollow(m_isActive, m_userID,transform.gameObject);
         }
         else
         {
-            m_userController.GetComponent<UserController>().ActionFollow(m_isActive, m_userID,transform.gameObject);
+            m_userController.GetComponent<UIUserManager>().ActionFollow(m_isActive, m_userID,transform.gameObject);
         }
     }
 

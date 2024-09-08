@@ -23,6 +23,16 @@ public class UiController : MonoBehaviour
     public GameObject ButtonZoomOut { get { return m_buttonZoomOut; } }
     #endregion
 
+    #region ゲスト関係
+    [SerializeField] GameObject m_buttonGuest;         // ゲストのプロフィールを表示するボタン
+    [SerializeField] GameObject m_uiPanelGuests;       // ゲストのUIパネル
+    [SerializeField] GameObject m_guestScrollContent;  // プレファブの格納先
+    [SerializeField] GameObject m_profileGuestPrefab;  // ゲストのプロフィールプレファブ
+    [SerializeField] List<Sprite> m_texIcons;          // アイコン画像
+    [SerializeField] GameObject m_buttonEditDone;      // ゲストの配置決定ボタン
+    [SerializeField] GameObject m_buttonEdit;          // ゲストの編集開始ボタン
+    #endregion
+
     #region ゲーム
     [SerializeField] Text m_textTimer;
     [SerializeField] GameObject m_textSubTimePrefab;
@@ -51,10 +61,12 @@ public class UiController : MonoBehaviour
     #endregion
 
     // ゲームマネージャー
-    [SerializeField] GameManager gameManager;
+    [SerializeField] GameManager m_gameManager;
 
     private void Start()
     {
+        InitGuestUI();
+
         m_textStageID.text = "ステージ " + TopManager.stageID;
         m_textTimer.text = "40:00";
 
@@ -66,6 +78,98 @@ public class UiController : MonoBehaviour
 
         // 無効化する
         m_buttonReset.GetComponent<Button>().interactable = false;
+    }
+
+    void InitGuestUI()
+    {
+        if (TopSceneDirector.Instance == null)
+        {
+            m_buttonGuest.SetActive(false);
+            m_buttonEditDone.SetActive(false);
+            m_buttonEdit.SetActive(false);
+            return;
+        }
+
+        bool isActive = TopSceneDirector.Instance.PlayMode == TopSceneDirector.PLAYMODE.GUEST;
+        m_buttonGuest.SetActive(isActive);
+        m_buttonEditDone.SetActive(isActive);
+        m_buttonEdit.SetActive(isActive);
+
+        if (!isActive) return;
+
+        // ゲームモードを編集完了モードに変更する
+        m_gameManager.UpdateGameMode(GameManager.GAMEMODE.EditDone);
+        m_buttonEdit.GetComponent<Button>().interactable = true;
+        m_buttonEditDone.GetComponent<Button>().interactable = false;
+        m_buttonReset.GetComponent<Button>().interactable = false;
+
+        // ゲストのプロフィール取得処理
+        StartCoroutine(NetworkManager.Instance.GetSignalUserProfile(
+            TopSceneDirector.Instance.DistressSignalID,
+            result =>
+            {
+                if (result == null) return;
+
+                // プロフィール生成
+                // 取得したフォローリストの情報を元に各ユーザーのプロフィールを作成する
+                foreach (ShowUserProfileResponse user in result)
+                {
+                    // プロフィールを生成する
+                    GameObject profile = Instantiate(m_profileGuestPrefab, m_guestScrollContent.transform);
+                    profile.GetComponent<GuestProfile>().UpdateProfile(user.UserID, user.Name,
+                        user.AchievementTitle, user.StageID, user.TotalScore,
+                        m_texIcons[user.IconID - 1], user.IsAgreement);
+                }
+            }));
+    }
+
+    /// <summary>
+    /// ゲストの編集開始ボタン
+    /// </summary>
+    public void OnGuestEditButton()
+    {
+        m_gameManager.UpdateGameMode(GameManager.GAMEMODE.Edit);
+        m_buttonEdit.GetComponent<Button>().interactable = false;
+        m_buttonEditDone.GetComponent<Button>().interactable = true;
+        m_buttonReset.GetComponent<Button>().interactable = true;
+    }
+
+    /// <summary>
+    /// ゲストの配置決定ボタン処理
+    /// </summary>
+    public void OnGuestEditDoneButton()
+    {
+        m_gameManager.UpdateGameMode(GameManager.GAMEMODE.EditDone);
+        m_gameManager.OnGameReset();
+
+        m_buttonEdit.GetComponent<Button>().interactable = true;
+        m_buttonEditDone.GetComponent<Button>().interactable = false;
+        m_buttonReset.GetComponent<Button>().interactable = false;
+
+        // ゲストの配置情報更新処理
+        var requestData = m_gameManager.GetGuestEditData();
+        StartCoroutine(NetworkManager.Instance.UpdateSignalGuest(
+            requestData.SignalID,
+            requestData.Pos,
+            requestData.Vector,
+            result =>
+            {
+                if (!result) return;
+                Debug.Log("ゲストの配置情報を更新した！");
+            }));
+    }
+
+    /// <summary>
+    /// 救難信号に参加しているユーザーのプロフィール表示・非表示
+    /// </summary>
+    /// <param name="isActive"></param>
+    public void SetActiveGuestProfile(bool isActive)
+    {
+        if (isActive) SEManager.Instance.PlayButtonSE();
+        if (!isActive) SEManager.Instance.PlayCanselSE();
+
+        m_uiPanelGuests.SetActive(isActive);
+        m_uiPanelGame.SetActive(!isActive);
     }
 
     /// <summary>
@@ -104,7 +208,7 @@ public class UiController : MonoBehaviour
         m_uiPanelGame.SetActive(!isActive);
 
         // パネルを閉じる場合はポーズOFFにする
-        gameManager.m_isPause = !isActive ? false : true;
+        m_gameManager.m_isPause = !isActive ? false : true;
     }
 
     /// <summary>
@@ -122,7 +226,7 @@ public class UiController : MonoBehaviour
         
 
         // パネルを閉じる場合はポーズOFFにする
-        gameManager.m_isPause = !isActive ? false : true;
+        m_gameManager.m_isPause = !isActive ? false : true;
     }
 
     /// <summary>
@@ -130,6 +234,9 @@ public class UiController : MonoBehaviour
     /// </summary>
     public void SetGameOverUI(bool isMedal1, bool isMedal2, float time, int score, bool isStageClear)
     {
+        m_uiPanelTutorial.SetActive(false);
+        m_uiPanelGuests.SetActive(false);
+        m_uiPanelHome.SetActive(false);
         m_uiPanelGame.SetActive(false);
         m_uiPanelGameOver.SetActive(true);
 
@@ -166,6 +273,9 @@ public class UiController : MonoBehaviour
             false : true;
 
         // パネルをリザルトに設定する
+        m_uiPanelTutorial.SetActive(false);
+        m_uiPanelGuests.SetActive(false);
+        m_uiPanelHome.SetActive(false);
         m_uiPanelGameOver.SetActive(false);
         m_uiPanelResult.SetActive(true);
         m_uiPanelGame.SetActive(false);
@@ -236,6 +346,6 @@ public class UiController : MonoBehaviour
     /// </summary>
     public void EventPause(bool frag)
     {
-        gameManager.m_isPause = frag;
+        m_gameManager.m_isPause = frag;
     }
 }

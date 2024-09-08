@@ -36,6 +36,7 @@ public class StageButtonController : MonoBehaviour
             // É{É^Éìê∂ê¨
             GameObject button = Instantiate(m_uiBtnPrefab, transform);
             button.GetComponent<Button>().onClick.AddListener(() => m_manager.OnSelectStageButton(id));
+            button.GetComponent<Button>().onClick.AddListener(() => SEManager.Instance.PlayButtonSE());
             button.GetComponentInChildren<Text>().text = "" + (i + 1);
         }
     }

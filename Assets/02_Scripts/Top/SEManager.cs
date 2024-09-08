@@ -4,6 +4,25 @@ using UnityEngine;
 
 public class SEManager : MonoBehaviour
 {
+    // インスタンス作成
+    public static SEManager Instance;
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            // トップ画面の状態を保持する
+            Instance = this;
+
+            // シーン遷移しても破棄しないようにする
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            // シーン遷移して新しく生成される自身を破棄
+            Destroy(gameObject);
+        }
+    }
+
     AudioSource m_audio;
     [SerializeField] AudioClip m_ScreanMoveSE;
     [SerializeField] AudioClip m_buttonSE;

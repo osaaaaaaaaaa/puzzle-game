@@ -107,7 +107,6 @@ GameObject:
   - component: {fileID: 6597089681848037293}
   - component: {fileID: 274829915587195571}
   - component: {fileID: 1410710092580537218}
-  - component: {fileID: 6710397283560952827}
   m_Layer: 5
   m_Name: ButtonDestroy
   m_TagString: Untagged
@@ -216,9 +215,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6710397283560952827}
-        m_TargetAssemblyTypeName: FollowActionButton, Assembly-CSharp
-        m_MethodName: OnTaskButton
+      - m_Target: {fileID: 6268944977217104213}
+        m_TargetAssemblyTypeName: SignalGuestLogBar, Assembly-CSharp
+        m_MethodName: OnDestroyButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -228,20 +227,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &6710397283560952827
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2414471575958153055}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d2e06083699f9b5418a205b0772185fe, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_texActive: {fileID: 21300000, guid: 23357832751e1c049b7e96865aa1d8b3, type: 3}
-  m_texPassive: {fileID: 21300000, guid: 1187be4d469cbae4f8cb1dc58229253b, type: 3}
 --- !u!1 &2544283964651426352
 GameObject:
   m_ObjectHideFlags: 0

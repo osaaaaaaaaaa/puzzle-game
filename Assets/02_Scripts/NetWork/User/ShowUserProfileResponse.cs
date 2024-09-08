@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Newtonsoft.Json;
 
-public class ShowRankingResponse
+public class ShowUserProfileResponse
 {
     [JsonProperty("user_id")]
     public int UserID { get; set; }

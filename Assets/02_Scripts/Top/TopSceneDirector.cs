@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Singleton : MonoBehaviour
+public class TopSceneDirector : MonoBehaviour
 {
-    public static Singleton Instance;
+    public static TopSceneDirector Instance;
 
     private void Awake()
     {
@@ -26,12 +26,29 @@ public class Singleton : MonoBehaviour
         }
     }
 
+    [SerializeField] GameObject topObjParent;
+
+    public enum PLAYMODE
+    {
+        SOLO,
+        HOST,
+        GUEST
+    }
+    public PLAYMODE PlayMode { get; private set; }
+
+    public int DistressSignalID { get; private set; }
+
     /// <summary>
     /// トップ画面の表示・非表示を切り替える
     /// </summary>
     public void ChangeActive(bool _active)
     {
-        var obj = Instance.transform.GetChild(0).gameObject;
-        obj.SetActive(_active); // 表示切り替え処理
+        topObjParent.SetActive(_active); // 表示切り替え処理
+    }
+
+    public void SetPlayMode(PLAYMODE mode,int signalID)
+    {
+        PlayMode = mode;
+        DistressSignalID = signalID;
     }
 }
