@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 using DG.Tweening;
 using UnityEngine.AddressableAssets;
 using System;
+using System.Linq;
 
 public class GameManager : MonoBehaviour
 {
@@ -21,7 +22,7 @@ public class GameManager : MonoBehaviour
 
     // ゲスト
     [SerializeField] GameObject m_guestSetPrefab;
-    List<Guest> m_guestList;
+    public List<GameObject> m_guestList { get; private set; }
 
     #region ステージの進捗情報
     bool m_isMedal1;
@@ -54,7 +55,7 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-        m_guestList = new List<Guest>();
+        m_guestList = new List<GameObject>();
 
         // ゲームモードの初期化
         if (TopSceneDirector.Instance != null)
@@ -70,7 +71,38 @@ public class GameManager : MonoBehaviour
                 {
                     if (result == null) return;
 
-                    // ゲストを生成する
+                    foreach (ShowSignalGuestResponse user in result)
+                    {
+                        // 正常に変換できるかチェック , 登録してまだ設置が完了していない場合はスキップ
+                        Vector3 pos = NetworkManager.Instance.StringToVector3(user.Pos);
+                        Vector3 vec = NetworkManager.Instance.StringToVector3(user.Vector);
+                        if (pos == Vector3.zero || vec == Vector3.zero)
+                        {
+                            m_guestList.Add(null);
+                            continue;
+                        }
+                        
+
+                        if (user.UserID == NetworkManager.Instance.UserID)
+                        {
+                            // 自分自身の場合は最後に登録した場所へ移動させる
+                            GameObject.Find("Player").transform.position = pos;
+                            continue;
+                        }
+
+                        // ゲストを生成する
+                        GameObject stage = GameObject.Find("Stage");
+                        GameObject guestSet = Instantiate(m_guestSetPrefab, stage.transform);
+                        guestSet.transform.position = Vector3.zero;
+                        GameObject guest = guestSet.transform.GetChild(0).gameObject;
+                        guest.GetComponent<Guest>().InitMemberVariable(user.UserName, pos, vec);
+
+                        // 生成して初期化が済んだらリストに追加
+                        m_guestList.Add(guest);
+                    }
+
+                    // ゲストの生成が終わったらプロフィールを生成する
+                    m_UiController.InitGuestUI();
                 }));
         }
         else
@@ -108,46 +140,6 @@ public class GameManager : MonoBehaviour
         {
             GameObject.Find("Medal1").GetComponent<Medal>().InitMemberVariable(false);
             GameObject.Find("Medal2").GetComponent<Medal>().InitMemberVariable(false);
-        }
-
-        if (TopSceneDirector.Instance != null)
-        {
-            if (TopSceneDirector.Instance.PlayMode != TopSceneDirector.PLAYMODE.SOLO)
-            {
-                // 参加しているゲストの配置情報を取得する
-                StartCoroutine(NetworkManager.Instance.GetSignalGuest(
-                    TopSceneDirector.Instance.DistressSignalID,
-                    result =>
-                    {
-                        if (result == null) return;
-
-                        foreach (ShowSignalGuestResponse user in result)
-                        {
-                            // 登録してまだ設置が完了していない場合はスキップ
-                            if (NetworkManager.Instance.StringToVector3(user.Pos) == Vector3.zero) continue;
-
-                            Vector3 pos = NetworkManager.Instance.StringToVector3(user.Pos);
-                            Vector3 vec = NetworkManager.Instance.StringToVector3(user.Vector);
-
-                            if (user.UserID == NetworkManager.Instance.UserID)
-                            {
-                                // 自分自身の場合は最後に登録した場所へ移動させる
-                                GameObject.Find("Player").transform.position = pos;
-                                continue;
-                            }
-
-                            // ゲストを生成する
-                            GameObject stage = GameObject.Find("Stage");
-                            GameObject guestSet = Instantiate(m_guestSetPrefab, stage.transform);
-                            guestSet.transform.position = Vector3.zero;
-                            GameObject guest = guestSet.transform.GetChild(0).gameObject;
-                            guest.GetComponent<Guest>().InitMemberVariable(user.UserName,pos, vec);
-
-                            // 生成して初期化が済んだらリストに追加
-                            m_guestList.Add(guest.GetComponent<Guest>());
-                        }
-                }));
-            }
         }
 #endif
 
@@ -192,22 +184,36 @@ public class GameManager : MonoBehaviour
 
                     foreach (ShowSignalGuestResponse user in result)
                     {
-                        // 登録してまだ設置が完了していない場合はスキップ
-                        if (NetworkManager.Instance.StringToVector3(user.Pos) == Vector3.zero) continue;
+                        // 正常に変換できるかチェック , 登録してまだ設置が完了していない場合はスキップ
+                        Vector3 pos = NetworkManager.Instance.StringToVector3(user.Pos);
+                        Vector3 vec = NetworkManager.Instance.StringToVector3(user.Vector);
+                        if (pos == Vector3.zero || vec == Vector3.zero)
+                        {
+                            m_guestList.Add(null);
+                            continue;
+                        }
+
+
+                        if (user.UserID == NetworkManager.Instance.UserID)
+                        {
+                            // 自分自身の場合は最後に登録した場所へ移動させる
+                            GameObject.Find("Player").transform.position = pos;
+                            continue;
+                        }
 
                         // ゲストを生成する
                         GameObject stage = GameObject.Find("Stage");
                         GameObject guestSet = Instantiate(m_guestSetPrefab, stage.transform);
                         guestSet.transform.position = Vector3.zero;
-
                         GameObject guest = guestSet.transform.GetChild(0).gameObject;
-                        guest.GetComponent<Guest>().InitMemberVariable(user.UserName,
-                            NetworkManager.Instance.StringToVector3(user.Pos), 
-                            NetworkManager.Instance.StringToVector3(user.Vector));
+                        guest.GetComponent<Guest>().InitMemberVariable(user.UserName, pos, vec);
 
                         // 生成して初期化が済んだらリストに追加
-                        m_guestList.Add(guest.GetComponent<Guest>());
+                        m_guestList.Add(guest);
                     }
+
+                    // ゲストの生成が終わったらプロフィールを生成する
+                    m_UiController.InitGuestUI();
                 }));
         }
 #endif
@@ -255,7 +261,7 @@ public class GameManager : MonoBehaviour
     private void Update()
     {
         if (TopSceneDirector.Instance == null) return;
-        if (TopSceneDirector.Instance.PlayMode == TopSceneDirector.PLAYMODE.GUEST) return;
+        if (TopSceneDirector.Instance.PlayMode == TopSceneDirector.PLAYMODE.GUEST || m_isPause) return;
 
         // カウントダウン
         if (m_isEndAnim && !m_isEndGame)
@@ -363,6 +369,26 @@ public class GameManager : MonoBehaviour
             // 初クリア演出
             PlayStageClearEffect();
         }
+
+        // 自身がホストの場合
+        if (TopSceneDirector.Instance.PlayMode == TopSceneDirector.PLAYMODE.HOST) DistressSignalClear();
+    }
+
+    /// <summary>
+    /// 救難信号のステージクリア処理
+    /// </summary>
+    void DistressSignalClear()
+    {
+        // クリア済みかどうかチェック
+        if (!NetworkManager.Instance.dSignalList.Any(item => item.SignalID == TopSceneDirector.Instance.DistressSignalID)) return;
+
+        // ステージクリア処理
+        StartCoroutine(NetworkManager.Instance.UpdateDistressSignal(
+            TopSceneDirector.Instance.DistressSignalID,
+            result =>
+            {
+                Debug.Log("救難信号クリア！");
+            }));
     }
 
     /// <summary>
@@ -433,9 +459,10 @@ public class GameManager : MonoBehaviour
         m_player.GetComponent<Player>().ResetPlayer();
 
         // ゲストの状態もリセット
-        foreach(Guest guest in m_guestList)
+        foreach(GameObject guest in m_guestList)
         {
-            guest.ResetGuest();
+            if (guest == null) continue;
+            guest.GetComponent<Guest>().ResetGuest();
         }
     }
 

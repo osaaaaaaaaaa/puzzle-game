@@ -141,7 +141,6 @@ public class TopManager : MonoBehaviour
         TopSceneDirector.Instance.SetPlayMode(playMode, signalID);
         isOnStageButton = true;
         m_boxStage.GetComponent<StageBox>().OnCloseButton();
-
 #if !UNITY_EDITOR
         // ÉQÅ[ÉÄUIÉVÅ[ÉìÇ…ëJà⁄Ç∑ÇÈ
         Initiate.Fade("02_UIScene", Color.black, 1.0f);

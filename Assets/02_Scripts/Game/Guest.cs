@@ -13,7 +13,8 @@ public class Guest : MonoBehaviour
 
     [SerializeField] Text m_textName;
 
-    [SerializeField] SimulationController m_simulationController;
+    [SerializeField] GameObject m_simulationController;
+    [SerializeField] GameObject m_line;
 
     // ゲームマネージャー
     GameManager m_gameManager;
@@ -41,7 +42,7 @@ public class Guest : MonoBehaviour
     private void Update()
     {
         if (VectorKick == Vector3.zero || m_sonController == null) return;
-        m_simulationController.Simulation(transform.position + m_sonController.GetSonOfset());
+        m_simulationController.GetComponent<SimulationController>().Simulation(transform.position + m_sonController.GetSonOfset());
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -109,7 +110,16 @@ public class Guest : MonoBehaviour
         transform.position = position;
         VectorKick = vector;
 
-        // 起動予測線の描画を一回だけする
-        m_simulationController.vecKick = VectorKick;
+        // 起動予測線の描画開始
+        m_simulationController.GetComponent<SimulationController>().vecKick = VectorKick;
+    }
+
+    /// <summary>
+    /// 起動予測関係を表示・非表示する
+    /// </summary>
+    public void ToggleLineVisibility(bool isVisibility)
+    {
+        m_simulationController.SetActive(isVisibility);
+        m_line.SetActive(isVisibility);
     }
 }

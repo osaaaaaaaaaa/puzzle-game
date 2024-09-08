@@ -14,7 +14,7 @@ public class SignalHostLogBar : MonoBehaviour
     [SerializeField] Button m_btnDestroy;                 // 破棄するボタン
     int m_signalID;
 
-    public void UpdateLog(int signalID,DateTime created_at, int stageID, int guestCnt, bool isStageClear)
+    public void UpdateLog(UISignalManager signalManager, int signalID,DateTime created_at, int stageID, int guestCnt, bool isStageClear)
     {
         m_signalID = signalID;
         m_textDay.text = created_at.ToString("yyyy/MM/dd HH:mm:ss");
@@ -33,6 +33,7 @@ public class SignalHostLogBar : MonoBehaviour
             // 遷移イベント設定
             var manager = GameObject.Find("TopManager").GetComponent<TopManager>();
             m_btnAction.onClick.AddListener(() => manager.OnPlayStageButton(TopSceneDirector.PLAYMODE.HOST, signalID ,stageID));
+            m_btnAction.onClick.AddListener(() => signalManager.OnSignalTabButton(0));
         }
     }
 

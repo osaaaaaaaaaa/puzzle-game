@@ -15,8 +15,10 @@ public class Cow : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        if (TopSceneDirector.Instance.PlayMode == TopSceneDirector.PLAYMODE.GUEST) return;
+
         // プレイヤーが触れた場合
-        if(collision.gameObject.layer == 6)
+        if (collision.gameObject.layer == 6)
         {
             // 息子のテクスチャを牛に切り替える
             m_sonController.ChangeCowTexture(m_direction, transform.position);

@@ -17,7 +17,7 @@ public class SignalGuestLogBar : MonoBehaviour
     [SerializeField] Button m_btnDestroy;                 // 破棄するボタン
     int m_signalID;
 
-    public void UpdateLogBar(int signalID, int elapsed_days, Sprite icon, bool isAgreement, string hostName, int stageID, int guestCnt, bool action,bool is_rewarded)
+    public void UpdateLogBar(UISignalManager signalManager,int signalID, int elapsed_days, Sprite icon, bool isAgreement, string hostName, int stageID, int guestCnt, bool action,bool is_rewarded)
     {
         m_signalID = signalID;
         m_textDays.text = elapsed_days + "日前";
@@ -49,6 +49,7 @@ public class SignalGuestLogBar : MonoBehaviour
             // 遷移イベント設定
             var manager = GameObject.Find("TopManager").GetComponent<TopManager>();
             m_btnAction.onClick.AddListener(() => manager.OnPlayStageButton(TopSceneDirector.PLAYMODE.GUEST, signalID, stageID));
+            m_btnAction.onClick.AddListener(() => signalManager.OnSignalTabButton(0));
         }
 
         // 一旦押せないようにしておく
@@ -63,6 +64,7 @@ public class SignalGuestLogBar : MonoBehaviour
         // ゲスト削除処理
         StartCoroutine(NetworkManager.Instance.DestroySignalGuest(
             m_signalID,
+            NetworkManager.Instance.UserID,
             result =>
             {
                 if (!result) return;

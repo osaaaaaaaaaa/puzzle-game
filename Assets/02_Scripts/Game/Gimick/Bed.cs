@@ -37,6 +37,7 @@ public class Bed : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        if (TopSceneDirector.Instance.PlayMode == TopSceneDirector.PLAYMODE.GUEST) return;
         if (collision.gameObject.tag == "Ghost") return;    // ゴーストの場合
 
         // 息子の場合

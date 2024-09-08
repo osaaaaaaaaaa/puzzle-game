@@ -28,6 +28,7 @@ public class Cage : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        if (TopSceneDirector.Instance.PlayMode == TopSceneDirector.PLAYMODE.GUEST) return;
         if (collision.gameObject.tag == "Ghost" || collision.gameObject.layer != 6 && collision.gameObject.layer != 10) return;
 
         // Œ®‚ğŠ‚µ‚Ä‚¢‚éê‡

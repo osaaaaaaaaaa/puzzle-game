@@ -68,7 +68,7 @@ public class UISignalManager : MonoBehaviour
                             // ÉçÉOÇê∂ê¨Ç∑ÇÈ
                             GameObject logHost = Instantiate(m_barHostLogPrefab, contentLog.transform);
                             logHost.GetComponent<SignalHostLogBar>().UpdateLog(
-                                log.SignalID, log.CreateDay, log.StageID, log.GuestCnt, log.IsStageClear);
+                                this,log.SignalID, log.CreateDay, log.StageID, log.GuestCnt, log.IsStageClear);
                         }
                     }));
                 break;
@@ -83,7 +83,7 @@ public class UISignalManager : MonoBehaviour
                         {
                             // ÉçÉOÇê∂ê¨Ç∑ÇÈ
                             GameObject logHost = Instantiate(m_barGuestLogPrefab, contentLog.transform);
-                            logHost.GetComponent<SignalGuestLogBar>().UpdateLogBar(log.SignalID, log.ElapsedDay,
+                            logHost.GetComponent<SignalGuestLogBar>().UpdateLogBar(this,log.SignalID, log.ElapsedDay,
                                 m_texIcons[log.IconID - 1], log.IsAgreement, log.HostName, log.StageID, log.GuestCnt, log.IsStageClear, log.IsRewarded);
                         }
                     }));

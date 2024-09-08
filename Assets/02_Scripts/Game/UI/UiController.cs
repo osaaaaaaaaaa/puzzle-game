@@ -65,10 +65,13 @@ public class UiController : MonoBehaviour
 
     private void Start()
     {
-        InitGuestUI();
-
         m_textStageID.text = "ステージ " + TopManager.stageID;
         m_textTimer.text = "40:00";
+
+        // ボタンをソロ・ホストで遊ぶときのものに設定
+        m_buttonGuest.SetActive(false);
+        m_buttonEditDone.SetActive(false);
+        m_buttonEdit.SetActive(false);
 
         // 非アクティブにする
         m_uiCamera.SetActive(false);
@@ -80,7 +83,7 @@ public class UiController : MonoBehaviour
         m_buttonReset.GetComponent<Button>().interactable = false;
     }
 
-    void InitGuestUI()
+    public void InitGuestUI()
     {
         if (TopSceneDirector.Instance == null)
         {
@@ -90,18 +93,24 @@ public class UiController : MonoBehaviour
             return;
         }
 
-        bool isActive = TopSceneDirector.Instance.PlayMode == TopSceneDirector.PLAYMODE.GUEST;
-        m_buttonGuest.SetActive(isActive);
-        m_buttonEditDone.SetActive(isActive);
-        m_buttonEdit.SetActive(isActive);
+        // ソロで遊ぶ場合は処理を終了
+        if (TopSceneDirector.Instance.PlayMode == TopSceneDirector.PLAYMODE.SOLO) return;
 
-        if (!isActive) return;
+        // ゲストのプロフィール一覧を表示するボタン
+        m_buttonGuest.SetActive(true);
 
-        // ゲームモードを編集完了モードに変更する
-        m_gameManager.UpdateGameMode(GameManager.GAMEMODE.EditDone);
-        m_buttonEdit.GetComponent<Button>().interactable = true;
-        m_buttonEditDone.GetComponent<Button>().interactable = false;
-        m_buttonReset.GetComponent<Button>().interactable = false;
+        // ゲストのときのUIに変更
+        if (TopSceneDirector.Instance.PlayMode == TopSceneDirector.PLAYMODE.GUEST)
+        {
+            m_buttonEditDone.SetActive(true);
+            m_buttonEdit.SetActive(true);
+
+            // ゲームモードを編集完了モードに変更する
+            m_gameManager.UpdateGameMode(GameManager.GAMEMODE.EditDone);
+            m_buttonEdit.GetComponent<Button>().interactable = true;
+            m_buttonEditDone.GetComponent<Button>().interactable = false;
+            m_buttonReset.GetComponent<Button>().interactable = false;
+        }
 
         // ゲストのプロフィール取得処理
         StartCoroutine(NetworkManager.Instance.GetSignalUserProfile(
@@ -110,13 +119,18 @@ public class UiController : MonoBehaviour
             {
                 if (result == null) return;
 
-                // プロフィール生成
+                Debug.Log(m_gameManager.m_guestList.Count);
+
                 // 取得したフォローリストの情報を元に各ユーザーのプロフィールを作成する
+                int i = 0;
                 foreach (ShowUserProfileResponse user in result)
                 {
+                    // ゲストのオブジェクト
+                    GameObject guestObj = i < m_gameManager.m_guestList.Count ? m_gameManager.m_guestList[i] : null;
+
                     // プロフィールを生成する
                     GameObject profile = Instantiate(m_profileGuestPrefab, m_guestScrollContent.transform);
-                    profile.GetComponent<GuestProfile>().UpdateProfile(user.UserID, user.Name,
+                    profile.GetComponent<GuestProfile>().UpdateProfile(guestObj, user.UserID, user.Name,
                         user.AchievementTitle, user.StageID, user.TotalScore,
                         m_texIcons[user.IconID - 1], user.IsAgreement);
                 }
@@ -170,6 +184,9 @@ public class UiController : MonoBehaviour
 
         m_uiPanelGuests.SetActive(isActive);
         m_uiPanelGame.SetActive(!isActive);
+
+        // パネルを閉じる場合、ポーズ状態を解除する
+        if (!isActive) EventPause(false);
     }
 
     /// <summary>
@@ -248,6 +265,9 @@ public class UiController : MonoBehaviour
     /// </summary>
     public void SetResultUI(bool isMedal1, bool isMedal2, float time, int score, bool isStageClear)
     {
+        // ホストの状態でクリアした場合は非アクティブ化
+        if (TopSceneDirector.Instance.PlayMode == TopSceneDirector.PLAYMODE.HOST) m_buttonNextStage.SetActive(false);
+
         // メダルのUIを更新する
         if (isMedal1) m_medalContainers[0].sprite = m_texMedals[0];
         if (isMedal2) m_medalContainers[1].sprite = m_texMedals[1];

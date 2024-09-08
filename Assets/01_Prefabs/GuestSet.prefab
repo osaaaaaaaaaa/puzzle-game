@@ -134,7 +134,8 @@ MonoBehaviour:
   m_kickSE: {fileID: 8300000, guid: 6a01a88f85ea54847b778f80400d5231, type: 3}
   m_cowSE: {fileID: 8300000, guid: 2c04247ce90825146970f246f589258b, type: 3}
   m_textName: {fileID: 7335376123593413186}
-  m_simulationController: {fileID: 8738551369685862400}
+  m_simulationController: {fileID: 3381191191710167453}
+  m_line: {fileID: 8812821890095050722}
   m_isKicked: 0
 --- !u!61 &5360761600597609052
 BoxCollider2D:

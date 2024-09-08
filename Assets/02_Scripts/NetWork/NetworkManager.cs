@@ -61,7 +61,14 @@ public class NetworkManager : MonoBehaviour
         string[] strValues = strVector.Split(",");
 
         // float型に変換してVector3を作成する
-        return new Vector3(float.Parse(strValues[0]), float.Parse(strValues[1]), float.Parse(strValues[2]));
+        if(float.TryParse(strValues[0], out float posX) 
+            && float.TryParse(strValues[1], out float posY) 
+            && float.TryParse(strValues[2], out float posZ))
+        {
+            return new Vector3(posX, posY, posZ);
+        }
+
+        return Vector3.zero;
     }
 
     /// <summary>
@@ -647,12 +654,12 @@ public class NetworkManager : MonoBehaviour
     /// <summary>
     /// ゲスト削除処理
     /// </summary>
-    public IEnumerator DestroySignalGuest(int signalID, Action<bool> result)
+    public IEnumerator DestroySignalGuest(int signalID, int userID, Action<bool> result)
     {
         // サーバーに送信するオブジェクトを作成
         DestroySignalGuestRequest requestData = new DestroySignalGuestRequest();
         requestData.SignalID = signalID;
-        requestData.UserID = UserID;
+        requestData.UserID = userID;
         // サーバーに送信オブジェクトをJSONに変換
         string json = JsonConvert.SerializeObject(requestData);
         // 送信
@@ -728,6 +735,43 @@ public class NetworkManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 救難信号クリア処理
+    /// </summary>
+    public IEnumerator UpdateDistressSignal(int signalID,Action<bool> result)
+    {
+        // サーバーに送信するオブジェクトを作成
+        UpdateDistressSignal requestData = new UpdateDistressSignal();
+        requestData.SignalID = signalID;
+        // サーバーに送信オブジェクトをJSONに変換
+        string json = JsonConvert.SerializeObject(requestData);
+        // 送信
+        UnityWebRequest request = UnityWebRequest.Post(API_BASE_URL + "distress_signals/update", json, "application/json");
+
+        // 結果を受信するまで待機
+        yield return request.SendWebRequest();
+
+        if (request.result == UnityWebRequest.Result.Success
+            && request.responseCode == 200)
+        {
+            // 条件に合う救難信号を取得する
+            var dSignal = dSignalList.FirstOrDefault(item => item.SignalID == signalID);
+            dSignalList.Remove(dSignal);
+
+            foreach (var test in dSignalList)
+            {
+                Debug.Log("ID:" + test.SignalID + ",Stage:" + test.StageID);
+            }
+
+            // 呼び出し元のresult処理を呼び出す
+            result?.Invoke(true);
+        }
+        else
+        {
+            // 呼び出し元のresult処理を呼び出す
+            result?.Invoke(false);
+        }
+    }
 
     /// <summary>
     /// 救難信号のログ(ホスト)取得処理
