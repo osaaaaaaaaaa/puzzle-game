@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 using DG.Tweening;
 using System;
 using UnityEngine.AddressableAssets;
+using Newtonsoft.Json;
 
 public class TopManager : MonoBehaviour
 {
@@ -133,12 +134,12 @@ public class TopManager : MonoBehaviour
     /// <summary>
     /// ステージシーンに遷移する
     /// </summary>
-    public void OnPlayStageButton(TopSceneDirector.PLAYMODE playMode,int signalID, int id)
+    public void OnPlayStageButton(TopSceneDirector.PLAYMODE playMode,int signalID, int id, bool isStageClear)
     {
         if (isOnStageButton) return;
 
         stageID = id == 0 ? stageID : id;   // ソロで遊ぶ場合(id=0)は更新しない
-        TopSceneDirector.Instance.SetPlayMode(playMode, signalID);
+        TopSceneDirector.Instance.SetPlayMode(playMode, signalID, isStageClear);
         isOnStageButton = true;
         m_boxStage.GetComponent<StageBox>().OnCloseButton();
 #if !UNITY_EDITOR

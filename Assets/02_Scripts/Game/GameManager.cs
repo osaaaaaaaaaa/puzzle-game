@@ -19,10 +19,22 @@ public class GameManager : MonoBehaviour
     GameObject m_player;
     // カメラコントローラ
     CameraController m_cameraController;
+    // ステージ
+    GameObject m_stage;
 
-    // ゲスト
+    #region リプレイ関係
+    List<ReplayData> replayDatas = new List<ReplayData>();
+    [SerializeField] GameObject m_buttonReplay;        // リプレイ再生ボタン
+    [SerializeField] GameObject m_replayRecorder;      // ホストのリプレイを録画する
+    [SerializeField] GameObject m_replayPlayer;        // リプレイを再生する
+    bool m_isReplayEnd = true;
+    public bool IsReplayEnd { get { return m_isReplayEnd; }set { m_isReplayEnd = value; } }
+    #endregion
+
+    #region ゲスト関係
     [SerializeField] GameObject m_guestSetPrefab;
     public List<GameObject> m_guestList { get; private set; }
+    #endregion
 
     #region ステージの進捗情報
     bool m_isMedal1;
@@ -60,50 +72,26 @@ public class GameManager : MonoBehaviour
         // ゲームモードの初期化
         if (TopSceneDirector.Instance != null)
         {
+            // ゲームモードを設定する
             var playMode = TopSceneDirector.Instance.PlayMode;
             var gameMode = playMode != TopSceneDirector.PLAYMODE.GUEST ? GAMEMODE.Play : GAMEMODE.EditDone;
             GameMode = gameMode;
+            // ホストで遊ぶ場合はリプレイの録画開始
+            m_replayRecorder.SetActive(playMode == TopSceneDirector.PLAYMODE.HOST);
 
-            // 参加しているゲストの配置情報を取得する
-            StartCoroutine(NetworkManager.Instance.GetSignalGuest(
-                TopSceneDirector.Instance.DistressSignalID,
-                result =>
-                {
-                    if (result == null) return;
-
-                    foreach (ShowSignalGuestResponse user in result)
+            if (playMode == TopSceneDirector.PLAYMODE.GUEST)
+            {
+                // ホストのリプレイ情報取得処理
+                StartCoroutine(NetworkManager.Instance.GetReplayData(
+                    TopSceneDirector.Instance.DistressSignalID,
+                    result =>
                     {
-                        // 正常に変換できるかチェック , 登録してまだ設置が完了していない場合はスキップ
-                        Vector3 pos = NetworkManager.Instance.StringToVector3(user.Pos);
-                        Vector3 vec = NetworkManager.Instance.StringToVector3(user.Vector);
-                        if (pos == Vector3.zero || vec == Vector3.zero)
-                        {
-                            m_guestList.Add(null);
-                            continue;
-                        }
-                        
+                        if (result == null) return;
 
-                        if (user.UserID == NetworkManager.Instance.UserID)
-                        {
-                            // 自分自身の場合は最後に登録した場所へ移動させる
-                            GameObject.Find("Player").transform.position = pos;
-                            continue;
-                        }
-
-                        // ゲストを生成する
-                        GameObject stage = GameObject.Find("Stage");
-                        GameObject guestSet = Instantiate(m_guestSetPrefab, stage.transform);
-                        guestSet.transform.position = Vector3.zero;
-                        GameObject guest = guestSet.transform.GetChild(0).gameObject;
-                        guest.GetComponent<Guest>().InitMemberVariable(user.UserName, pos, vec);
-
-                        // 生成して初期化が済んだらリストに追加
-                        m_guestList.Add(guest);
-                    }
-
-                    // ゲストの生成が終わったらプロフィールを生成する
-                    m_UiController.InitGuestUI();
-                }));
+                        replayDatas = result;
+                        m_buttonReplay.SetActive(true);
+                    }));
+            }
         }
         else
         {
@@ -135,6 +123,60 @@ public class GameManager : MonoBehaviour
                 false : NetworkManager.Instance.StageResults[TopManager.stageID - 1].IsMedal2;
             GameObject.Find("Medal1").GetComponent<Medal>().InitMemberVariable(isMedal1);
             GameObject.Find("Medal2").GetComponent<Medal>().InitMemberVariable(isMedal2);
+
+            // プレファブの格納先
+            m_stage = GameObject.Find("Stage");
+            // リプレイプレイヤーを子オブジェクトにしてセッティングを完了する
+            m_replayPlayer.transform.parent = m_stage.transform;
+            m_replayPlayer.transform.position = Vector3.zero;
+
+            if (TopSceneDirector.Instance.PlayMode != TopSceneDirector.PLAYMODE.SOLO)
+            {
+                // 参加しているゲストの配置情報を取得する
+                StartCoroutine(NetworkManager.Instance.GetSignalGuest(
+                    TopSceneDirector.Instance.DistressSignalID,
+                    result =>
+                    {
+                        if (result == null)
+                        {
+                            // ゲストのプロフィールを表示する
+                            m_UiController.InitGuestUI();
+                            return;
+                        };
+
+                        foreach (ShowSignalGuestResponse user in result)
+                        {
+                            // 正常に変換できるかチェック , 登録してまだ設置が完了していない場合はスキップ
+                            Vector3 pos = NetworkManager.Instance.StringToVector3(user.Pos);
+                            Vector3 vec = NetworkManager.Instance.StringToVector3(user.Vector);
+                            if (pos == Vector3.zero || vec == Vector3.zero)
+                            {
+                                m_guestList.Add(null);
+                                continue;
+                            }
+
+
+                            if (user.UserID == NetworkManager.Instance.UserID)
+                            {
+                                // 自分自身の場合は最後に登録した場所へ移動させる
+                                GameObject.Find("Player").transform.position = pos;
+                                continue;
+                            }
+
+                            // ゲストを生成する
+                            GameObject guestSet = Instantiate(m_guestSetPrefab, m_stage.transform);
+                            guestSet.transform.position = Vector3.zero;
+                            GameObject guest = guestSet.transform.GetChild(0).gameObject;
+                            guest.GetComponent<Guest>().InitMemberVariable(user.UserName, pos, vec);
+
+                            // 生成して初期化が済んだらリストに追加
+                            m_guestList.Add(guest);
+                        }
+
+                        // ゲストのプロフィールを表示する
+                        m_UiController.InitGuestUI();
+                    }));
+            }
         }
         else
         {
@@ -173,6 +215,12 @@ public class GameManager : MonoBehaviour
         GameObject.Find("Medal1").GetComponent<Medal>().InitMemberVariable(isMedal1);
         GameObject.Find("Medal2").GetComponent<Medal>().InitMemberVariable(isMedal2);
 
+        // プレファブの格納先
+        m_stage = GameObject.Find("Stage");
+        // リプレイプレイヤーを子オブジェクトにしてセッティングを完了する
+        m_replayPlayer.transform.parent = m_stage.transform;
+        m_replayPlayer.transform.position = Vector3.zero;
+
         if (TopSceneDirector.Instance.PlayMode != TopSceneDirector.PLAYMODE.SOLO)
         {
             // 参加しているゲストの配置情報を取得する
@@ -180,7 +228,12 @@ public class GameManager : MonoBehaviour
                 TopSceneDirector.Instance.DistressSignalID,
                 result =>
                 {
-                    if (result == null) return;
+                    if (result == null)
+                    {
+                        // ゲストのプロフィールを表示する
+                        m_UiController.InitGuestUI();
+                        return;
+                    };
 
                     foreach (ShowSignalGuestResponse user in result)
                     {
@@ -202,8 +255,7 @@ public class GameManager : MonoBehaviour
                         }
 
                         // ゲストを生成する
-                        GameObject stage = GameObject.Find("Stage");
-                        GameObject guestSet = Instantiate(m_guestSetPrefab, stage.transform);
+                        GameObject guestSet = Instantiate(m_guestSetPrefab, m_stage.transform);
                         guestSet.transform.position = Vector3.zero;
                         GameObject guest = guestSet.transform.GetChild(0).gameObject;
                         guest.GetComponent<Guest>().InitMemberVariable(user.UserName, pos, vec);
@@ -500,5 +552,19 @@ public class GameManager : MonoBehaviour
             Pos = m_player.transform.position.ToString(),
             Vector = m_player.GetComponent<Player>().VectorKick.ToString()
         };
+    }
+
+    /// <summary>
+    /// リプレイプレイヤーを生成して再生する
+    /// </summary>
+    public void StartReplay()
+    {
+        // リプレイを再生できない場合
+        if (!m_isReplayEnd || replayDatas.Count == 0) return;
+
+        m_isReplayEnd = false;
+        m_replayPlayer.SetActive(true);
+        var rPlayer = m_replayPlayer.GetComponent<ReplayPlayer>();
+        rPlayer.StartCoroutine(rPlayer.ReplayCoroutine(this, replayDatas));
     }
 }

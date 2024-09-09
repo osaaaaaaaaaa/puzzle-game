@@ -32,7 +32,7 @@ public class SignalHostLogBar : MonoBehaviour
 
             // ‘JˆÚƒCƒxƒ“ƒgİ’è
             var manager = GameObject.Find("TopManager").GetComponent<TopManager>();
-            m_btnAction.onClick.AddListener(() => manager.OnPlayStageButton(TopSceneDirector.PLAYMODE.HOST, signalID ,stageID));
+            m_btnAction.onClick.AddListener(() => manager.OnPlayStageButton(TopSceneDirector.PLAYMODE.HOST, signalID ,stageID, isStageClear));
             m_btnAction.onClick.AddListener(() => signalManager.OnSignalTabButton(0));
         }
     }

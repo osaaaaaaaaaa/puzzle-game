@@ -39,7 +39,7 @@ public class Player : MonoBehaviour
     /// <summary>
     /// R‚é‚Æ‚«‚ÌƒxƒNƒgƒ‹
     /// </summary>
-    public Vector3 VectorKick { get; private set; }
+    public Vector3 VectorKick { get; private set; } = Vector3.zero;
 
     private void Start()
     {

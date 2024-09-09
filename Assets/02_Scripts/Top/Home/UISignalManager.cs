@@ -6,11 +6,14 @@ using DG.Tweening;
 
 public class UISignalManager : MonoBehaviour
 {
+    [SerializeField] Text m_textEmpty;
+
     #region ユーザー情報
     [SerializeField] List<Sprite> m_texIcons;             // アイコン画像
     #endregion
 
     #region 救難信号
+    [SerializeField] GameObject m_uiPanelError;              // 通信エラー時のパネル
     [SerializeField] List<Sprite> m_texTabs;                 // タブの画像 [1:アクティブな画像,0:非アクティブな画像]
     [SerializeField] GameObject m_tabLog;                    // ログを表示するタブ
     [SerializeField] GameObject m_logMenuBtnParent;          // メニューボタンの親オブジェクト
@@ -61,6 +64,8 @@ public class UISignalManager : MonoBehaviour
                 StartCoroutine(NetworkManager.Instance.GetSignalHostLogList(
                     result =>
                     {
+                        m_textEmpty.text = result.Length == 0 ? "募集した履歴が見つかりませんでした。" : "";
+
                         if (result == null) return;
 
                         foreach (ShowHostLogResponse log in result)
@@ -77,6 +82,8 @@ public class UISignalManager : MonoBehaviour
                 StartCoroutine(NetworkManager.Instance.GetSignalGuestLogList(
                     result =>
                     {
+                        m_textEmpty.text = result.Length == 0 ? "参加した履歴が見つかりませんでした。" : "";
+
                         if (result == null) return;
 
                         foreach (ShowGuestLogResponse log in result)
@@ -109,6 +116,8 @@ public class UISignalManager : MonoBehaviour
         StartCoroutine(NetworkManager.Instance.GetRndSignalList(
             result =>
             {
+                m_textEmpty.text = result.Length == 0 ? "募集が見つかりませんでした。" : "";
+
                 if (result == null) return;
 
                 // 取得した情報を元に各救難信号を作成する
@@ -116,7 +125,7 @@ public class UISignalManager : MonoBehaviour
                 {
                     // 救難信号を生成する
                     GameObject signalBar = Instantiate(m_signalPrefab, content.transform);
-                    signalBar.GetComponent<SignalBar>().UpdateSignalBar(signal.SignalID, signal.ElapsedDay,
+                    signalBar.GetComponent<SignalBar>().UpdateSignalBar(m_uiPanelError,signal.SignalID, signal.ElapsedDay,
                         m_texIcons[signal.IconID - 1], signal.IsAgreement, signal.HostName, signal.StageID, signal.GuestCnt);
                 }
             }));
@@ -128,6 +137,7 @@ public class UISignalManager : MonoBehaviour
     /// <param name="mode">SIGNAL_LIST_MODE参照</param>
     public void OnSignalTabButton(int mode)
     {
+        m_textEmpty.text = "";
         m_logScloleView.SetActive(false);
         m_signalScloleView.SetActive(false);
         m_logMenuBtnParent.SetActive(false);
@@ -155,6 +165,7 @@ public class UISignalManager : MonoBehaviour
     /// <param name="mode">SIGNAL_LIST_MODE</param>
     public void OnSelectMenuLogButton(int mode)
     {
+        m_textEmpty.text = "";
         m_logMenuBtnParent.SetActive(false);
         m_logScloleView.SetActive(true);
         switch (mode)

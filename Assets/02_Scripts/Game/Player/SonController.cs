@@ -9,8 +9,8 @@ public class SonController : MonoBehaviour
     [SerializeField] GameObject m_ride_cow;
 
     public GameObject Son { get { return m_son; } }
-
-    Vector3 m_offsetRun;    // 走るテクスチャのオフセット
+    public GameObject SonRun { get { return m_son_run; } }
+    public GameObject SonRideCow { get { return m_ride_cow; } }
 
     /// <summary>
     /// ゲーム開始時の息子のテクスチャ設定
@@ -22,11 +22,6 @@ public class SonController : MonoBehaviour
     }
 
     public STARTSON_TEXTURE m_startSonTex = STARTSON_TEXTURE.SON;
-
-    private void Start()
-    {
-        m_offsetRun = m_son_run.transform.position - m_son.transform.position;
-    }
 
     /// <summary>
     /// 元のテクスチャに戻す

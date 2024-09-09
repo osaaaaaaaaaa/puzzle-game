@@ -59,12 +59,6 @@ public class StageBox : MonoBehaviour
         m_textRecruiting.text = m_distressSignal != null ? "募集中" : "募集する";
         m_btnRecruiting.interactable = m_distressSignal != null ? false : true;
 
-        if(m_distressSignal != null)
-        {
-            Debug.Log("信号ID:" + m_distressSignal.SignalID);
-            Debug.Log("ステージID:" + m_distressSignal.StageID);
-        }
-
         gameObject.SetActive(true);
     }
 
@@ -101,6 +95,6 @@ public class StageBox : MonoBehaviour
         var mode = m_distressSignal != null ? TopSceneDirector.PLAYMODE.HOST : TopSceneDirector.PLAYMODE.SOLO;
         int signalID = m_distressSignal != null ? m_distressSignal.SignalID : 0;
         int stageID = m_distressSignal != null ? m_distressSignal.StageID : 0;
-        managerTop.OnPlayStageButton(mode, signalID, stageID);
+        managerTop.OnPlayStageButton(mode, signalID, stageID, false);
     }
 }

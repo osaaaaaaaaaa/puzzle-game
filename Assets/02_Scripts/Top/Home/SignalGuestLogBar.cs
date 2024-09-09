@@ -12,9 +12,10 @@ public class SignalGuestLogBar : MonoBehaviour
     [SerializeField] Text m_textHostName;                 // ホスト名
     [SerializeField] Text m_textStageID;                  // ステージID
     [SerializeField] Text m_textGuestCnt;                 // ゲストの参加人数
-    [SerializeField] Button m_btnAction;                  // ステージに遷移、報酬を受け取るボタン
-    [SerializeField] Text m_textAction;                   // 上のボタンのテキスト
-    [SerializeField] Button m_btnDestroy;                 // 破棄するボタン
+    [SerializeField] Button m_btnTransition;              // ステージに遷移ボタン
+    [SerializeField] Text m_textTransition;               // 遷移ボタンのテキスト
+    [SerializeField] GameObject m_btnDestroy;             // 破棄するボタン
+    [SerializeField] GameObject m_btnReward;              // 報酬受け取りボタン
     int m_signalID;
 
     public void UpdateLogBar(UISignalManager signalManager,int signalID, int elapsed_days, Sprite icon, bool isAgreement, string hostName, int stageID, int guestCnt, bool action,bool is_rewarded)
@@ -31,29 +32,36 @@ public class SignalGuestLogBar : MonoBehaviour
         {
             if (is_rewarded)
             {
-                m_textAction.text = "報酬を受け取る";
-                m_btnAction.interactable = true;
-
-                // 報酬受け取りイベント追加
+                m_btnReward.SetActive(false);
             }
             else
             {
-                m_textAction.text = "報酬受取済み";
-                m_btnAction.interactable = false;
+                m_btnDestroy.SetActive(false);
+                m_btnTransition.interactable = false;
+                m_textTransition.text = "報酬受取可能";
             }
         }
         else
         {
-            m_textAction.text = "ステージへ移動";
-
-            // 遷移イベント設定
-            var manager = GameObject.Find("TopManager").GetComponent<TopManager>();
-            m_btnAction.onClick.AddListener(() => manager.OnPlayStageButton(TopSceneDirector.PLAYMODE.GUEST, signalID, stageID));
-            m_btnAction.onClick.AddListener(() => signalManager.OnSignalTabButton(0));
+            m_btnReward.SetActive(false);
         }
 
-        // 一旦押せないようにしておく
-        // m_btnDestroy.interactable = false;
+        // 遷移イベント設定
+        var manager = GameObject.Find("TopManager").GetComponent<TopManager>();
+        m_btnTransition.onClick.AddListener(() => signalManager.OnSignalTabButton(0));
+        m_btnTransition.onClick.AddListener(() => manager.OnPlayStageButton(TopSceneDirector.PLAYMODE.GUEST, signalID, stageID, action));
+
+    }
+
+    /// <summary>
+    /// 報酬受け取りボタン
+    /// </summary>
+    public void OnRewardButton()
+    {
+        m_btnDestroy.SetActive(true);
+        m_btnReward.SetActive(false);
+        m_btnTransition.interactable = true;
+        m_textTransition.text = "ステージへ移動";
     }
 
     /// <summary>

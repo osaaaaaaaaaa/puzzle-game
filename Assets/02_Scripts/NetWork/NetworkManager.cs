@@ -774,6 +774,61 @@ public class NetworkManager : MonoBehaviour
     }
 
     /// <summary>
+    /// リプレイ情報取得処理
+    /// </summary>
+    public IEnumerator GetReplayData(int signalID,Action<List<ReplayData>> result)
+    {
+        // 送信
+        UnityWebRequest request = UnityWebRequest.Get(API_BASE_URL + "distress_signals/replay/show?d_signal_id=" + signalID);
+
+        // 結果を受信するまで待機
+        yield return request.SendWebRequest();
+
+        if (request.result == UnityWebRequest.Result.Success
+            && request.responseCode == 200)
+        {
+            // 通信が成功した場合、返ってきたJSONをオブジェクトに変換
+            string resultJson = request.downloadHandler.text;
+            UpdateReplayData response = JsonConvert.DeserializeObject<UpdateReplayData>(resultJson);
+            List<ReplayData> replayDatas = new(response.ReplayDatas);
+
+            // 呼び出し元のresult処理を呼び出す
+            result?.Invoke(replayDatas);
+        }
+        else
+        {
+            // 呼び出し元のresult処理を呼び出す
+            result?.Invoke(null);
+        }
+    }
+
+
+    /// <summary>
+    /// リプレイ情報更新処理
+    /// </summary>
+    public IEnumerator UpdateReplayData(int signalID, List<ReplayData> replayDatas, Action<bool> result)
+    {
+        // サーバーに送信するオブジェクトを作成
+        UpdateReplayData requestData = new UpdateReplayData() { SignalID = signalID, ReplayDatas = replayDatas };
+        // サーバーに送信オブジェクトをJSONに変換
+        string json = JsonConvert.SerializeObject(requestData);
+        // 送信
+        UnityWebRequest request = UnityWebRequest.Post(API_BASE_URL + "distress_signals/replay/update", json, "application/json");
+
+        // 結果を受信するまで待機
+        yield return request.SendWebRequest();
+
+        bool isSuccess = false;
+        if (request.result == UnityWebRequest.Result.Success
+            && request.responseCode == 200)
+        {
+            isSuccess = true;
+        }
+
+        result?.Invoke(isSuccess);
+    }
+
+    /// <summary>
     /// 救難信号のログ(ホスト)取得処理
     /// </summary>
     public IEnumerator GetSignalHostLogList(Action<ShowHostLogResponse[]> result)

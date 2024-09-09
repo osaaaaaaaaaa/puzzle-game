@@ -12,11 +12,16 @@ public class SignalBar : MonoBehaviour
     [SerializeField] Text m_textHostName;                 // ホスト名
     [SerializeField] Text m_textGuestCnt;                 // ゲストの参加人数
     [SerializeField] Text m_textDays;                     // 経過日数
+    GameObject m_uiPanelError;
     int m_signalID;
+    int m_stageID;
 
-    public void UpdateSignalBar(int signalID, int elapsed_days, Sprite icon, bool isAgreement, string hostName, int stageID, int guestCnt)
+    public void UpdateSignalBar(GameObject errorPanel,int signalID, int elapsed_days, Sprite icon, bool isAgreement, string hostName, int stageID, int guestCnt)
     {
+        m_uiPanelError = errorPanel;
         m_signalID = signalID;
+        m_stageID = stageID;
+
         m_textDays.text = elapsed_days + "日前";
         m_icon.sprite = icon;
         m_heart.SetActive(isAgreement);
@@ -37,9 +42,18 @@ public class SignalBar : MonoBehaviour
             Vector3.zero.ToString(),
             result =>
             {
-                if (!result) return;
                 SEManager.Instance.PlayButtonSE();
-                Destroy(gameObject);
+                if (!result)
+                {
+                    m_uiPanelError.SetActive(true);
+                    return;
+                };
+
+                // 成功した場合
+                var signalManager = GameObject.Find("UIDistressSignalManager").GetComponent<UISignalManager>();
+                var managerTop = GameObject.Find("TopManager").GetComponent<TopManager>();
+                signalManager.OnSignalTabButton(0);
+                managerTop.OnPlayStageButton(TopSceneDirector.PLAYMODE.GUEST, m_signalID, m_stageID, false);
             }));
     }
 }

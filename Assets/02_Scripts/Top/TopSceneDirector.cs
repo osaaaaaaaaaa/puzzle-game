@@ -37,6 +37,10 @@ public class TopSceneDirector : MonoBehaviour
     public PLAYMODE PlayMode { get; private set; }
 
     public int DistressSignalID { get; private set; }
+    /// <summary>
+    /// 救難信号がクリア済みかどうか
+    /// </summary>
+    public bool IsSignalStageClear { get; private set; }
 
     /// <summary>
     /// トップ画面の表示・非表示を切り替える
@@ -46,9 +50,10 @@ public class TopSceneDirector : MonoBehaviour
         topObjParent.SetActive(_active); // 表示切り替え処理
     }
 
-    public void SetPlayMode(PLAYMODE mode,int signalID)
+    public void SetPlayMode(PLAYMODE mode,int signalID,bool isStageClear)
     {
         PlayMode = mode;
         DistressSignalID = signalID;
+        IsSignalStageClear = isStageClear;
     }
 }

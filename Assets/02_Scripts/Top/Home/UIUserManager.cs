@@ -6,6 +6,8 @@ using DG.Tweening;
 
 public class UIUserManager : MonoBehaviour
 {
+    [SerializeField] Text m_textEmpty;
+
     #region ユーザー情報
     [SerializeField] StageButtonController m_stageButtonController;
     [SerializeField] Text m_textUserName;                 // ユーザー名
@@ -157,6 +159,7 @@ public class UIUserManager : MonoBehaviour
                 StartCoroutine(NetworkManager.Instance.GetFollowList(
                     result =>
                     {
+                        m_textEmpty.text = result.Length == 0 ? "ユーザーが見つかりませんでした。" : "";
                         m_followCntText.text = "" + result.Length;
 
                         // 取得したフォローリストの情報を元に各ユーザーのプロフィールを作成する
@@ -185,6 +188,8 @@ public class UIUserManager : MonoBehaviour
                 StartCoroutine(NetworkManager.Instance.GetRecommendedUserList(
                     result =>
                     {
+                        m_textEmpty.text = result.Length == 0 ? "ユーザーが見つかりませんでした。" : "";
+
                         // 取得したフォローリストの情報を元に各ユーザーのプロフィールを作成する
                         foreach (ShowUserRecommendedResponse user in result)
                         {
@@ -221,6 +226,7 @@ public class UIUserManager : MonoBehaviour
                 StartCoroutine(NetworkManager.Instance.GetRankingList(
                     result =>
                     {
+                        m_textEmpty.text = result.Length == 0 ? "ユーザーが見つかりませんでした。" : "";
                         m_followCntText.text = "" + result.Length;
 
                         // 取得したフォローリストの情報を元に各ユーザーのプロフィールを作成する
@@ -249,10 +255,13 @@ public class UIUserManager : MonoBehaviour
                     Destroy(oldProfile.gameObject);
                 }
 
-                // おすすめのユーザーリスト取得処理
+                // フォロー内でのランキング取得処理
                 StartCoroutine(NetworkManager.Instance.GetFollowRankingList(
                     result =>
                     {
+                        m_textEmpty.text = result.Length <= 1 ? "ユーザーが見つかりませんでした。" : "";
+                        if (result.Length <= 1) return;
+
                         // 取得したフォローリストの情報を元に各ユーザーのプロフィールを作成する
                         int i = 0;
                         foreach (ShowUserProfileResponse user in result)
@@ -408,6 +417,7 @@ public class UIUserManager : MonoBehaviour
     /// <param name="mode">FOLLOW_LIST_MODE参照</param>
     public void OnFollowTabButton(int mode)
     {
+        m_textEmpty.text = "";
         m_errorTextFollow.text = "";
 
         switch (mode)
@@ -482,6 +492,7 @@ public class UIUserManager : MonoBehaviour
     /// <param name="mode">RANKINF_MODE参照</param>
     public void OnRankingTabButton(int mode)
     {
+        m_textEmpty.text = "";
         switch (mode)
         {
             case 0: // 全ユーザー内のランキングを表示する
@@ -510,6 +521,7 @@ public class UIUserManager : MonoBehaviour
     /// </summary>
     public void OnEditAchieveButton(int mode)
     {
+        m_textEmpty.text = "";
         switch (mode)
         {
             case 0: // ホストのログリストを表示

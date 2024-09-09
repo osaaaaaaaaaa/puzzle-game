@@ -7,11 +7,13 @@ using DG.Tweening;
 public class UiController : MonoBehaviour
 {
     #region パネル
-    [SerializeField] GameObject m_uiPanelGame;      // ゲームのUI
-    [SerializeField] GameObject m_uiPanelTutorial;  // チュートリアルのUI
-    [SerializeField] GameObject m_uiPanelHome;      // ホーム画面に戻るかの確認するUI
-    [SerializeField] GameObject m_uiPanelResult;    // リザルトのUI
-    [SerializeField] GameObject m_uiPanelGameOver;  // ゲームオーバーのUI
+    [SerializeField] GameObject m_uiPanelGame;          // ゲームのUI
+    [SerializeField] GameObject m_uiPanelTutorial;      // チュートリアルのUI
+    [SerializeField] GameObject m_uiPanelHome;          // ホーム画面に戻るかの確認するUI
+    [SerializeField] GameObject m_uiPanelResult;        // リザルトのUI
+    [SerializeField] GameObject m_uiPanelGameOver;      // ゲームオーバーのUI
+    [SerializeField] GameObject m_uiPanelJsonError;     // 通信エラー時のパネル
+    [SerializeField] GameObject m_uiPanelParamError;    // パラメータ異常時のパネル
     #endregion
 
     #region ボタン
@@ -24,6 +26,7 @@ public class UiController : MonoBehaviour
     #endregion
 
     #region ゲスト関係
+    [SerializeField] Text m_textEmpty;
     [SerializeField] GameObject m_buttonGuest;         // ゲストのプロフィールを表示するボタン
     [SerializeField] GameObject m_uiPanelGuests;       // ゲストのUIパネル
     [SerializeField] GameObject m_guestScrollContent;  // プレファブの格納先
@@ -31,6 +34,7 @@ public class UiController : MonoBehaviour
     [SerializeField] List<Sprite> m_texIcons;          // アイコン画像
     [SerializeField] GameObject m_buttonEditDone;      // ゲストの配置決定ボタン
     [SerializeField] GameObject m_buttonEdit;          // ゲストの編集開始ボタン
+    [SerializeField] GameObject m_buttonReplay;        // リプレイ再生ボタン
     #endregion
 
     #region ゲーム
@@ -72,6 +76,7 @@ public class UiController : MonoBehaviour
         m_buttonGuest.SetActive(false);
         m_buttonEditDone.SetActive(false);
         m_buttonEdit.SetActive(false);
+        m_buttonReplay.SetActive(false);
 
         // 非アクティブにする
         m_uiCamera.SetActive(false);
@@ -85,14 +90,6 @@ public class UiController : MonoBehaviour
 
     public void InitGuestUI()
     {
-        if (TopSceneDirector.Instance == null)
-        {
-            m_buttonGuest.SetActive(false);
-            m_buttonEditDone.SetActive(false);
-            m_buttonEdit.SetActive(false);
-            return;
-        }
-
         // ソロで遊ぶ場合は処理を終了
         if (TopSceneDirector.Instance.PlayMode == TopSceneDirector.PLAYMODE.SOLO) return;
 
@@ -102,8 +99,17 @@ public class UiController : MonoBehaviour
         // ゲストのときのUIに変更
         if (TopSceneDirector.Instance.PlayMode == TopSceneDirector.PLAYMODE.GUEST)
         {
-            m_buttonEditDone.SetActive(true);
-            m_buttonEdit.SetActive(true);
+            if (!TopSceneDirector.Instance.IsSignalStageClear)
+            {
+                // まだホストが救難信号のステージをクリアしていない場合
+                m_buttonEditDone.SetActive(true);
+                m_buttonEdit.SetActive(true);
+            }
+            else
+            {
+                // クリア済みの場合
+                m_buttonReset.SetActive(false);
+            }
 
             // ゲームモードを編集完了モードに変更する
             m_gameManager.UpdateGameMode(GameManager.GAMEMODE.EditDone);
@@ -117,9 +123,8 @@ public class UiController : MonoBehaviour
             TopSceneDirector.Instance.DistressSignalID,
             result =>
             {
+                m_textEmpty.text = result == null ? "参加しているユーザーが見つかりませんでした。" : "";
                 if (result == null) return;
-
-                Debug.Log(m_gameManager.m_guestList.Count);
 
                 // 取得したフォローリストの情報を元に各ユーザーのプロフィールを作成する
                 int i = 0;
@@ -160,17 +165,35 @@ public class UiController : MonoBehaviour
         m_buttonEditDone.GetComponent<Button>().interactable = false;
         m_buttonReset.GetComponent<Button>().interactable = false;
 
-        // ゲストの配置情報更新処理
+        // ゲストの配置情報を取得する
         var requestData = m_gameManager.GetGuestEditData();
+        if (NetworkManager.Instance.StringToVector3(requestData.Vector) == Vector3.zero)
+        {
+            // 蹴り飛ばすベクトルを設定していない場合はエラー
+            TogglePanelParamErrorVisibility(true);
+            return;
+        }
+
+        // ゲストの配置情報更新処理
         StartCoroutine(NetworkManager.Instance.UpdateSignalGuest(
             requestData.SignalID,
             requestData.Pos,
             requestData.Vector,
             result =>
             {
-                if (!result) return;
+                if (!result)
+                {
+                    ShowPanelJsonError();
+                    return;
+                };
+
                 Debug.Log("ゲストの配置情報を更新した！");
             }));
+    }
+
+    public void OnReplayButton()
+    {
+        m_gameManager.StartReplay();
     }
 
     /// <summary>
@@ -185,7 +208,6 @@ public class UiController : MonoBehaviour
         m_uiPanelGuests.SetActive(isActive);
         m_uiPanelGame.SetActive(!isActive);
 
-        // パネルを閉じる場合、ポーズ状態を解除する
         if (!isActive) EventPause(false);
     }
 
@@ -225,7 +247,7 @@ public class UiController : MonoBehaviour
         m_uiPanelGame.SetActive(!isActive);
 
         // パネルを閉じる場合はポーズOFFにする
-        m_gameManager.m_isPause = !isActive ? false : true;
+        if (!isActive) EventPause(false);
     }
 
     /// <summary>
@@ -240,10 +262,10 @@ public class UiController : MonoBehaviour
         {
             m_uiPanelGame.SetActive(!isActive);
         }
-        
+
 
         // パネルを閉じる場合はポーズOFFにする
-        m_gameManager.m_isPause = !isActive ? false : true;
+        if (!isActive) EventPause(false);
     }
 
     /// <summary>
@@ -359,6 +381,24 @@ public class UiController : MonoBehaviour
         sequence.Append(subTimeObj.transform.DOLocalMoveY(487, 1f).SetEase(Ease.Linear))
             .Join(subTimeObj.GetComponent<Text>().DOFade(0,1).OnComplete(() => { Destroy(subTimeObj.gameObject); }));
         sequence.Play();
+    }
+
+    /// <summary>
+    /// 通信エラー時のパネルを表示する
+    /// </summary>
+    public void ShowPanelJsonError()
+    {
+        SetActiveGameUI(false);
+        m_uiPanelJsonError.SetActive(true);
+    }
+
+    /// <summary>
+    /// パラメータ異常時のパネルを表示・非表示処理
+    /// </summary>
+    public void TogglePanelParamErrorVisibility(bool isActive)
+    {
+        SetActiveGameUI(!isActive);
+        m_uiPanelParamError.SetActive(isActive);
     }
 
     /// <summary>
