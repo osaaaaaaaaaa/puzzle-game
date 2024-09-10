@@ -43,6 +43,7 @@ public class NetworkManager : MonoBehaviour
     public int StageID { get; private set; } = 0;
     public int IconID { get; private set; } = 0;
     public int TotalScore { get; private set; } = 0;
+    public bool IsDistressSignalEnabled { get; set; } = false;
     #endregion
 
     #region ステージリザルト情報・救難信号情報
@@ -159,6 +160,7 @@ public class NetworkManager : MonoBehaviour
             this.StageID = response.StageID;
             this.IconID = response.IconID;
             this.TotalScore = response.TotalScore;
+            this.IsDistressSignalEnabled = response.IsDistressSignalEnabled;
 
             // 呼び出し元のresult処理を呼び出す
             result?.Invoke(response);
@@ -562,7 +564,7 @@ public class NetworkManager : MonoBehaviour
     /// <summary>
     /// 救難信号登録処理
     /// </summary>
-    public IEnumerator StoreDistressSignal(int stage_id, Action<ShowDistressSignalResponse> result)
+    public IEnumerator StoreDistressSignal(int stage_id, Action<ShowDistressSignalResponse> result, Action<string> error)
     {
         // サーバーに送信するオブジェクトを作成
         StoreDistressSignalRequest requestData = new StoreDistressSignalRequest();
@@ -585,16 +587,24 @@ public class NetworkManager : MonoBehaviour
             dSignalList.Add(response);
             result?.Invoke(response);
         }
+        else if (request.responseCode == 400)
+        {
+            // 返ってきたJSONをオブジェクトに変換
+            string resultJson = request.downloadHandler.text;
+            ErrorResponse response = JsonConvert.DeserializeObject<ErrorResponse>(resultJson);
+
+            error?.Invoke(response.Error);
+        }
         else
         {
-            result?.Invoke(null);
+            error?.Invoke("通信エラーが発生しました");
         }
     }
 
     /// <summary>
     /// ゲスト登録（救難信号参加）・配置情報更新処理
     /// </summary>
-    public IEnumerator UpdateSignalGuest(int signalID,string pos, string vec, Action<bool> result)
+    public IEnumerator UpdateSignalGuest(int signalID,string pos, string vec, Action<string> result)
     {
         // サーバーに送信するオブジェクトを作成
         UpdateSignalGuestRequest requestData = new UpdateSignalGuestRequest();
@@ -610,14 +620,23 @@ public class NetworkManager : MonoBehaviour
         // 結果を受信するまで待機
         yield return request.SendWebRequest();
 
-        bool isSuccess = false;
         if (request.result == UnityWebRequest.Result.Success
             && request.responseCode == 200)
         {
-            isSuccess = true;
+            result?.Invoke(null);
         }
+        else if (request.responseCode == 400)
+        {
+            // 返ってきたJSONをオブジェクトに変換
+            string resultJson = request.downloadHandler.text;
+            ErrorResponse response = JsonConvert.DeserializeObject<ErrorResponse>(resultJson);
 
-        result?.Invoke(isSuccess);
+            result?.Invoke(response.Error);
+        }
+        else
+        {
+            result?.Invoke("通信エラーが発生しました");
+        }
     }
 
     /// <summary>

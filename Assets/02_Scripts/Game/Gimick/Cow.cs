@@ -15,7 +15,7 @@ public class Cow : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (TopSceneDirector.Instance.PlayMode == TopSceneDirector.PLAYMODE.GUEST) return;
+        if (TopSceneDirector.Instance != null && TopSceneDirector.Instance.PlayMode == TopSceneDirector.PLAYMODE.GUEST) return;
 
         // ÉvÉåÉCÉÑÅ[Ç™êGÇÍÇΩèÍçá
         if (collision.gameObject.layer == 6)

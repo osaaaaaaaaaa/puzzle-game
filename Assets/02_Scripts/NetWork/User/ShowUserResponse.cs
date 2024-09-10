@@ -17,4 +17,6 @@ public class ShowUserResponse
     public int IconID { get; set; }
     [JsonProperty("score")]
     public int TotalScore { get; set; }
+    [JsonProperty("is_distress_signal_enabled")]
+    public bool IsDistressSignalEnabled { get; set; }
 }

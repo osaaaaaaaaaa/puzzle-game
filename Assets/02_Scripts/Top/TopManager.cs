@@ -11,13 +11,16 @@ using Newtonsoft.Json;
 public class TopManager : MonoBehaviour
 {
     [SerializeField] UIUserManager m_uiUserManager;
+    [SerializeField] UISignalManager m_uiSignalManager;
 
     [SerializeField] GameObject m_parent_top;
     [SerializeField] GameObject m_ui_startTextParent;
-    [SerializeField] Image m_panelImage;                 // 非表示にするパネルのイメージ
-    [SerializeField] Text m_uiUserName;                  // ユーザー名
-    [SerializeField] AssetDownLoader m_assetDownLoader;  // アセットダウンローダー
-    [SerializeField] GameObject m_boxStage;              // ステージシーンに入る前のウインドウ
+    [SerializeField] Image m_panelImage;                    // 非表示にするパネルのイメージ
+    [SerializeField] Text m_uiUserName;                     // ユーザー名
+    [SerializeField] AssetDownLoader m_assetDownLoader;     // アセットダウンローダー
+    [SerializeField] GameObject m_boxStage;                 // ステージシーンに入る前のウインドウ
+    [SerializeField] Image m_imgSignalButton;               // 救難信号のボタンの画像
+    [SerializeField] GameObject m_panelSignalButtonError;   // 救難信号ボタンを押したときに表示されるウインドウ
     bool isOnStageButton;   //ステージシーンに遷移するボタンをクリックしたかどうか
 
     // システム画面のパネルリスト
@@ -52,11 +55,13 @@ public class TopManager : MonoBehaviour
         S = 9999,
         A = 1200,
         B = 800,
-        C = 500
+        C = 500,
+        X = 0,
     }
 
     private void OnEnable()
     {
+       
         isOnStageButton = false;
     }
 
@@ -107,12 +112,18 @@ public class TopManager : MonoBehaviour
                 result => { }
                 ));
 
-            // ステージのリザルト情報を取得する
-            StartCoroutine(NetworkManager.Instance.GetStageResults(
-                result =>
+            // ユーザー情報を更新する
+            StartCoroutine(NetworkManager.Instance.GetUserData(
+                result => 
                 {
-                    OnClickTitleWindow();
-                }));
+                    // ステージのリザルト情報を取得する
+                    StartCoroutine(NetworkManager.Instance.GetStageResults(
+                        result =>
+                        {
+                            OnClickTitleWindow();
+                        }));
+                }
+                ));
         }
     }
 
@@ -159,6 +170,9 @@ public class TopManager : MonoBehaviour
         if (isOnStageButton) return;
 
         m_uiUserManager.UpdateUserDataUI(true, m_parent_top);
+
+        // 救難信号のカラー変更
+        m_imgSignalButton.color = NetworkManager.Instance.IsDistressSignalEnabled ? new Color(1f, 1f, 1f, 1f) : new Color(0.7f, 0.7f, 0.7f, 1f);
     }
 
     /// <summary>
@@ -205,12 +219,31 @@ public class TopManager : MonoBehaviour
     }
 
     /// <summary>
+    /// 救難信号ボタン処理
+    /// </summary>
+    public void OnDistressSignalButton()
+    {
+        if (!NetworkManager.Instance.IsDistressSignalEnabled)
+        {
+            TogglePanelDistressErrorVisibility(true);
+            return;
+        }
+        OnButtonSystemPanel((int)SYSTEM.D_SIGNAL);
+        m_uiSignalManager.OnSignalTabButton(0);
+    }
+
+    public void TogglePanelDistressErrorVisibility(bool isVisibility)
+    {
+        m_panelSignalButtonError.SetActive(isVisibility);
+    }
+
+    /// <summary>
     /// ランクを取得
     /// </summary>
     /// <returns></returns>
     public static Sprite GetScoreRank(List<Sprite> spriteRanks, int score)
     {
-        // 呼び出しがCから行われる , spriteRanksは上からS~Cの順で格納されている
+        // 呼び出しがXから行われる , spriteRanksは上からS~Xの順で格納されている
         int i = spriteRanks.Count - 1;
         foreach (var value in Enum.GetValues(typeof(TopManager.ScoreRank)))
         {

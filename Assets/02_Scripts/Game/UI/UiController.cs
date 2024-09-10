@@ -181,7 +181,7 @@ public class UiController : MonoBehaviour
             requestData.Vector,
             result =>
             {
-                if (!result)
+                if (result != null)
                 {
                     ShowPanelJsonError();
                     return;
@@ -306,12 +306,13 @@ public class UiController : MonoBehaviour
 
         // 評価を表記
         m_imgRank.color = new Color(1, 1, 1, 1);
-        m_imgRank.sprite = TopManager.GetScoreRank(m_texRanks,score);
+        if (isStageClear) m_imgRank.sprite = TopManager.GetScoreRank(m_texRanks, score);
+        if (!isStageClear) m_imgRank.sprite = m_texRanks[m_texRanks.Count - 1];
 
         // クリアしたかどうかで動的に設定
         m_textPlateResult.text = isStageClear ? "ステージクリア！" : "しっぱい...";
         // クリア済みのステージの場合はボタンを押せるようにする、そうでない場合は押せないようにする
-        m_buttonNextStage.GetComponent<Button>().interactable = NetworkManager.Instance.StageResults.Count < TopManager.stageID ? 
+        m_buttonNextStage.GetComponent<Button>().interactable = NetworkManager.Instance.StageResults.Count < TopManager.stageID ?
             false : true;
 
         // パネルをリザルトに設定する

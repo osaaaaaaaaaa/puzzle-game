@@ -14,6 +14,7 @@ public class UISignalManager : MonoBehaviour
 
     #region 救難信号
     [SerializeField] GameObject m_uiPanelError;              // 通信エラー時のパネル
+    [SerializeField] Text m_textError;                       // 通信エラー時のテキスト
     [SerializeField] List<Sprite> m_texTabs;                 // タブの画像 [1:アクティブな画像,0:非アクティブな画像]
     [SerializeField] GameObject m_tabLog;                    // ログを表示するタブ
     [SerializeField] GameObject m_logMenuBtnParent;          // メニューボタンの親オブジェクト
@@ -23,6 +24,7 @@ public class UISignalManager : MonoBehaviour
     [SerializeField] GameObject m_tabRecruiting;             // 救難信号の募集リストを表示するタブ
     [SerializeField] GameObject m_signalScloleView;          // 救難信号の募集を表示するビュー
     [SerializeField] GameObject m_signalPrefab;              // 救難信号の募集のプレファブ
+    [SerializeField] Text m_textDataCnt;                     // 取得したデータ数のテキスト
     #endregion
 
     /// <summary>
@@ -64,7 +66,8 @@ public class UISignalManager : MonoBehaviour
                 StartCoroutine(NetworkManager.Instance.GetSignalHostLogList(
                     result =>
                     {
-                        m_textEmpty.text = result.Length == 0 ? "募集した履歴が見つかりませんでした。" : "";
+                        m_textEmpty.text = result == null ? "募集した履歴が見つかりませんでした。" : "";
+                        m_textDataCnt.text = result == null ? "0/10" : result.Length + "/10";
 
                         if (result == null) return;
 
@@ -82,7 +85,8 @@ public class UISignalManager : MonoBehaviour
                 StartCoroutine(NetworkManager.Instance.GetSignalGuestLogList(
                     result =>
                     {
-                        m_textEmpty.text = result.Length == 0 ? "参加した履歴が見つかりませんでした。" : "";
+                        m_textEmpty.text = result == null ? "募集した履歴が見つかりませんでした。" : "";
+                        m_textDataCnt.text = result == null ? "0/10" : result.Length + "/10";
 
                         if (result == null) return;
 
@@ -116,7 +120,8 @@ public class UISignalManager : MonoBehaviour
         StartCoroutine(NetworkManager.Instance.GetRndSignalList(
             result =>
             {
-                m_textEmpty.text = result.Length == 0 ? "募集が見つかりませんでした。" : "";
+                m_textEmpty.text = result == null ? "募集した履歴が見つかりませんでした。" : "";
+                m_textDataCnt.text = result == null ? "0/10" : result.Length + "/10";
 
                 if (result == null) return;
 
@@ -125,7 +130,7 @@ public class UISignalManager : MonoBehaviour
                 {
                     // 救難信号を生成する
                     GameObject signalBar = Instantiate(m_signalPrefab, content.transform);
-                    signalBar.GetComponent<SignalBar>().UpdateSignalBar(m_uiPanelError,signal.SignalID, signal.ElapsedDay,
+                    signalBar.GetComponent<SignalBar>().UpdateSignalBar(m_uiPanelError, m_textError, signal.SignalID, signal.ElapsedDay,
                         m_texIcons[signal.IconID - 1], signal.IsAgreement, signal.HostName, signal.StageID, signal.GuestCnt);
                 }
             }));
@@ -138,6 +143,8 @@ public class UISignalManager : MonoBehaviour
     public void OnSignalTabButton(int mode)
     {
         m_textEmpty.text = "";
+        m_textDataCnt.text = "";
+        m_uiPanelError.SetActive(false);
         m_logScloleView.SetActive(false);
         m_signalScloleView.SetActive(false);
         m_logMenuBtnParent.SetActive(false);
@@ -166,6 +173,7 @@ public class UISignalManager : MonoBehaviour
     public void OnSelectMenuLogButton(int mode)
     {
         m_textEmpty.text = "";
+        m_textDataCnt.text = "";
         m_logMenuBtnParent.SetActive(false);
         m_logScloleView.SetActive(true);
         switch (mode)

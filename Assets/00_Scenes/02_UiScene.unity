@@ -9209,6 +9209,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: c27ee42108fece949b9404728f93854d, type: 3}
   - {fileID: 21300000, guid: e6c93edc49ebc3b41837c28bfcb4c6ab, type: 3}
   - {fileID: 21300000, guid: 1093a3309d7b53d49b3ee6dc5a4e3d01, type: 3}
+  - {fileID: 21300000, guid: 2af420b7018d2114ba8bf0e9572a4628, type: 3}
   m_uiPanelImage: {fileID: 682233816}
   m_uiCamera: {fileID: 2103209169}
   m_uiClearCamera: {fileID: 1673260466}

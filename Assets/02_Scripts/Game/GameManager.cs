@@ -312,8 +312,7 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        if (TopSceneDirector.Instance == null) return;
-        if (TopSceneDirector.Instance.PlayMode == TopSceneDirector.PLAYMODE.GUEST || m_isPause) return;
+        if (TopSceneDirector.Instance != null && TopSceneDirector.Instance.PlayMode == TopSceneDirector.PLAYMODE.GUEST || m_isPause) return;
 
         // カウントダウン
         if (m_isEndAnim && !m_isEndGame)
@@ -375,14 +374,22 @@ public class GameManager : MonoBehaviour
         // 現在のステージが上限以下＆＆最新のステージをクリアしたかどうか
         bool isUpdateStageID = NetworkManager.Instance.StageID < TopManager.stageMax && NetworkManager.Instance.StageID == TopManager.stageID;
 
-        // メダルを初獲得した||ハイスコアを上回ったかどうか
+        // メダルを初獲得した||ハイスコアを上回ったかどうかチェック
         bool isUpdateResult = false;
         if (!isUpdateStageID)
         {
-            ShowStageResultResponse currentResult = NetworkManager.Instance.StageResults[TopManager.stageID - 1];
-            isUpdateResult = !currentResult.IsMedal1 && m_isMedal1
-                || !currentResult.IsMedal2 && m_isMedal2
-                || currentResult.Score < score;
+            if (NetworkManager.Instance.StageResults.Count < TopManager.stageID)
+            {
+                // まだリザルトが存在しない場合
+                isUpdateResult = true;
+            }
+            else
+            {
+                ShowStageResultResponse currentResult = NetworkManager.Instance.StageResults[TopManager.stageID - 1];
+                isUpdateResult = !currentResult.IsMedal1 && m_isMedal1
+                    || !currentResult.IsMedal2 && m_isMedal2
+                    || currentResult.Score < score;
+            }
         }
 
         // リザルトを更新する必要がある場合
@@ -506,6 +513,7 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void OnGameReset()
     {
+        m_isPause = false;
         m_gameTimer -= 2f;
         m_UiController.GetComponent<UiController>().GenerateSubTimeText(2);
         m_player.GetComponent<Player>().ResetPlayer();

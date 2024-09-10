@@ -14,15 +14,18 @@ public class StageBox : MonoBehaviour
     [SerializeField] Text m_textScore;
     [SerializeField] Image m_imgRank;
     [SerializeField] List<Sprite> m_texRanks;
-    [SerializeField] Button m_btnRecruiting;
+    [SerializeField] GameObject m_btnRecruiting;
     [SerializeField] Text m_textRecruiting;
 
     [SerializeField] TopManager managerTop;
     ShowDistressSignalResponse m_distressSignal;
 
+    [SerializeField] GameObject m_panelError;
+    [SerializeField] Text m_textError;
+
     public void InitStatus(ShowStageResultResponse resultData)
     {
-        if(resultData == null)
+        if (resultData == null)
         {
             resultData = new ShowStageResultResponse
             {
@@ -52,12 +55,21 @@ public class StageBox : MonoBehaviour
 
         // 評価を表記
         m_imgRank.color = new Color(1, 1, 1, 1);
-        m_imgRank.sprite = TopManager.GetScoreRank(m_texRanks, resultData.Score);
+        if (resultData.Score > 0) m_imgRank.sprite = TopManager.GetScoreRank(m_texRanks, resultData.Score);
+        if (resultData.Score == 0) m_imgRank.sprite = m_texRanks[m_texRanks.Count - 1];
 
-        // 募集ボタンを編集 (募集済の場合=> textを募集中 & ボタンを押せなくする)
-        m_distressSignal = NetworkManager.Instance.dSignalList.FirstOrDefault(item => item.StageID == TopManager.stageID);    // リストから検索して取得
-        m_textRecruiting.text = m_distressSignal != null ? "募集中" : "募集する";
-        m_btnRecruiting.interactable = m_distressSignal != null ? false : true;
+        if (NetworkManager.Instance.IsDistressSignalEnabled)
+        {
+            // 募集ボタンを編集 (募集済の場合=> textを募集中 & ボタンを押せなくする)
+            m_btnRecruiting.SetActive(true);
+            m_distressSignal = NetworkManager.Instance.dSignalList.FirstOrDefault(item => item.StageID == TopManager.stageID);    // リストから検索して取得
+            m_textRecruiting.text = m_distressSignal != null ? "募集中" : "募集する";
+            m_btnRecruiting.GetComponent<Button>().interactable = m_distressSignal != null ? false : true;
+        }
+        else
+        {
+            m_btnRecruiting.SetActive(false);
+        }
 
         gameObject.SetActive(true);
     }
@@ -84,8 +96,13 @@ public class StageBox : MonoBehaviour
             {
                 if (result == null) return;
                 m_textRecruiting.text = "募集中";
-                m_btnRecruiting.interactable = false;
+                m_btnRecruiting.GetComponent<Button>().interactable = false;
                 m_distressSignal = result;
+            },
+            error => 
+            {
+                m_textError.text = error;
+                TogglePanelErrorVisibility(true);
             }));
     }
 
@@ -96,5 +113,10 @@ public class StageBox : MonoBehaviour
         int signalID = m_distressSignal != null ? m_distressSignal.SignalID : 0;
         int stageID = m_distressSignal != null ? m_distressSignal.StageID : 0;
         managerTop.OnPlayStageButton(mode, signalID, stageID, false);
+    }
+
+    public void TogglePanelErrorVisibility(bool isVisible)
+    {
+        m_panelError.SetActive(isVisible);
     }
 }

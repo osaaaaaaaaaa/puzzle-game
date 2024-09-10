@@ -33,6 +33,7 @@ public class SignalGuestLogBar : MonoBehaviour
             if (is_rewarded)
             {
                 m_btnReward.SetActive(false);
+                m_textTransition.text = "ÉNÉäÉAçœÇ›";
             }
             else
             {

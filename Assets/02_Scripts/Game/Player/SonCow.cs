@@ -17,7 +17,7 @@ public class SonCow : MonoBehaviour
     bool m_isBeKicked;  // 蹴り飛ばされたかどうか
     bool m_isJump;      // ジャンプしたかどうか
     GameObject m_player;
-    GameObject m_gameManager;
+    GameManager m_gameManager;
 
     #region Rayの始点と終点
     float m_lineWallStart = 0.7f;
@@ -79,7 +79,7 @@ public class SonCow : MonoBehaviour
         }
 
         // 移動処理
-        m_rb.velocity = new Vector2(m_speed * m_direction, m_rb.velocity.y); ;
+        if(!m_gameManager.m_isPause) m_rb.velocity = new Vector2(m_speed * m_direction, m_rb.velocity.y);
     }
 
     /// <summary>
@@ -143,8 +143,8 @@ public class SonCow : MonoBehaviour
     /// </summary>
     void SeparateSon()
     {
-        // 牛に乗った息子が非アクティブの場合
-        if (!m_son_cow.activeSelf || m_isJump) return;
+        // 牛に乗った息子が非アクティブの場合 || ポーズ中の場合
+        if (!m_son_cow.activeSelf || m_isJump || m_gameManager.m_isPause) return;
 
         m_son.transform.position = m_son_cow.transform.position;
 
@@ -247,7 +247,7 @@ public class SonCow : MonoBehaviour
     public void InitMemberVariable()
     {
         m_player = GameObject.Find("Player");
-        m_gameManager = GameObject.Find("GameManager");
+        m_gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         m_offset = transform.position - m_player.transform.position;
     }
 

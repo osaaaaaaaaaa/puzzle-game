@@ -13,12 +13,14 @@ public class SignalBar : MonoBehaviour
     [SerializeField] Text m_textGuestCnt;                 // ゲストの参加人数
     [SerializeField] Text m_textDays;                     // 経過日数
     GameObject m_uiPanelError;
+    Text m_textError;
     int m_signalID;
     int m_stageID;
 
-    public void UpdateSignalBar(GameObject errorPanel,int signalID, int elapsed_days, Sprite icon, bool isAgreement, string hostName, int stageID, int guestCnt)
+    public void UpdateSignalBar(GameObject errorPanel,Text errorText,int signalID, int elapsed_days, Sprite icon, bool isAgreement, string hostName, int stageID, int guestCnt)
     {
         m_uiPanelError = errorPanel;
+        m_textError = errorText;
         m_signalID = signalID;
         m_stageID = stageID;
 
@@ -43,8 +45,9 @@ public class SignalBar : MonoBehaviour
             result =>
             {
                 SEManager.Instance.PlayButtonSE();
-                if (!result)
+                if (result != null)
                 {
+                    m_textError.text = result;
                     m_uiPanelError.SetActive(true);
                     return;
                 };
