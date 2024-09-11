@@ -16,10 +16,14 @@ public class SignalGuestLogBar : MonoBehaviour
     [SerializeField] Text m_textTransition;               // 遷移ボタンのテキスト
     [SerializeField] GameObject m_btnDestroy;             // 破棄するボタン
     [SerializeField] GameObject m_btnReward;              // 報酬受け取りボタン
+    UISignalManager m_signalManager;
+    GameObject m_logBar;
     int m_signalID;
 
     public void UpdateLogBar(UISignalManager signalManager,int signalID, int elapsed_days, Sprite icon, bool isAgreement, string hostName, int stageID, int guestCnt, bool action,bool is_rewarded)
     {
+        m_signalManager = signalManager;
+        m_logBar = this.gameObject;
         m_signalID = signalID;
         m_textDays.text = elapsed_days + "日前";
         m_icon.sprite = icon;
@@ -52,6 +56,9 @@ public class SignalGuestLogBar : MonoBehaviour
         m_btnTransition.onClick.AddListener(() => signalManager.OnSignalTabButton(0));
         m_btnTransition.onClick.AddListener(() => manager.OnPlayStageButton(TopSceneDirector.PLAYMODE.GUEST, signalID, stageID, action));
 
+        // 削除確認パネルを表示するイベント設定
+        m_btnDestroy.GetComponent<Button>().onClick.
+            AddListener(() => m_signalManager.ShowPanelConfirmationGuest("参加を取り消しますか？",this));
     }
 
     /// <summary>
@@ -76,9 +83,13 @@ public class SignalGuestLogBar : MonoBehaviour
             NetworkManager.Instance.UserID,
             result =>
             {
-                if (!result) return;
+                if (!result)
+                {
+                    m_signalManager.ShowPanelError("通信エラーが発生しました");
+                    return;
+                };
                 SEManager.Instance.PlayCanselSE();
-                Destroy(gameObject);
+                Destroy(m_logBar);
             }));
     }
 }

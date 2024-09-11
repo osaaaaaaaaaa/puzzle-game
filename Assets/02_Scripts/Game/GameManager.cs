@@ -86,10 +86,13 @@ public class GameManager : MonoBehaviour
                     TopSceneDirector.Instance.DistressSignalID,
                     result =>
                     {
-                        if (result == null) return;
+                        if (result == null)
+                        {
+                            m_buttonReplay.GetComponent<Button>().interactable = false; 
+                        };
 
                         replayDatas = result;
-                        m_buttonReplay.SetActive(true);
+                        m_buttonReplay.GetComponent<Button>().interactable = true;
                     }));
             }
         }
@@ -114,9 +117,9 @@ public class GameManager : MonoBehaviour
         GameObject.Find("Goal").GetComponent<Goal>().InitMemberVariable();
         GameObject.Find("SonController").GetComponent<SonController>().InitMemberVariable();
 
-        // 前回メダルを取得している場合は表示を変更する 、 リザルトが存在しない場合は必ずfalse
         if (TopSceneDirector.Instance != null)
         {
+            // 前回メダルを取得している場合は表示を変更する 、 リザルトが存在しない場合は必ずfalse
             bool isMedal1 = NetworkManager.Instance.StageResults.Count < TopManager.stageID ?
             false : NetworkManager.Instance.StageResults[TopManager.stageID - 1].IsMedal1;
             bool isMedal2 = NetworkManager.Instance.StageResults.Count < TopManager.stageID ?
@@ -180,6 +183,7 @@ public class GameManager : MonoBehaviour
         }
         else
         {
+            // ゲームシーンから始めた場合
             GameObject.Find("Medal1").GetComponent<Medal>().InitMemberVariable(false);
             GameObject.Find("Medal2").GetComponent<Medal>().InitMemberVariable(false);
         }
@@ -190,11 +194,11 @@ public class GameManager : MonoBehaviour
     }
 
     // Start is called before the first frame update
-    void Start()
+    IEnumerator Start()
     {
         // アセットバンドルを使用する場合、Startメソッドの型をIEnumeratorに変更すること
         // ビルドするときは、全体に!をつけること
-#if !UNITY_EDITOR
+
         // ゲームシーンを読み込むまで待機する
         var op = Addressables.LoadSceneAsync(TopManager.stageID + "_GameScene", LoadSceneMode.Additive);
         yield return op;
@@ -230,15 +234,15 @@ public class GameManager : MonoBehaviour
                 {
                     if (result == null)
                     {
-                        // ゲストのプロフィールを表示する
-                        m_UiController.InitGuestUI();
+                            // ゲストのプロフィールを表示する
+                            m_UiController.InitGuestUI();
                         return;
                     };
 
                     foreach (ShowSignalGuestResponse user in result)
                     {
-                        // 正常に変換できるかチェック , 登録してまだ設置が完了していない場合はスキップ
-                        Vector3 pos = NetworkManager.Instance.StringToVector3(user.Pos);
+                            // 正常に変換できるかチェック , 登録してまだ設置が完了していない場合はスキップ
+                            Vector3 pos = NetworkManager.Instance.StringToVector3(user.Pos);
                         Vector3 vec = NetworkManager.Instance.StringToVector3(user.Vector);
                         if (pos == Vector3.zero || vec == Vector3.zero)
                         {
@@ -249,26 +253,25 @@ public class GameManager : MonoBehaviour
 
                         if (user.UserID == NetworkManager.Instance.UserID)
                         {
-                            // 自分自身の場合は最後に登録した場所へ移動させる
-                            GameObject.Find("Player").transform.position = pos;
+                                // 自分自身の場合は最後に登録した場所へ移動させる
+                                GameObject.Find("Player").transform.position = pos;
                             continue;
                         }
 
-                        // ゲストを生成する
-                        GameObject guestSet = Instantiate(m_guestSetPrefab, m_stage.transform);
+                            // ゲストを生成する
+                            GameObject guestSet = Instantiate(m_guestSetPrefab, m_stage.transform);
                         guestSet.transform.position = Vector3.zero;
                         GameObject guest = guestSet.transform.GetChild(0).gameObject;
                         guest.GetComponent<Guest>().InitMemberVariable(user.UserName, pos, vec);
 
-                        // 生成して初期化が済んだらリストに追加
-                        m_guestList.Add(guest);
+                            // 生成して初期化が済んだらリストに追加
+                            m_guestList.Add(guest);
                     }
 
-                    // ゲストの生成が終わったらプロフィールを生成する
-                    m_UiController.InitGuestUI();
+                        // ゲストのプロフィールを表示する
+                        m_UiController.InitGuestUI();
                 }));
         }
-#endif
 
         // 壁を非表示にする
         GameObject.Find("Wall_R").GetComponent<Renderer>().enabled = false;
@@ -279,6 +282,7 @@ public class GameManager : MonoBehaviour
         m_mainCamera = GameObject.Find("MainCamera_Game");
         m_player = GameObject.Find("Player");
         m_cameraController = GameObject.Find("CameraController").GetComponent<CameraController>();
+        var goal = GameObject.Find("Goal");
 
         // フラグOFF
         m_isPause = false;
@@ -338,6 +342,8 @@ public class GameManager : MonoBehaviour
         m_UiController.GetComponent<UiController>().SetActiveGameUI(true);
 
         m_isEndAnim = true;
+
+        if (TopManager.stageID == 1) m_UiController.OnTutorialButton(true);
     }
 
     /// <summary>

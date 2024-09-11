@@ -186,8 +186,6 @@ public class UiController : MonoBehaviour
                     ShowPanelJsonError();
                     return;
                 };
-
-                Debug.Log("ゲストの配置情報を更新した！");
             }));
     }
 
@@ -246,8 +244,7 @@ public class UiController : MonoBehaviour
         m_uiPanelTutorial.SetActive(isActive);
         m_uiPanelGame.SetActive(!isActive);
 
-        // パネルを閉じる場合はポーズOFFにする
-        if (!isActive) EventPause(false);
+        EventPause(isActive);
     }
 
     /// <summary>

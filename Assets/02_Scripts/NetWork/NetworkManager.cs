@@ -37,6 +37,7 @@ public class NetworkManager : MonoBehaviour
     #endregion
 
     #region ユーザー情報
+    public bool IsDistressSignalTutrial { get; private set; } = false;
     public int UserID { get; private set; } = 0;
     public string UserName { get; private set; } = "";
     public int AchievementID { get; private set; } = 0;
@@ -73,6 +74,15 @@ public class NetworkManager : MonoBehaviour
     }
 
     /// <summary>
+    /// 救難信号のチュートリアルを見たことを記録する
+    /// </summary>
+    public void TutrialViewed()
+    {
+        this.IsDistressSignalTutrial = true;
+        SaveUserData();
+    }
+
+    /// <summary>
     /// ユーザー登録処理
     /// </summary>
     public IEnumerator StoreUser(string name, Action<bool> result)
@@ -98,6 +108,7 @@ public class NetworkManager : MonoBehaviour
             // ファイルにユーザー情報を保存する
             this.UserName = name;
             this.UserID = response.UserID;
+            this.IsDistressSignalTutrial = false;
             SaveUserData();
             isSuccess = true;
         }
@@ -114,6 +125,7 @@ public class NetworkManager : MonoBehaviour
         SaveData saveData = new SaveData();
         saveData.Name = this.UserName;
         saveData.UserID = this.UserID;
+        saveData.IsDistressSignalTutrial = this.IsDistressSignalTutrial;
         string json = JsonConvert.SerializeObject(saveData);
         // Application.persistentDataPathはOS毎で保存場所が固定されている
         var writer = new StreamWriter(Application.persistentDataPath + "/saveData.json");
@@ -136,6 +148,7 @@ public class NetworkManager : MonoBehaviour
         SaveData saveData = JsonConvert.DeserializeObject<SaveData>(json);
         this.UserID = saveData.UserID;
         this.UserName = saveData.Name;
+        this.IsDistressSignalTutrial = saveData.IsDistressSignalTutrial;
         return true;
     }
 

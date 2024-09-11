@@ -6,7 +6,7 @@ using DG.Tweening;
 
 public class UISignalManager : MonoBehaviour
 {
-    [SerializeField] Text m_textEmpty;
+    [SerializeField] GameObject m_textEmpty;
 
     #region ユーザー情報
     [SerializeField] List<Sprite> m_texIcons;             // アイコン画像
@@ -15,6 +15,9 @@ public class UISignalManager : MonoBehaviour
     #region 救難信号
     [SerializeField] GameObject m_uiPanelError;              // 通信エラー時のパネル
     [SerializeField] Text m_textError;                       // 通信エラー時のテキスト
+    [SerializeField] GameObject m_uiPanelConfirmation;       // 削除確認パネル
+    [SerializeField] Text m_textConfirmation;                // 削除確認のテキスト
+    [SerializeField] Button m_buttonConfirmation;            // 削除確認のYESボタン
     [SerializeField] List<Sprite> m_texTabs;                 // タブの画像 [1:アクティブな画像,0:非アクティブな画像]
     [SerializeField] GameObject m_tabLog;                    // ログを表示するタブ
     [SerializeField] GameObject m_logMenuBtnParent;          // メニューボタンの親オブジェクト
@@ -26,6 +29,25 @@ public class UISignalManager : MonoBehaviour
     [SerializeField] GameObject m_signalPrefab;              // 救難信号の募集のプレファブ
     [SerializeField] Text m_textDataCnt;                     // 取得したデータ数のテキスト
     #endregion
+
+    #region ウィンドウ
+    [SerializeField] GameObject m_windowDistressSignal;
+    [SerializeField] GameObject m_windowTutrial;
+    #endregion
+
+    #region チュートリアル
+    [SerializeField] GameObject m_menuTutorial;
+    [SerializeField] List<GameObject> m_panelTutrials;
+    #endregion
+
+    /// <summary>
+    /// ウィンドウの表示モード
+    /// </summary>
+    enum SHOW_WINDOW_MODE
+    {
+        DISTRESS_SIGNAL = 0,       // 救難信号のウインドウ
+        TUTORIAL,                  // チュートリアルのウインドウ
+    }
 
     /// <summary>
     /// 救難信号の表示モード
@@ -43,6 +65,12 @@ public class UISignalManager : MonoBehaviour
     {
         LOG_HOST = 0,       // ホストのときのログ一覧
         LOG_GUEST,          // ゲストのときのログ一覧
+    }
+
+    public void ToggleTextEmpty(string text, bool isVisibility)
+    {
+        m_textEmpty.SetActive(isVisibility);
+        m_textEmpty.GetComponent<Text>().text = text;
     }
 
     /// <summary>
@@ -66,7 +94,7 @@ public class UISignalManager : MonoBehaviour
                 StartCoroutine(NetworkManager.Instance.GetSignalHostLogList(
                     result =>
                     {
-                        m_textEmpty.text = result == null ? "募集した履歴が見つかりませんでした。" : "";
+                        ToggleTextEmpty("募集した履歴が見つかりませんでした。", result == null);
                         m_textDataCnt.text = result == null ? "0/10" : result.Length + "/10";
 
                         if (result == null) return;
@@ -85,7 +113,7 @@ public class UISignalManager : MonoBehaviour
                 StartCoroutine(NetworkManager.Instance.GetSignalGuestLogList(
                     result =>
                     {
-                        m_textEmpty.text = result == null ? "募集した履歴が見つかりませんでした。" : "";
+                        ToggleTextEmpty("参加した履歴が見つかりませんでした。", result == null); 
                         m_textDataCnt.text = result == null ? "0/10" : result.Length + "/10";
 
                         if (result == null) return;
@@ -120,7 +148,7 @@ public class UISignalManager : MonoBehaviour
         StartCoroutine(NetworkManager.Instance.GetRndSignalList(
             result =>
             {
-                m_textEmpty.text = result == null ? "募集した履歴が見つかりませんでした。" : "";
+                ToggleTextEmpty("募集が見つかりませんでした。", result == null);
                 m_textDataCnt.text = result == null ? "0/10" : result.Length + "/10";
 
                 if (result == null) return;
@@ -130,7 +158,7 @@ public class UISignalManager : MonoBehaviour
                 {
                     // 救難信号を生成する
                     GameObject signalBar = Instantiate(m_signalPrefab, content.transform);
-                    signalBar.GetComponent<SignalBar>().UpdateSignalBar(m_uiPanelError, m_textError, signal.SignalID, signal.ElapsedDay,
+                    signalBar.GetComponent<SignalBar>().UpdateSignalBar(this, signal.SignalID, signal.ElapsedDay,
                         m_texIcons[signal.IconID - 1], signal.IsAgreement, signal.HostName, signal.StageID, signal.GuestCnt);
                 }
             }));
@@ -142,12 +170,13 @@ public class UISignalManager : MonoBehaviour
     /// <param name="mode">SIGNAL_LIST_MODE参照</param>
     public void OnSignalTabButton(int mode)
     {
-        m_textEmpty.text = "";
+        ToggleTextEmpty("", false);
         m_textDataCnt.text = "";
         m_uiPanelError.SetActive(false);
         m_logScloleView.SetActive(false);
         m_signalScloleView.SetActive(false);
         m_logMenuBtnParent.SetActive(false);
+        m_windowTutrial.SetActive(false);
         switch (mode)
         {
             case 0: // ログの選択メニューを表示
@@ -172,10 +201,11 @@ public class UISignalManager : MonoBehaviour
     /// <param name="mode">SIGNAL_LIST_MODE</param>
     public void OnSelectMenuLogButton(int mode)
     {
-        m_textEmpty.text = "";
+        ToggleTextEmpty("", false);
         m_textDataCnt.text = "";
         m_logMenuBtnParent.SetActive(false);
         m_logScloleView.SetActive(true);
+        m_windowTutrial.SetActive(false);
         switch (mode)
         {
             case 0: // ログの選択メニューを表示
@@ -185,5 +215,85 @@ public class UISignalManager : MonoBehaviour
                 UpdateSignalLogUI(SIGNAL_LOG_LIST_MODE.LOG_GUEST);
                 break;
         }
+    }
+
+    /// <summary>
+    /// ウィンドウを切り替える
+    /// </summary>
+    /// <param name="mode">SHOW_WINDOW_MODE</param>
+    public void ToggleWindowVisibility(int mode)
+    {
+        ToggleTextEmpty("", false);
+        m_textDataCnt.text = "";
+        switch (mode)
+        {
+            case 0: // 救難信号のウインドウ表示
+                m_windowTutrial.SetActive(false);
+                m_windowDistressSignal.SetActive(true);
+                OnSignalTabButton(0);
+                break;
+            case 1: // チュートリアルのウインドウ表示
+                m_windowDistressSignal.SetActive(false);
+                m_windowTutrial.SetActive(true);
+                break;
+        }
+    }
+
+    /// <summary>
+    /// チュートリアルパネルを表示・非表示にする
+    /// </summary>
+    /// <param name="panelID">m_panelTutrialsのインデックス番号+1</param>
+    public void TogglePanelTutorialVisibility(int panelID)
+    {
+        m_menuTutorial.SetActive(panelID == 0);
+
+        // IDに0指定で全て非表示にする
+        for (int i = 0; i < m_panelTutrials.Count; i++)
+        {
+            bool isMyID = i + 1 == panelID;
+            m_panelTutrials[i].SetActive(isMyID);
+        }
+    }
+
+    /// <summary>
+    /// チュートリアルのパネルを閉じるボタン
+    /// </summary>
+    public void OnClosePanelTutrialButton()
+    {
+        TogglePanelTutorialVisibility(0);
+        m_windowTutrial.SetActive(true);
+    }
+
+    public void ShowPanelError(string error)
+    {
+        m_textError.text = error;
+        m_uiPanelError.SetActive(true);
+    }
+
+    public void ShowPanelConfirmationGuest(string text,SignalGuestLogBar logBar)
+    {
+        m_uiPanelConfirmation.SetActive(true);
+        m_textConfirmation.text = text;
+
+        // ログの削除イベントをYesボタンに設定する
+        m_buttonConfirmation.onClick.RemoveAllListeners();
+        m_buttonConfirmation.onClick.AddListener(() => logBar.OnDestroyButton());
+        m_buttonConfirmation.onClick.AddListener(() => HidePanelConfirmation());
+    }
+
+    public void ShowPanelConfirmationHost(string text, SignalHostLogBar logBar)
+    {
+        m_uiPanelConfirmation.SetActive(true);
+        m_textConfirmation.text = text;
+
+        // ログの削除イベントをYesボタンに設定する
+        m_buttonConfirmation.onClick.RemoveAllListeners();
+        m_buttonConfirmation.onClick.AddListener(() => logBar.OnDestroyButton());
+        m_buttonConfirmation.onClick.AddListener(() => HidePanelConfirmation());
+    }
+
+    public void HidePanelConfirmation()
+    {
+        m_uiPanelConfirmation.SetActive(false);
     }
 }

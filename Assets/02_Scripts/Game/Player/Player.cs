@@ -100,8 +100,6 @@ public class Player : MonoBehaviour
         // 画面タッチした&&現在矢印を生成できる場合
         if (Input.GetMouseButtonDown(0) && m_isKicked == false)
         {
-            Debug.Log(m_gameManager.GameMode);
-
             // タッチした場所にRayを飛ばす
             Vector2 worldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             RaycastHit2D hit2d = Physics2D.Raycast(worldPos, Vector2.zero);
@@ -199,7 +197,6 @@ public class Player : MonoBehaviour
         uiController.SetInteractableButtonReset(true);
 
         // 息子を蹴り飛ばす処理
-        Debug.Log("方角：" + dir + " , パワー：" + power);
         Debug.Log("ベクトル：" + new Vector3(dir.x * power, dir.y * power).ToString());
         if (m_son.activeSelf)
         {

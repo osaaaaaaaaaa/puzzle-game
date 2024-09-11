@@ -228,8 +228,19 @@ public class TopManager : MonoBehaviour
             TogglePanelDistressErrorVisibility(true);
             return;
         }
+
         OnButtonSystemPanel((int)SYSTEM.D_SIGNAL);
-        m_uiSignalManager.OnSignalTabButton(0);
+
+        if (TopSceneDirector.Instance != null && TopSceneDirector.Instance.PlayMode == TopSceneDirector.PLAYMODE.SOLO && !NetworkManager.Instance.IsDistressSignalTutrial)
+        {
+            NetworkManager.Instance.TutrialViewed();        // チュートリアルを見たことにする
+            m_uiSignalManager.ToggleWindowVisibility(1);    // チュートリアル画面を表示する
+        }
+        else
+        {
+            // チュートリアル画面を見たことがある場合は救難信号の画面を表示する
+            m_uiSignalManager.ToggleWindowVisibility(0);
+        }
     }
 
     public void TogglePanelDistressErrorVisibility(bool isVisibility)

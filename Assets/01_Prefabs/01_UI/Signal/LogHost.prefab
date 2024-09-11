@@ -335,19 +335,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 593423584070402072}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 5897489180115116290}
-        m_TargetAssemblyTypeName: SignalHostLogBar, Assembly-CSharp
-        m_MethodName: OnDestroyButton
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!1 &3733207089506048712
 GameObject:
   m_ObjectHideFlags: 0
