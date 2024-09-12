@@ -10,7 +10,7 @@ public class ShowUserProfileResponse
     [JsonProperty("name")]
     public string Name { get; set; }
     [JsonProperty("title")]
-    public string AchievementTitle { get; set; }
+    public string Title { get; set; }
     [JsonProperty("icon_id")]
     public int IconID { get; set; }
     [JsonProperty("stage_id")]

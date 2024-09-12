@@ -8,10 +8,6 @@ public class UISignalManager : MonoBehaviour
 {
     [SerializeField] GameObject m_textEmpty;
 
-    #region ユーザー情報
-    [SerializeField] List<Sprite> m_texIcons;             // アイコン画像
-    #endregion
-
     #region 救難信号
     [SerializeField] GameObject m_uiPanelError;              // 通信エラー時のパネル
     [SerializeField] Text m_textError;                       // 通信エラー時のテキスト
@@ -123,7 +119,7 @@ public class UISignalManager : MonoBehaviour
                             // ログを生成する
                             GameObject logHost = Instantiate(m_barGuestLogPrefab, contentLog.transform);
                             logHost.GetComponent<SignalGuestLogBar>().UpdateLogBar(this,log.SignalID, log.ElapsedDay,
-                                m_texIcons[log.IconID - 1], log.IsAgreement, log.HostName, log.StageID, log.GuestCnt, log.IsStageClear, log.IsRewarded);
+                                TopManager.TexIcons[log.IconID - 1], log.IsAgreement, log.HostName, log.StageID, log.GuestCnt, log.IsStageClear, log.IsRewarded);
                         }
                     }));
                 break;
@@ -159,7 +155,7 @@ public class UISignalManager : MonoBehaviour
                     // 救難信号を生成する
                     GameObject signalBar = Instantiate(m_signalPrefab, content.transform);
                     signalBar.GetComponent<SignalBar>().UpdateSignalBar(this, signal.SignalID, signal.ElapsedDay,
-                        m_texIcons[signal.IconID - 1], signal.IsAgreement, signal.HostName, signal.StageID, signal.GuestCnt);
+                        TopManager.TexIcons[signal.IconID - 1], signal.IsAgreement, signal.HostName, signal.StageID, signal.GuestCnt);
                 }
             }));
     }

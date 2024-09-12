@@ -31,7 +31,6 @@ public class UiController : MonoBehaviour
     [SerializeField] GameObject m_uiPanelGuests;       // ゲストのUIパネル
     [SerializeField] GameObject m_guestScrollContent;  // プレファブの格納先
     [SerializeField] GameObject m_profileGuestPrefab;  // ゲストのプロフィールプレファブ
-    [SerializeField] List<Sprite> m_texIcons;          // アイコン画像
     [SerializeField] GameObject m_buttonEditDone;      // ゲストの配置決定ボタン
     [SerializeField] GameObject m_buttonEdit;          // ゲストの編集開始ボタン
     [SerializeField] GameObject m_buttonReplay;        // リプレイ再生ボタン
@@ -136,8 +135,8 @@ public class UiController : MonoBehaviour
                     // プロフィールを生成する
                     GameObject profile = Instantiate(m_profileGuestPrefab, m_guestScrollContent.transform);
                     profile.GetComponent<GuestProfile>().UpdateProfile(guestObj, user.UserID, user.Name,
-                        user.AchievementTitle, user.StageID, user.TotalScore,
-                        m_texIcons[user.IconID - 1], user.IsAgreement);
+                        user.Title, user.StageID, user.TotalScore,
+                        TopManager.TexIcons[user.IconID - 1], user.IsAgreement);
                 }
             }));
     }

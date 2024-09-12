@@ -48,10 +48,10 @@ public class StageBox : MonoBehaviour
         text = text.Length == 3 ? "0" + text : text;
         text = text.Length == 2 ? "00" + text : text;
         text = text.Length == 1 ? "000" + text : text;
-        m_textClearTime.text = "クリアタイム   " + text.Insert(2, ":");
+        m_textClearTime.text = "クリアタイム     " + text.Insert(2, ":");
 
         // スコアを表記
-        m_textScore.text = "スコア   " + resultData.Score;
+        m_textScore.text = "ハイスコア          " + resultData.Score;
 
         // 評価を表記
         m_imgRank.color = new Color(1, 1, 1, 1);

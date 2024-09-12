@@ -74,7 +74,7 @@ public class Guest : MonoBehaviour
         Debug.Log(son.name);
 
         // 母親のアニメーションを再生する
-        GetComponent<MomAnimController>().PlayKickAnim();  // 蹴るアニメ
+        GetComponent<PlayerAnimController>().PlayKickAnim();  // 蹴るアニメ
 
         // 息子を蹴り飛ばす処理
         Debug.Log("ゲストのベクトル：" + VectorKick.ToString());
@@ -93,7 +93,7 @@ public class Guest : MonoBehaviour
     }
 
     /// <summary>
-    /// プレイヤーの状態をリセットする
+    /// 状態をリセットする
     /// </summary>
     public void ResetGuest()
     {
@@ -101,14 +101,14 @@ public class Guest : MonoBehaviour
         m_isKicked = false;
 
         // 母親のアニメーションを再生する
-        GetComponent<MomAnimController>().PlayStandbyAnim();  // 通常スキンのIdleアニメ
+        GetComponent<PlayerAnimController>().PlayStandbyAnim();  // 通常スキンのIdleアニメ
     }
 
     public void InitMemberVariable(string name,Vector3 position,Vector3 vector)
     {
         m_textName.text = name;
         transform.position = position;
-        VectorKick = vector;
+        VectorKick = (vector / m_player.m_mulPower) * 50f;   // アイテムを使用しないで蹴るときの大きさに修正;
 
         // 起動予測線の描画開始
         m_simulationController.GetComponent<SimulationController>().vecKick = VectorKick;

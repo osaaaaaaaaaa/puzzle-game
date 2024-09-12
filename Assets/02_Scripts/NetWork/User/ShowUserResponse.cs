@@ -7,8 +7,8 @@ public class ShowUserResponse
 {
     [JsonProperty("name")]
     public string Name { get; set; }
-    [JsonProperty("achievement_id")]
-    public int AchievementID { get; set; }
+    [JsonProperty("title_id")]
+    public int TitleID { get; set; }
     [JsonProperty("title")]
     public string AchievementTitle { get; set; }
     [JsonProperty("stage_id")]

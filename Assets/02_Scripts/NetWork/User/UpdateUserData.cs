@@ -9,8 +9,8 @@ public class UpdateUserData
     public int UserID { get; set; }
     [JsonProperty("name")]
     public string Name { get; set; }
-    [JsonProperty("achievement_id")]
-    public int AchievementID { get; set; }
+    [JsonProperty("title_id")]
+    public int TitleID { get; set; }
     [JsonProperty("stage_id")]
     public int StageID { get; set; }
     [JsonProperty("icon_id")]

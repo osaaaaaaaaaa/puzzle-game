@@ -194,11 +194,11 @@ public class GameManager : MonoBehaviour
     }
 
     // Start is called before the first frame update
-    IEnumerator Start()
+    void Start()
     {
         // アセットバンドルを使用する場合、Startメソッドの型をIEnumeratorに変更すること
         // ビルドするときは、全体に!をつけること
-
+#if !UNITY_EDITOR
         // ゲームシーンを読み込むまで待機する
         var op = Addressables.LoadSceneAsync(TopManager.stageID + "_GameScene", LoadSceneMode.Additive);
         yield return op;
@@ -272,6 +272,7 @@ public class GameManager : MonoBehaviour
                         m_UiController.InitGuestUI();
                 }));
         }
+#endif
 
         // 壁を非表示にする
         GameObject.Find("Wall_R").GetComponent<Renderer>().enabled = false;

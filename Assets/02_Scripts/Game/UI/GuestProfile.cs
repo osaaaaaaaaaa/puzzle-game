@@ -13,7 +13,6 @@ public class GuestProfile : MonoBehaviour
     [SerializeField] GameObject m_hertUI;                 // 相互フォロー,フォロワーを示すUI
     [SerializeField] Button m_buttonDestroy;              // ゲスト削除ボタン
     [SerializeField] Button m_buttonToggle;               // ゲストのオブジェクトを表示・非表示するボタン
-    [SerializeField] List<Sprite> m_texToggleBtn;         // トグルボタンの画像 [0:offの画像 , 1:onの画像]
     [SerializeField] GameObject m_window;                 // 確認ウインドウ
     GameObject m_guestObj;
     int m_userID;
@@ -71,7 +70,7 @@ public class GuestProfile : MonoBehaviour
     {
         // 表示・非表示を切り替える
         m_guestObj.SetActive(!m_guestObj.activeSelf);
-        m_buttonToggle.GetComponent<Image>().sprite = !m_guestObj.activeSelf ? m_texToggleBtn[0] : m_texToggleBtn[1];
+        m_buttonToggle.GetComponent<Image>().sprite = !m_guestObj.activeSelf ? TopManager.TexIcons[0] : TopManager.TexIcons[1];
 
         // ゲストの起動予測を表示・非表示処理
         m_guestObj.GetComponent<Guest>().ToggleLineVisibility(m_guestObj.activeSelf);

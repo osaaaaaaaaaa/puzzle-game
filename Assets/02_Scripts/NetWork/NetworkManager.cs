@@ -40,7 +40,7 @@ public class NetworkManager : MonoBehaviour
     public bool IsDistressSignalTutrial { get; private set; } = false;
     public int UserID { get; private set; } = 0;
     public string UserName { get; private set; } = "";
-    public int AchievementID { get; private set; } = 0;
+    public int TitleID { get; private set; } = 0;
     public int StageID { get; private set; } = 0;
     public int IconID { get; private set; } = 0;
     public int TotalScore { get; private set; } = 0;
@@ -169,7 +169,7 @@ public class NetworkManager : MonoBehaviour
             // 通信が成功した場合、返ってきたJSONをオブジェクトに変換
             string resultJson = request.downloadHandler.text;
             ShowUserResponse response = JsonConvert.DeserializeObject<ShowUserResponse>(resultJson);
-            this.AchievementID = response.AchievementID;
+            this.TitleID = response.TitleID;
             this.StageID = response.StageID;
             this.IconID = response.IconID;
             this.TotalScore = response.TotalScore;
@@ -188,13 +188,13 @@ public class NetworkManager : MonoBehaviour
     /// <summary>
     /// ユーザー情報更新処理
     /// </summary>
-    public IEnumerator UpdateUser(string name, int achievement_id, int stage_id, int icon_id, Action<ErrorResponse> result)
+    public IEnumerator UpdateUser(string name, int title_id, int stage_id, int icon_id, Action<ErrorResponse> result)
     {
         // サーバーに送信するオブジェクトを作成
         UpdateUserData requestData = new UpdateUserData();
         requestData.UserID = UserID;
         requestData.Name = name;
-        requestData.AchievementID = achievement_id;
+        requestData.TitleID = title_id;
         requestData.StageID = stage_id;
         requestData.IconID = icon_id;
         // サーバーに送信オブジェクトをJSONに変換
@@ -210,7 +210,7 @@ public class NetworkManager : MonoBehaviour
         {
             // 通信が成功した場合、ファイルにユーザー情報を保存する
             this.UserName = name;
-            this.AchievementID = achievement_id;
+            this.TitleID = title_id;
             this.StageID = stage_id;
             this.IconID = icon_id;
             SaveUserData();

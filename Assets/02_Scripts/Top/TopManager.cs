@@ -50,6 +50,17 @@ public class TopManager : MonoBehaviour
     /// </summary>
     public static int stageID { get; set; }
 
+    /// <summary>
+    /// アイテムを使用しているかどうか
+    /// </summary>
+    public static bool isUseItem { get; set; }
+
+    /// <summary>
+    /// アイコンデザインのリスト
+    /// </summary>
+    [SerializeField] List<Sprite> m_texIcons;
+    public static List<Sprite> TexIcons { get; private set; }
+
     public enum ScoreRank
     {
         S = 9999,
@@ -63,12 +74,14 @@ public class TopManager : MonoBehaviour
     {
        
         isOnStageButton = false;
+        isUseItem = false;
     }
 
     void Start()
     {
         stageID = 0;
         m_panelImage.enabled = false;
+        TexIcons = m_texIcons;
     }
 
     void Update()

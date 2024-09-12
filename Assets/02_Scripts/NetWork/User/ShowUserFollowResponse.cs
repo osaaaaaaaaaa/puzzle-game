@@ -10,7 +10,7 @@ public class ShowUserFollowResponse
     [JsonProperty("following_user_name")]
     public string Name { get; set; }
     [JsonProperty("title")]
-    public string AchievementTitle { get; set; }
+    public string Title { get; set; }
     [JsonProperty("stage_id")]
     public int StageID { get; set; }
     [JsonProperty("icon_id")]

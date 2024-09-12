@@ -43,6 +43,7 @@ public class Player : MonoBehaviour
 
     private void Start()
     {
+        if (TopManager.isUseItem) m_mulPower = 100;
         m_canDragPlayer = false;
         m_isKicked = false;
 
@@ -161,7 +162,7 @@ public class Player : MonoBehaviour
                 else
                 {
                     // 母親のアニメーションを再生する
-                    GetComponent<MomAnimController>().PlayStandbyAnim();  // 通常スキンのIdleアニメ
+                    GetComponent<PlayerAnimController>().PlayStandbyAnim();  // 通常スキンのIdleアニメ
 
                     // 生成した矢印を破棄する
                     Destroy(m_arrow);
@@ -191,7 +192,7 @@ public class Player : MonoBehaviour
         }
 
         // 母親のアニメーションを再生する
-        GetComponent<MomAnimController>().PlayKickAnim();  // 蹴るアニメ
+        GetComponent<PlayerAnimController>().PlayKickAnim();  // 蹴るアニメ
 
         // リセットボタンを有効化する
         uiController.SetInteractableButtonReset(true);
@@ -238,6 +239,6 @@ public class Player : MonoBehaviour
         }
 
         // 母親のアニメーションを再生する
-        GetComponent<MomAnimController>().PlayStandbyAnim();  // 通常スキンのIdleアニメ
+        GetComponent<PlayerAnimController>().PlayStandbyAnim();  // 通常スキンのIdleアニメ
     }
 }

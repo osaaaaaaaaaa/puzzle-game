@@ -16,7 +16,6 @@ public class UIUserManager : MonoBehaviour
     [SerializeField] Text m_textStageID;                  // ステージID
     [SerializeField] Text m_textScore;                    // ステージID
     [SerializeField] List<Image> m_icons;                 // アイコン
-    [SerializeField] List<Sprite> m_texIcons;             // アイコン画像
     #endregion
 
     #region 編集モードで使用するオブジェクト
@@ -27,8 +26,13 @@ public class UIUserManager : MonoBehaviour
     #endregion
     #region アイコン
     [SerializeField] GameObject m_editIconWindow;           // アイコン用の編集ウィンドウ
-    [SerializeField] GameObject m_iconListParent;           // アイコンリスト
+    [SerializeField] GameObject m_iconListParent;           // アイコンボタンの格納先
     [SerializeField] GameObject m_selectIconButtonPrefab;   // アイコンボタンのプレファブ
+    #endregion
+    #region 称号
+    [SerializeField] GameObject m_editTitleWindow;           // 称号用の編集ウィンドウ
+    [SerializeField] GameObject m_contentTitle;              // 称号ボタンの格納先
+    [SerializeField] GameObject m_selectTitleButtonPrefab;   // 称号ボタンのプレファブ
     #endregion
     #region フォローリスト
     [SerializeField] GameObject m_followUserScloleView;         // フォローリスト
@@ -56,7 +60,7 @@ public class UIUserManager : MonoBehaviour
     {
         PROFILE = 0,
         ICON,
-        ACHIEVE
+        TITLE
     }
 
     /// <summary>
@@ -113,7 +117,7 @@ public class UIUserManager : MonoBehaviour
                 // アイコンを更新する
                 foreach (Image img in m_icons)
                 {
-                    img.sprite = m_texIcons[result.IconID - 1];
+                    img.sprite = TopManager.TexIcons[result.IconID - 1];
                 }
 
                 // ユーザー名を更新する
@@ -173,8 +177,8 @@ public class UIUserManager : MonoBehaviour
                             // プロフィールを生成する
                             GameObject profile = Instantiate(m_profileFollowPrefab, contentFollow.transform);
                             profile.GetComponent<FollowingUserProfile>().UpdateProfile(transform.gameObject,user.UserID,
-                                user.Name, user.AchievementTitle,user.StageID, user.TotalScore, 
-                                m_texIcons[user.IconID - 1], user.IsAgreement);
+                                user.Name, user.Title,user.StageID, user.TotalScore,
+                                TopManager.TexIcons[user.IconID - 1], user.IsAgreement);
                         }
                     }));
                 break;
@@ -202,8 +206,8 @@ public class UIUserManager : MonoBehaviour
                             // プロフィールを生成する
                             GameObject profile = Instantiate(m_profileRecommendedPrefab, contentRecommended.transform);
                             profile.GetComponent<FollowingUserProfile>().UpdateProfile(transform.gameObject,user.UserID, 
-                                user.Name, user.AchievementTitle,user.StageID, user.TotalScore, 
-                                m_texIcons[user.IconID - 1], user.IsFollower);
+                                user.Name, user.Title,user.StageID, user.TotalScore,
+                                TopManager.TexIcons[user.IconID - 1], user.IsFollower);
                         }
                     }));
                 break;
@@ -244,8 +248,8 @@ public class UIUserManager : MonoBehaviour
                             // プロフィールを生成する
                             GameObject profile = Instantiate(m_profileRankingPrefab, contentRanking.transform);
                             profile.GetComponent<RankingUserProfile>().UpdateProfile(i+1, isMyData,
-                                user.Name, user.AchievementTitle, user.StageID, user.TotalScore,
-                                m_texIcons[user.IconID - 1], user.IsAgreement);
+                                user.Name, user.Title, user.StageID, user.TotalScore,
+                                TopManager.TexIcons[user.IconID - 1], user.IsAgreement);
                             i++;
                         }
                     }));
@@ -276,8 +280,8 @@ public class UIUserManager : MonoBehaviour
                             // プロフィールを生成する
                             GameObject profile = Instantiate(m_profileRankingPrefab, contentRecommended.transform);
                             profile.GetComponent<RankingUserProfile>().UpdateProfile(i+1, isMyData,
-                                user.Name, user.AchievementTitle, user.StageID, user.TotalScore,
-                                m_texIcons[user.IconID - 1], user.IsAgreement);
+                                user.Name, user.Title, user.StageID, user.TotalScore,
+                                TopManager.TexIcons[user.IconID - 1], user.IsAgreement);
                             i++;
                         }
                     }));
@@ -293,6 +297,7 @@ public class UIUserManager : MonoBehaviour
         ResetErrorText();
         m_editProfileWindow.SetActive(currentEditMode == EDITMODE.PROFILE ? true : false);
         m_editIconWindow.SetActive(currentEditMode == EDITMODE.ICON ? true : false);
+        m_editTitleWindow.SetActive(currentEditMode == EDITMODE.TITLE ? true : false);
     }
 
     /// <summary>
@@ -325,7 +330,7 @@ public class UIUserManager : MonoBehaviour
             // ユーザー更新処理
             StartCoroutine(NetworkManager.Instance.UpdateUser(
                 m_inputUserName.text,
-                NetworkManager.Instance.AchievementID,
+                NetworkManager.Instance.TitleID,
                 NetworkManager.Instance.StageID,
                 NetworkManager.Instance.IconID,
                 result =>
@@ -380,7 +385,7 @@ public class UIUserManager : MonoBehaviour
                 for (int i = 0; i < result.Length; i++)
                 {
                     GameObject button = Instantiate(m_selectIconButtonPrefab, m_iconListParent.transform);
-                    button.GetComponent<Image>().sprite = m_texIcons[result[i].Effect - 1];
+                    button.GetComponent<Image>().sprite = TopManager.TexIcons[result[i].Effect - 1];
 
                     // アイコン変更イベントを追加する
                     int iconID = new int();   // アドレス更新
@@ -399,7 +404,7 @@ public class UIUserManager : MonoBehaviour
         // ユーザー更新処理
         StartCoroutine(NetworkManager.Instance.UpdateUser(
             NetworkManager.Instance.UserName,
-            NetworkManager.Instance.AchievementID,
+            NetworkManager.Instance.TitleID,
             NetworkManager.Instance.StageID,
             iconID,
             result =>
@@ -410,7 +415,68 @@ public class UIUserManager : MonoBehaviour
                 // アイコンを更新する
                 foreach (Image img in m_icons)
                 {
-                    img.sprite = m_texIcons[iconID - 1];
+                    img.sprite = TopManager.TexIcons[iconID - 1];
+                }
+
+                OnCloseEditWindowButton();
+            }));
+    }
+
+
+    /// <summary>
+    /// 称号のリストを表示する
+    /// </summary>
+    public void OnEditTitleButton()
+    {
+        SetActiveParents(EDITMODE.TITLE);
+
+        // 現在存在するアイコンの選択ボタンを全て破棄する
+        foreach (Transform child in m_contentTitle.transform)
+        {
+            Destroy(child.gameObject);
+        }
+
+        // 所持している正午情報を取得する
+        StartCoroutine(NetworkManager.Instance.GetUserItem(
+            2,
+            result =>
+            {
+                // 所持している称号のみ生成する
+                for (int i = 0; i < result.Length; i++)
+                {
+                    GameObject button = Instantiate(m_selectTitleButtonPrefab, m_contentTitle.transform);
+                    button.transform.GetChild(0).GetComponent<Text>().text = result[i].Name;
+
+                    // 称号変更イベントを追加する
+                    int titleID = new int();   // アドレス更新
+                    string name = result[i].Name; ;
+                    titleID = result[i].ItemID;
+                    button.GetComponent<Button>().onClick.AddListener(() => OnDoneTitleButton(titleID, name));
+                }
+            }));
+    }
+
+    /// <summary>
+    /// 称号を変更する
+    /// </summary>
+    public void OnDoneTitleButton(int titleID,string title)
+    {
+        SEManager.Instance.PlayButtonSE();
+        // ユーザー更新処理
+        StartCoroutine(NetworkManager.Instance.UpdateUser(
+            NetworkManager.Instance.UserName,
+            titleID,
+            NetworkManager.Instance.StageID,
+            NetworkManager.Instance.IconID,
+            result =>
+            {
+                // エラー文が返ってきた場合はリターン
+                if (result != null) return;
+
+                // 称号を更新する
+                foreach (Text text in m_textAchievementTitle)
+                {
+                    text.text = title;
                 }
 
                 OnCloseEditWindowButton();
@@ -520,40 +586,5 @@ public class UIUserManager : MonoBehaviour
                 UpdateRankingUI(RANKINF_MODE.FOLLOW);
                 break;
         }
-    }
-
-    /// <summary>
-    /// アチーブメントのリストを表示する
-    /// </summary>
-    public void OnEditAchieveButton(int mode)
-    {
-        ToggleTextEmpty("", false);
-        switch (mode)
-        {
-            case 0: // ホストのログリストを表示
-                m_rankingScloleView.SetActive(true);
-                m_followRankingScloleView.SetActive(false);
-                m_tabRanking.GetComponent<Image>().sprite = m_texTabs[1];
-                m_tabFollowRanking.GetComponent<Image>().sprite = m_texTabs[0];
-
-                break;
-            case 1: // ゲストのログリストを表示
-                m_rankingScloleView.SetActive(false);
-                m_followRankingScloleView.SetActive(true);
-                m_tabRanking.GetComponent<Image>().sprite = m_texTabs[0];
-                m_tabFollowRanking.GetComponent<Image>().sprite = m_texTabs[1];
-
-                // 募集一覧を取得
-                //UpdateRankingUI(RANKINF_MODE.FOLLOW);
-                break;
-        }
-    }
-
-    /// <summary>
-    /// アチーブメントを変更する
-    /// </summary>
-    public void OnDoneAchieveButton()
-    {
-
     }
 }

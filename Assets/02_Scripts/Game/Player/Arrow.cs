@@ -59,7 +59,7 @@ public class Arrow : MonoBehaviour
             if (dis < 0.4f)
             {
                 // 母親のアニメーションを再生する
-                m_player.GetComponent<MomAnimController>().PlayIdleAnim();  // アブノーマルスキンのIdleアニメ
+                m_player.GetComponent<PlayerAnimController>().PlayIdleAnim();  // アブノーマルスキンのIdleアニメ
 
                 // 描画off
                 transform.gameObject.GetComponent<SpriteRenderer>().enabled = false;
@@ -74,7 +74,7 @@ public class Arrow : MonoBehaviour
             if(isKick == false)
             {
                 // 母親のアニメーションを再生する
-                m_player.GetComponent<MomAnimController>().PlayReadyAnim();  // 蹴る姿勢のアニメ
+                m_player.GetComponent<PlayerAnimController>().PlayReadyAnim();  // 蹴る姿勢のアニメ
             }
 
             // isKickをtrue
