@@ -16,6 +16,7 @@ public class SignalGuestLogBar : MonoBehaviour
     [SerializeField] Text m_textTransition;               // 遷移ボタンのテキスト
     [SerializeField] GameObject m_btnDestroy;             // 破棄するボタン
     [SerializeField] GameObject m_btnReward;              // 報酬受け取りボタン
+    [SerializeField] Sprite m_spriteReward;               // 報酬アイテムの画像
     UISignalManager m_signalManager;
     GameObject m_logBar;
     int m_signalID;
@@ -66,10 +67,24 @@ public class SignalGuestLogBar : MonoBehaviour
     /// </summary>
     public void OnRewardButton()
     {
-        m_btnDestroy.SetActive(true);
-        m_btnReward.SetActive(false);
-        m_btnTransition.interactable = true;
-        m_textTransition.text = "ステージへ移動";
+        // ゲストの報酬受け取り処理
+        StartCoroutine(NetworkManager.Instance.UpdateSignalGuestReward(
+            m_signalID,
+            result =>
+            {
+                if (result == null)
+                {
+                    m_signalManager.ShowPanelError("通信エラーが発生しました");
+                    return;
+                };
+
+                GameObject.Find("ItemDetail").GetComponent<PanelItemDetails>().SetPanelContent("アイテム獲得", result.Amount + "ポイント獲得！", m_spriteReward);
+
+                m_btnDestroy.SetActive(true);
+                m_btnReward.SetActive(false);
+                m_btnTransition.interactable = true;
+                m_textTransition.text = "ステージへ移動";
+            }));
     }
 
     /// <summary>

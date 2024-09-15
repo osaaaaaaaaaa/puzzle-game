@@ -497,6 +497,7 @@ MonoBehaviour:
   m_textTransition: {fileID: 7884711570091071685}
   m_btnDestroy: {fileID: 2414471575958153055}
   m_btnReward: {fileID: 8568389615294670818}
+  m_spriteReward: {fileID: 21300000, guid: 4c6d48fffb6efd94b8a288719f9b30e6, type: 3}
 --- !u!1 &4050920112309979105
 GameObject:
   m_ObjectHideFlags: 0

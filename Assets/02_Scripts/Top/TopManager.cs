@@ -32,7 +32,8 @@ public class TopManager : MonoBehaviour
         MAILBOX,
         FOLLOWBOX,
         RANKING,
-        D_SIGNAL
+        D_SIGNAL,
+        ACHIEVEMENT
     }
 
     /// <summary>
@@ -120,6 +121,12 @@ public class TopManager : MonoBehaviour
         }
         else
         {
+            // 所持アイテムを取得する
+            StartCoroutine(NetworkManager.Instance.GetUserItem(
+                3,
+                result => { }
+                ));
+
             // 自分が募集中の救難信号を取得する
             StartCoroutine(NetworkManager.Instance.GetDistressSignalList(
                 result => { }
@@ -165,6 +172,7 @@ public class TopManager : MonoBehaviour
         stageID = id == 0 ? stageID : id;   // ソロで遊ぶ場合(id=0)は更新しない
         TopSceneDirector.Instance.SetPlayMode(playMode, signalID, isStageClear);
         isOnStageButton = true;
+        isUseItem = m_boxStage.GetComponent<StageBox>().m_isUseItem;
         m_boxStage.GetComponent<StageBox>().OnCloseButton();
 #if !UNITY_EDITOR
         // ゲームUIシーンに遷移する
@@ -184,7 +192,7 @@ public class TopManager : MonoBehaviour
 
         m_uiUserManager.UpdateUserDataUI(true, m_parent_top);
 
-        // 救難信号のカラー変更
+        // 救難信号ボタンのカラー変更
         m_imgSignalButton.color = NetworkManager.Instance.IsDistressSignalEnabled ? new Color(1f, 1f, 1f, 1f) : new Color(0.7f, 0.7f, 0.7f, 1f);
     }
 
@@ -226,6 +234,9 @@ public class TopManager : MonoBehaviour
     public void OnBackButtonSystemPanel()
     {
         if (isOnStageButton) return;
+
+        // 救難信号ボタンのカラー変更
+        m_imgSignalButton.color = NetworkManager.Instance.IsDistressSignalEnabled ? new Color(1f, 1f, 1f, 1f) : new Color(0.7f, 0.7f, 0.7f, 1f);
 
         m_uiUserManager.ResetErrorText();
         m_parent_top.transform.DOLocalMove(new Vector3(m_parent_top.transform.localPosition.x, 0, 0), 0.5f).SetEase(Ease.Linear);

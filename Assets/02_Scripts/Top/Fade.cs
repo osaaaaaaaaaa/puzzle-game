@@ -7,6 +7,7 @@ public class Fade : MonoBehaviour
 {
     private void OnEnable()
     {
+        DOTween.Kill(transform.GetComponent<CanvasGroup>());
         GetComponent<CanvasGroup>().alpha = 10f;
         GetComponent<CanvasGroup>().DOFade(0.0f, 1).SetEase(Ease.InCubic).SetLoops(-1, LoopType.Yoyo);
     }

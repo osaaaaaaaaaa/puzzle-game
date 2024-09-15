@@ -45,12 +45,18 @@ public class NetworkManager : MonoBehaviour
     public int IconID { get; private set; } = 0;
     public int TotalScore { get; private set; } = 0;
     public bool IsDistressSignalEnabled { get; set; } = false;
+    public int ItemCnt { get; private set; } = 0;
     #endregion
 
     #region ステージリザルト情報・救難信号情報
     public List<ShowStageResultResponse> StageResults { get; private set; } = new List<ShowStageResultResponse>();
     public List<ShowDistressSignalResponse> dSignalList { get; private set; } = new List<ShowDistressSignalResponse>();
     #endregion
+
+    // 救難信号システムを解放するアイテムID
+    const int c_DistressSignalEnableItemID = 35;
+    // ステージで使用できるアイテムID
+    public int GolfClubItemID { get; private set; } = 34;
 
     /// <summary>
     /// string型からVector3型に変換する
@@ -253,8 +259,9 @@ public class NetworkManager : MonoBehaviour
             && request.responseCode == 200)
         {
             // 通信が成功した場合、ファイルにユーザー情報を保存する
-            this.UserName = name;
-            SaveUserData();
+            if (itemID == c_DistressSignalEnableItemID) this.IsDistressSignalEnabled = true;    // 救難信号システムを開放
+            if (itemID == this.GolfClubItemID) this.ItemCnt = this.ItemCnt + allieAmount < 0 ? 0 : this.ItemCnt + allieAmount; // 所持アイテム数を更新する
+
             isSuccess = true;
         }
 
@@ -279,6 +286,8 @@ public class NetworkManager : MonoBehaviour
             // 通信が成功した場合、返ってきたJSONをオブジェクトに変換
             string resultJson = request.downloadHandler.text;
             ShowUserItemResponse[] response = JsonConvert.DeserializeObject<ShowUserItemResponse[]>(resultJson);
+
+            if (type == 3 && response.Length != 0) this.ItemCnt = response[0].Amount;
 
             // 呼び出し元のresult処理を呼び出す
             result?.Invoke(response);
@@ -546,6 +555,157 @@ public class NetworkManager : MonoBehaviour
     }
 
     /// <summary>
+    /// アチーブメント一覧取得処理
+    /// </summary>
+    public IEnumerator GetAchievementList(Action<ShowAchievementResponse[]> result)
+    {
+        // 送信
+        UnityWebRequest request = UnityWebRequest.Get(API_BASE_URL + "achievements?user_id=" + UserID);
+
+        // 結果を受信するまで待機
+        yield return request.SendWebRequest();
+
+        if (request.result == UnityWebRequest.Result.Success
+            && request.responseCode == 200)
+        {
+            // 通信が成功した場合、返ってきたJSONをオブジェクトに変換
+            string resultJson = request.downloadHandler.text;
+            ShowAchievementResponse[] response = JsonConvert.DeserializeObject<ShowAchievementResponse[]>(resultJson);
+
+            // 呼び出し元のresult処理を呼び出す
+            result?.Invoke(response);
+        }
+        else
+        {
+            // 呼び出し元のresult処理を呼び出す
+            result?.Invoke(null);
+        }
+    }
+
+    /// <summary>
+    /// アチーブメント達成状況更新処理
+    /// </summary>
+    public IEnumerator UpdateUserAchievement(int type,int allieVal, Action<bool> result)
+    {
+        // サーバーに送信するオブジェクトを作成
+        UpdateUserAchievementRequest requestData = new UpdateUserAchievementRequest();
+        requestData.UserID = UserID;
+        requestData.Type = type;
+        requestData.AllieVal = allieVal;
+        // サーバーに送信オブジェクトをJSONに変換
+        string json = JsonConvert.SerializeObject(requestData);
+        // 送信
+        UnityWebRequest request = UnityWebRequest.Post(API_BASE_URL + "users/achievements/update", json, "application/json");
+
+        // 結果を受信するまで待機
+        yield return request.SendWebRequest();
+
+        bool isSuccess = false;
+        if (request.result == UnityWebRequest.Result.Success
+            && request.responseCode == 200)
+        {
+            isSuccess = true;
+        }
+        result?.Invoke(isSuccess);
+    }
+
+    /// <summary>
+    /// 受信メール一覧取得処理
+    /// </summary>
+    public IEnumerator GetUserMailList(Action<ShowUserMailResponse[]> result)
+    {
+        // 送信
+        UnityWebRequest request = UnityWebRequest.Get(API_BASE_URL + "users/mail/show?user_id=" + UserID);
+
+        // 結果を受信するまで待機
+        yield return request.SendWebRequest();
+
+        if (request.result == UnityWebRequest.Result.Success
+            && request.responseCode == 200)
+        {
+            // 通信が成功した場合、返ってきたJSONをオブジェクトに変換
+            string resultJson = request.downloadHandler.text;
+            ShowUserMailResponse[] response = JsonConvert.DeserializeObject<ShowUserMailResponse[]>(resultJson);
+
+            // 呼び出し元のresult処理を呼び出す
+            result?.Invoke(response);
+        }
+        else
+        {
+            // 呼び出し元のresult処理を呼び出す
+            result?.Invoke(null);
+        }
+    }
+
+    /// <summary>
+    /// 受信メール開封処理
+    /// </summary>
+    public IEnumerator UpdateUserMail(int mailID, Action<ShowUserItemResponse[]> result)
+    {
+        // サーバーに送信するオブジェクトを作成
+        UpdateUserMailRequest requestData = new UpdateUserMailRequest();
+        requestData.UserID = UserID;
+        requestData.MailID = mailID;
+        // サーバーに送信オブジェクトをJSONに変換
+        string json = JsonConvert.SerializeObject(requestData);
+        // 送信
+        UnityWebRequest request = UnityWebRequest.Post(API_BASE_URL + "users/mail/update", json, "application/json");
+
+        // 結果を受信するまで待機
+        yield return request.SendWebRequest();
+
+        if (request.result == UnityWebRequest.Result.Success
+            && request.responseCode == 200)
+        {
+            // 通信が成功した場合、返ってきたJSONをオブジェクトに変換
+            string resultJson = request.downloadHandler.text;
+            ShowUserItemResponse[] response = JsonConvert.DeserializeObject<ShowUserItemResponse[]>(resultJson);
+
+            for (int i = 0; i < response.Length; i++)
+            {
+                if (response[i].ItemID == c_DistressSignalEnableItemID) this.IsDistressSignalEnabled = true;    // 救難信号システムを開放
+                if (response[i].ItemID == this.GolfClubItemID) this.ItemCnt = this.ItemCnt + response[i].Amount < 0 ? 0 : this.ItemCnt + response[i].Amount; // 所持アイテム数を更新する
+            }
+
+            // 呼び出し元のresult処理を呼び出す
+            result?.Invoke(response);
+        }
+        else
+        {
+            result?.Invoke(null);
+        }
+    }
+
+    /// <summary>
+    /// 受信メール削除処理
+    /// </summary>
+    public IEnumerator DestroyUserMail(int mailID, Action<bool> result)
+    {
+        // サーバーに送信するオブジェクトを作成
+        UpdateUserMailRequest requestData = new UpdateUserMailRequest();
+        requestData.UserID = UserID;
+        requestData.MailID = mailID;
+        // サーバーに送信オブジェクトをJSONに変換
+        string json = JsonConvert.SerializeObject(requestData);
+        // 送信
+        UnityWebRequest request = UnityWebRequest.Post(API_BASE_URL + "users/mail/destroy", json, "application/json");
+
+        // 結果を受信するまで待機
+        yield return request.SendWebRequest();
+        bool isSuccess = false;
+
+        if (request.result == UnityWebRequest.Result.Success
+            && request.responseCode == 200)
+        {
+            isSuccess = true;
+        }
+
+        // 呼び出し元のresult処理を呼び出す
+        result?.Invoke(isSuccess);
+    }
+
+
+    /// <summary>
     /// 自分が募集中(未クリア)の救難信号取得処理
     /// </summary>
     public IEnumerator GetDistressSignalList(Action<ShowDistressSignalResponse[]> result)
@@ -658,7 +818,7 @@ public class NetworkManager : MonoBehaviour
     public IEnumerator DestroyDistressSignal(int signalID, Action<bool> result)
     {
         // サーバーに送信するオブジェクトを作成
-        DestroySignalGuestRequest requestData = new DestroySignalGuestRequest();
+        DistressSignalGuestRequest requestData = new DistressSignalGuestRequest();
         requestData.SignalID = signalID;
         // サーバーに送信オブジェクトをJSONに変換
         string json = JsonConvert.SerializeObject(requestData);
@@ -689,7 +849,7 @@ public class NetworkManager : MonoBehaviour
     public IEnumerator DestroySignalGuest(int signalID, int userID, Action<bool> result)
     {
         // サーバーに送信するオブジェクトを作成
-        DestroySignalGuestRequest requestData = new DestroySignalGuestRequest();
+        DistressSignalGuestRequest requestData = new DistressSignalGuestRequest();
         requestData.SignalID = signalID;
         requestData.UserID = userID;
         // サーバーに送信オブジェクトをJSONに変換
@@ -834,7 +994,6 @@ public class NetworkManager : MonoBehaviour
         }
     }
 
-
     /// <summary>
     /// リプレイ情報更新処理
     /// </summary>
@@ -943,4 +1102,40 @@ public class NetworkManager : MonoBehaviour
             result?.Invoke(null);
         }
     }
+
+    /// <summary>
+    /// ゲストの報酬受け取り処理
+    /// </summary>
+    public IEnumerator UpdateSignalGuestReward(int signalID, Action<ShowUserItemResponse> result)
+    {
+        // サーバーに送信するオブジェクトを作成
+        DistressSignalGuestRequest requestData = new DistressSignalGuestRequest();
+        requestData.SignalID = signalID;
+        requestData.UserID = this.UserID;
+
+        // サーバーに送信オブジェクトをJSONに変換
+        string json = JsonConvert.SerializeObject(requestData);
+        // 送信
+        UnityWebRequest request = UnityWebRequest.Post(API_BASE_URL + "distress_signals/reward/update", json, "application/json");
+
+        // 結果を受信するなで待機
+        yield return request.SendWebRequest();
+
+        if (request.result == UnityWebRequest.Result.Success
+            && request.responseCode == 200)
+        {
+            // 通信が成功した場合、返ってきたJSONをオブジェクトに変換
+            string resultJson = request.downloadHandler.text;
+            ShowUserItemResponse response = JsonConvert.DeserializeObject<ShowUserItemResponse>(resultJson);
+
+            // 呼び出し元のresult処理を呼び出す
+            result?.Invoke(response);
+        }
+        else
+        {
+            // 呼び出し元のresult処理を呼び出す
+            result?.Invoke(null);
+        }
+    }
+
 }

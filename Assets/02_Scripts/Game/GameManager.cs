@@ -405,12 +405,13 @@ public class GameManager : MonoBehaviour
             // ステージクリア処理
             StartCoroutine(NetworkManager.Instance.UpdateStageClear(
                 isUpdateStageID,
-                new ShowStageResultResponse { 
-                    StageID = TopManager.stageID, 
-                    IsMedal1 = m_isMedal1, 
-                    IsMedal2 = m_isMedal2, 
+                new ShowStageResultResponse
+                {
+                    StageID = TopManager.stageID,
+                    IsMedal1 = m_isMedal1,
+                    IsMedal2 = m_isMedal2,
                     Time = time,
-                    Score = score 
+                    Score = score
                 },
                 result =>
                 {
@@ -418,10 +419,33 @@ public class GameManager : MonoBehaviour
                     m_isEndGame = true;
 
                     // UIをゲームクリア用に設定する
-                    m_UiController.SetResultUI(m_isMedal1,m_isMedal2, m_gameTimer, score, true);
+                    m_UiController.SetResultUI(m_isMedal1, m_isMedal2, m_gameTimer, score, true);
 
                     // 初クリア演出
                     PlayStageClearEffect();
+                }));
+
+            if (isUpdateStageID)
+            {
+                // アチーブメント達成状況更新処理 [ステージ初回クリア]
+                StartCoroutine(NetworkManager.Instance.UpdateUserAchievement(
+                    1,
+                    TopManager.stageID,
+                    result =>
+                    {
+                        Debug.Log("アチーブメント１");
+                        if (!result) return;
+                    }));
+            }
+
+            // アチーブメント達成状況更新処理 [トータルスコア]
+            StartCoroutine(NetworkManager.Instance.UpdateUserAchievement(
+                2,
+                0,
+                result =>
+                {
+                    Debug.Log("アチーブメント２");
+                    if (!result) return;
                 }));
         }
         else
@@ -430,10 +454,25 @@ public class GameManager : MonoBehaviour
             m_isEndGame = true;
 
             // UIをゲームクリア用に設定する
-            m_UiController.SetResultUI(m_isMedal1, m_isMedal2,m_gameTimer, score,true);
+            m_UiController.SetResultUI(m_isMedal1, m_isMedal2, m_gameTimer, score, true);
 
             // 初クリア演出
             PlayStageClearEffect();
+        }
+
+        // アイテムを使用している場合
+        if (TopManager.isUseItem)
+        {
+            TopManager.isUseItem = false;
+            // 所持アイテム更新処理
+            StartCoroutine(NetworkManager.Instance.UpdateUserItem(
+                NetworkManager.Instance.GolfClubItemID,
+                2,
+                -1,
+                result =>
+                {
+                    if (!result) return;
+                }));
         }
 
         // 自身がホストの場合

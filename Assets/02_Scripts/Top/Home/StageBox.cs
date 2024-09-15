@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public class StageBox : MonoBehaviour
 {
@@ -22,6 +23,11 @@ public class StageBox : MonoBehaviour
 
     [SerializeField] GameObject m_panelError;
     [SerializeField] Text m_textError;
+
+    [SerializeField] Button m_btnItem;
+    [SerializeField] GameObject m_itemFrame;
+    [SerializeField] Text m_textItemCnt;
+    public bool m_isUseItem { get; private set; }
 
     public void InitStatus(ShowStageResultResponse resultData)
     {
@@ -58,6 +64,14 @@ public class StageBox : MonoBehaviour
         if (resultData.Score > 0) m_imgRank.sprite = TopManager.GetScoreRank(m_texRanks, resultData.Score);
         if (resultData.Score == 0) m_imgRank.sprite = m_texRanks[m_texRanks.Count - 1];
 
+        // アイテムボタンを初期化
+        m_isUseItem = false;
+        m_btnItem.interactable = NetworkManager.Instance.ItemCnt > 0;
+        DOTween.Kill(m_itemFrame.transform);
+        m_itemFrame.GetComponent<Image>().color = new Color(0.7f, 0.7f, 0.7f, 1f);
+        m_itemFrame.SetActive(true);
+        m_textItemCnt.text = "×" + NetworkManager.Instance.ItemCnt;
+
         if (NetworkManager.Instance.IsDistressSignalEnabled)
         {
             // 募集ボタンを編集 (募集済の場合=> textを募集中 & ボタンを押せなくする)
@@ -72,6 +86,25 @@ public class StageBox : MonoBehaviour
         }
 
         gameObject.SetActive(true);
+    }
+
+    public void OnUseItemButton()
+    {
+        m_isUseItem = !m_isUseItem;
+        int currentItemCnt = m_isUseItem && (NetworkManager.Instance.ItemCnt - 1) >= 0 ? (NetworkManager.Instance.ItemCnt - 1) : NetworkManager.Instance.ItemCnt;
+        m_textItemCnt.text = "×" + currentItemCnt;
+
+        if (m_isUseItem)
+        {
+            Debug.Log("再生");
+            m_itemFrame.GetComponent<Image>().DOFade(0.1f, 0.5f).SetEase(Ease.OutCubic).SetLoops(-1, LoopType.Yoyo);
+        }
+        else
+        {
+            Debug.Log("停止");
+            DOTween.Kill(m_itemFrame.GetComponent<Image>());
+            m_itemFrame.GetComponent<Image>().color = new Color(0.7f, 0.7f, 0.7f, 1f);
+        }
     }
 
     public void OnCloseButton()

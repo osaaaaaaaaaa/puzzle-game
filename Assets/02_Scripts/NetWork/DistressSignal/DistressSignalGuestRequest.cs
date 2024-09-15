@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Newtonsoft.Json;
 
-public class DestroySignalGuestRequest
+public class DistressSignalGuestRequest
 {
     [JsonProperty("d_signal_id")]
     public int SignalID { get; set; }

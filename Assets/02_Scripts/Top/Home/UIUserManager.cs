@@ -35,8 +35,8 @@ public class UIUserManager : MonoBehaviour
     [SerializeField] GameObject m_selectTitleButtonPrefab;   // 称号ボタンのプレファブ
     #endregion
     #region フォローリスト
-    [SerializeField] GameObject m_followUserScloleView;         // フォローリスト
-    [SerializeField] GameObject m_recommendedUserScloleView;    // おすすめのユーザーリスト
+    [SerializeField] GameObject m_followUserScrollView;         // フォローリスト
+    [SerializeField] GameObject m_recommendedUserScrollView;    // おすすめのユーザーリスト
     [SerializeField] GameObject m_tabFollow;                    // フォローリストを表示するタブ
     [SerializeField] GameObject m_tabCandidate;                 // おすすめのユーザーリストを表示するタブ
     [SerializeField] GameObject m_profileFollowPrefab;          // フォローしているユーザーのプロフィールプレファブ
@@ -45,11 +45,28 @@ public class UIUserManager : MonoBehaviour
     [SerializeField] Text m_errorTextFollow;
     #endregion
     #region ランキング
-    [SerializeField] GameObject m_rankingScloleView;            // 全ユーザー内でのランキングビュー
-    [SerializeField] GameObject m_followRankingScloleView;      // フォロー内でのランキングビュー
+    [SerializeField] GameObject m_rankingScrollView;            // 全ユーザー内でのランキングビュー
+    [SerializeField] GameObject m_followRankingScrollView;      // フォロー内でのランキングビュー
     [SerializeField] GameObject m_tabRanking;                   // 全ユーザー内を表示するタブ
     [SerializeField] GameObject m_tabFollowRanking;             // フォロー内を表示するタブ
     [SerializeField] GameObject m_profileRankingPrefab;         // ランキングに表示するユーザープロフィールプレファブ
+    #endregion
+    #region アチーブメント一覧
+    [SerializeField] Text m_textTotalPoint;                 // 合計所持ポイント
+    [SerializeField] GameObject m_taskScrollView;           // タスクのビュー
+    [SerializeField] GameObject m_rewardScrollView;         // 報酬のビュー
+    [SerializeField] GameObject m_tabTask;                  // タスク一覧を表示するタブ
+    [SerializeField] GameObject m_tabReward;                // 報酬一覧を表示するタブ
+    [SerializeField] GameObject m_taskBarPrefab;            // タスクのプレファブ
+    [SerializeField] GameObject m_rewardBarPrefab;          // 報酬のプレファブ
+    [SerializeField] PanelItemDetails m_panelItemDetails;   // アイテム詳細パネルコンポーネント
+    #endregion
+    #region メールボックス
+    [SerializeField] Sprite m_spriteReceivedMail;           // メール開封済みのUI
+    [SerializeField] GameObject m_textMailEmpty;            // 空のときに表示する
+    [SerializeField] GameObject m_mailScrollView;           // プレファブの格納先
+    [SerializeField] GameObject m_mailPrefab;               // メールのプレファブ
+    [SerializeField] MailContent m_mailContent;
     #endregion
     #endregion
 
@@ -67,7 +84,7 @@ public class UIUserManager : MonoBehaviour
     /// フォローリストの表示モード
     /// </summary>
     enum FOLLOW_LIST_MODE
-    { 
+    {
         FOLLOW = 0,       // フォローリスト
         RECOMMENDED       // おすすめのユーザー
     }
@@ -75,7 +92,7 @@ public class UIUserManager : MonoBehaviour
     /// <summary>
     /// ランキングの表示モード
     /// </summary>
-    enum RANKINF_MODE
+    enum RANKING_MODE
     {
         USERS = 0,        // 全ユーザー内
         FOLLOW            // フォロー内
@@ -87,8 +104,8 @@ public class UIUserManager : MonoBehaviour
 
         if (TopManager.m_isClickTitle)
         {
-            UpdateUserDataUI(false,null);
-        }   
+            UpdateUserDataUI(false, null);
+        }
     }
 
     public void ResetErrorText()
@@ -96,16 +113,37 @@ public class UIUserManager : MonoBehaviour
         m_errorTextProfile.text = "";
     }
 
-    public void ToggleTextEmpty(string text,bool isVisibility)
+    public void ToggleTextEmpty(string text, bool isVisibility)
     {
         m_textEmpty.SetActive(isVisibility);
         m_textEmpty.GetComponent<Text>().text = text;
     }
 
+    GameObject DestroyScrollContentChildren(GameObject scroll)
+    {
+        GameObject content = scroll.transform.GetChild(0).transform.GetChild(0).gameObject;
+
+        // 現在存在する古い子オブジェクトを全て削除する
+        foreach (Transform oldProfile in content.transform)
+        {
+            Destroy(oldProfile.gameObject);
+        }
+
+        return content;
+    }
+
+    void ChangeHierarchyOrder(List<GameObject> targetList)
+    {
+        foreach(var targeet in targetList)
+        {
+            targeet.transform.SetAsLastSibling();
+        }
+    }
+
     /// <summary>
     /// ユーザー情報を更新する
     /// </summary>
-    public void UpdateUserDataUI(bool isMoveTopUI,GameObject parent_top)
+    public void UpdateUserDataUI(bool isMoveTopUI, GameObject parent_top)
     {
         // ユーザー情報取得処理
         StartCoroutine(NetworkManager.Instance.GetUserData(
@@ -155,14 +193,8 @@ public class UIUserManager : MonoBehaviour
         {
             case FOLLOW_LIST_MODE.FOLLOW:
 
-                // プロフィールのプレファブの格納先を取得する
-                GameObject contentFollow = m_followUserScloleView.transform.GetChild(0).transform.GetChild(0).gameObject;
-
-                // 現在、存在する古いプロフィールを全て削除する
-                foreach (Transform oldProfile in contentFollow.transform)
-                {
-                    Destroy(oldProfile.gameObject);
-                }
+                // 古いプロフィールを全て削除、格納先を取得する
+                GameObject contentFollow = DestroyScrollContentChildren(m_followUserScrollView);
 
                 // フォローリスト取得処理
                 StartCoroutine(NetworkManager.Instance.GetFollowList(
@@ -176,22 +208,16 @@ public class UIUserManager : MonoBehaviour
                         {
                             // プロフィールを生成する
                             GameObject profile = Instantiate(m_profileFollowPrefab, contentFollow.transform);
-                            profile.GetComponent<FollowingUserProfile>().UpdateProfile(transform.gameObject,user.UserID,
-                                user.Name, user.Title,user.StageID, user.TotalScore,
+                            profile.GetComponent<FollowingUserProfile>().UpdateProfile(transform.gameObject, user.UserID,
+                                user.Name, user.Title, user.StageID, user.TotalScore,
                                 TopManager.TexIcons[user.IconID - 1], user.IsAgreement);
                         }
                     }));
                 break;
             case FOLLOW_LIST_MODE.RECOMMENDED:
 
-                // プロフィールのプレファブの格納先を取得する
-                GameObject contentRecommended = m_recommendedUserScloleView.transform.GetChild(0).transform.GetChild(0).gameObject;
-
-                // 現在、存在する古いプロフィールを全て削除する
-                foreach (Transform oldProfile in contentRecommended.transform)
-                {
-                    Destroy(oldProfile.gameObject);
-                }
+                // 古いプロフィールを全て削除、格納先を取得する
+                GameObject contentRecommended = DestroyScrollContentChildren(m_recommendedUserScrollView);
 
                 // おすすめのユーザーリスト取得処理
                 StartCoroutine(NetworkManager.Instance.GetRecommendedUserList(
@@ -205,8 +231,8 @@ public class UIUserManager : MonoBehaviour
                         {
                             // プロフィールを生成する
                             GameObject profile = Instantiate(m_profileRecommendedPrefab, contentRecommended.transform);
-                            profile.GetComponent<FollowingUserProfile>().UpdateProfile(transform.gameObject,user.UserID, 
-                                user.Name, user.Title,user.StageID, user.TotalScore,
+                            profile.GetComponent<FollowingUserProfile>().UpdateProfile(transform.gameObject, user.UserID,
+                                user.Name, user.Title, user.StageID, user.TotalScore,
                                 TopManager.TexIcons[user.IconID - 1], user.IsFollower);
                         }
                     }));
@@ -217,20 +243,14 @@ public class UIUserManager : MonoBehaviour
     /// <summary>
     /// ランキングを更新する
     /// </summary>
-    void UpdateRankingUI(RANKINF_MODE mode)
+    void UpdateRankingUI(RANKING_MODE mode)
     {
         switch (mode)
         {
-            case RANKINF_MODE.USERS:
+            case RANKING_MODE.USERS:
 
-                // プロフィールのプレファブの格納先を取得する
-                GameObject contentRanking = m_rankingScloleView.transform.GetChild(0).transform.GetChild(0).gameObject;
-
-                // 現在、存在する古いプロフィールを全て削除する
-                foreach (Transform oldProfile in contentRanking.transform)
-                {
-                    Destroy(oldProfile.gameObject);
-                }
+                // 古いプロフィールを全て削除、格納先を取得する
+                GameObject contentRanking = DestroyScrollContentChildren(m_rankingScrollView);
 
                 // ランキング取得処理
                 StartCoroutine(NetworkManager.Instance.GetRankingList(
@@ -247,23 +267,17 @@ public class UIUserManager : MonoBehaviour
 
                             // プロフィールを生成する
                             GameObject profile = Instantiate(m_profileRankingPrefab, contentRanking.transform);
-                            profile.GetComponent<RankingUserProfile>().UpdateProfile(i+1, isMyData,
+                            profile.GetComponent<RankingUserProfile>().UpdateProfile(i + 1, isMyData,
                                 user.Name, user.Title, user.StageID, user.TotalScore,
                                 TopManager.TexIcons[user.IconID - 1], user.IsAgreement);
                             i++;
                         }
                     }));
                 break;
-            case RANKINF_MODE.FOLLOW:
+            case RANKING_MODE.FOLLOW:
 
-                // プロフィールのプレファブの格納先を取得する
-                GameObject contentRecommended = m_followRankingScloleView.transform.GetChild(0).transform.GetChild(0).gameObject;
-
-                // 現在、存在する古いプロフィールを全て削除する
-                foreach (Transform oldProfile in contentRecommended.transform)
-                {
-                    Destroy(oldProfile.gameObject);
-                }
+                // 古いプロフィールを全て削除、格納先を取得する
+                GameObject contentRankingFollow = DestroyScrollContentChildren(m_followRankingScrollView);
 
                 // フォロー内でのランキング取得処理
                 StartCoroutine(NetworkManager.Instance.GetFollowRankingList(
@@ -278,8 +292,8 @@ public class UIUserManager : MonoBehaviour
                         {
                             bool isMyData = NetworkManager.Instance.UserID == user.UserID ? true : false;
                             // プロフィールを生成する
-                            GameObject profile = Instantiate(m_profileRankingPrefab, contentRecommended.transform);
-                            profile.GetComponent<RankingUserProfile>().UpdateProfile(i+1, isMyData,
+                            GameObject profile = Instantiate(m_profileRankingPrefab, contentRankingFollow.transform);
+                            profile.GetComponent<RankingUserProfile>().UpdateProfile(i + 1, isMyData,
                                 user.Name, user.Title, user.StageID, user.TotalScore,
                                 TopManager.TexIcons[user.IconID - 1], user.IsAgreement);
                             i++;
@@ -288,6 +302,94 @@ public class UIUserManager : MonoBehaviour
                 break;
         }
     }
+
+    /// <summary>
+    /// アチーブメント一覧を更新する(アチーブメント一覧表示ボタンから呼ぶ)
+    /// </summary>
+    public void UpdateAchievementUI()
+    {
+        m_textTotalPoint.text = "pt";
+
+        // 古いアチーブメントを全て削除、格納先を取得する
+        GameObject contentTask = DestroyScrollContentChildren(m_taskScrollView);
+        GameObject contentReward = DestroyScrollContentChildren(m_rewardScrollView);
+
+        // 合計ポイントを取得する
+        StartCoroutine(NetworkManager.Instance.GetUserItem(
+            6,
+            result =>
+            {
+                int totalPoint = 0;
+                if (result.Length != 0) totalPoint = result[0].Amount;
+                m_textTotalPoint.text = totalPoint + "pt";
+
+                // アチーブメント一覧取得処理
+                StartCoroutine(NetworkManager.Instance.GetAchievementList(
+                    result =>
+                    {
+                        ToggleTextEmpty("通信エラーが発生しました。", result.Length == 0);
+
+                        List<GameObject> receivedAchieve = new List<GameObject>();
+                        foreach (ShowAchievementResponse achieve in result)
+                        {
+                            GameObject barAchieve;
+                            if (achieve.Type == 1 || achieve.Type == 2)
+                            {
+                                // タスク一覧を生成する
+                                barAchieve = Instantiate(m_taskBarPrefab, contentTask.transform);
+                                barAchieve.GetComponent<TaskBar>().UpdateTask(achieve.Text, achieve.AchievedVal, achieve.ProgressVal,
+                                    achieve.RewardItem.Amount, achieve.IsReceivedItem);
+                            }
+                            else
+                            {
+                                // 報酬一覧を生成する
+                                barAchieve = Instantiate(m_rewardBarPrefab, contentReward.transform);
+                                barAchieve.GetComponent<RewardBar>().UpdateReward(m_panelItemDetails, achieve.Type,
+                                    achieve.RewardItem, achieve.AchievedVal, totalPoint, achieve.IsReceivedItem);
+                            }
+
+                            if (achieve.IsReceivedItem) receivedAchieve.Add(barAchieve);
+                        }
+
+                        // 報酬受取済みのオブジェクトのヒエラルキー順を変更する
+                        ChangeHierarchyOrder(receivedAchieve);
+                    }));
+
+            }));
+    }
+
+    /// <summary>
+    /// メール一覧を更新する(メールのシステムボタンから呼ぶ)
+    /// </summary>
+    public void UpdateMailUI()
+    {
+        ToggleTextEmpty("", false);
+        m_textMailEmpty.SetActive(false);
+
+        // 古いメールを全て削除、格納先を取得する
+        GameObject content = DestroyScrollContentChildren(m_mailScrollView);
+
+        // 受信メールを取得する
+        StartCoroutine(NetworkManager.Instance.GetUserMailList(
+            result =>
+            {
+                if (result.Length == 0)
+                {
+                    m_textMailEmpty.SetActive(true);
+                    return;
+                }
+
+                foreach (ShowUserMailResponse mail in result)
+                {
+                    // メール一覧(セレクトボタン)を生成する
+                    GameObject mailButton = Instantiate(m_mailPrefab, content.transform);
+                    if (mail.IsReceived) mailButton.GetComponent<Image>().sprite = m_spriteReceivedMail;
+                    mailButton.transform.GetChild(0).GetComponent<Text>().text = mail.Title;
+                    mailButton.GetComponent<Button>().onClick.AddListener(() => { m_mailContent.SetMailContent(mailButton,mail.MailID,mail.Title, mail.CreatedAt, mail.Text, mail.IsReceived); });
+                }
+            }));
+    }
+
 
     /// <summary>
     /// 現在の編集モードによってUIの親オブジェクトを表示・非表示にする
@@ -422,7 +524,6 @@ public class UIUserManager : MonoBehaviour
             }));
     }
 
-
     /// <summary>
     /// 称号のリストを表示する
     /// </summary>
@@ -436,11 +537,16 @@ public class UIUserManager : MonoBehaviour
             Destroy(child.gameObject);
         }
 
-        // 所持している正午情報を取得する
+        // 所持している称号情報を取得する
         StartCoroutine(NetworkManager.Instance.GetUserItem(
             2,
             result =>
             {
+                // 称号を解除する項目を作成
+                GameObject buttonRelease = Instantiate(m_selectTitleButtonPrefab, m_contentTitle.transform);
+                buttonRelease.transform.GetChild(0).GetComponent<Text>().text = "×";
+                buttonRelease.GetComponent<Button>().onClick.AddListener(() => OnDoneTitleButton(0, ""));
+
                 // 所持している称号のみ生成する
                 for (int i = 0; i < result.Length; i++)
                 {
@@ -495,8 +601,8 @@ public class UIUserManager : MonoBehaviour
         switch (mode)
         {
             case 0: // フォローリストを表示する
-                m_followUserScloleView.SetActive(true);
-                m_recommendedUserScloleView.SetActive(false);
+                m_followUserScrollView.SetActive(true);
+                m_recommendedUserScrollView.SetActive(false);
                 m_tabFollow.GetComponent<Image>().sprite = m_texTabs[1];
                 m_tabCandidate.GetComponent<Image>().sprite = m_texTabs[0];
 
@@ -504,8 +610,8 @@ public class UIUserManager : MonoBehaviour
                 UpdateFollowListUI(FOLLOW_LIST_MODE.FOLLOW);
                 break;
             case 1: // おすすめのユーザーリストを表示する
-                m_followUserScloleView.SetActive(false);
-                m_recommendedUserScloleView.SetActive(true);
+                m_followUserScrollView.SetActive(false);
+                m_recommendedUserScrollView.SetActive(true);
                 m_tabFollow.GetComponent<Image>().sprite = m_texTabs[0];
                 m_tabCandidate.GetComponent<Image>().sprite = m_texTabs[1];
 
@@ -568,22 +674,46 @@ public class UIUserManager : MonoBehaviour
         switch (mode)
         {
             case 0: // 全ユーザー内のランキングを表示する
-                m_rankingScloleView.SetActive(true);
-                m_followRankingScloleView.SetActive(false);
+                m_rankingScrollView.SetActive(true);
+                m_followRankingScrollView.SetActive(false);
                 m_tabRanking.GetComponent<Image>().sprite = m_texTabs[1];
                 m_tabFollowRanking.GetComponent<Image>().sprite = m_texTabs[0];
 
                 // ランキングリストを取得
-                UpdateRankingUI(RANKINF_MODE.USERS);
+                UpdateRankingUI(RANKING_MODE.USERS);
                 break;
             case 1: // フォロー内のランキングを表示する
-                m_rankingScloleView.SetActive(false);
-                m_followRankingScloleView.SetActive(true);
+                m_rankingScrollView.SetActive(false);
+                m_followRankingScrollView.SetActive(true);
                 m_tabRanking.GetComponent<Image>().sprite = m_texTabs[0];
                 m_tabFollowRanking.GetComponent<Image>().sprite = m_texTabs[1];
 
                 // フォロー内でのランキング取得
-                UpdateRankingUI(RANKINF_MODE.FOLLOW);
+                UpdateRankingUI(RANKING_MODE.FOLLOW);
+                break;
+        }
+    }
+
+    /// <summary>
+    /// アチーブメント一覧の内容を切り替える
+    /// </summary>
+    /// <param name="mode">ACHIEVEMENT_MODE参照</param>
+    public void OnAchievementTabButton(int mode)
+    {
+        ToggleTextEmpty("", false);
+        switch (mode)
+        {
+            case 0: // タスク一覧を表示する
+                m_taskScrollView.SetActive(true);
+                m_rewardScrollView.SetActive(false);
+                m_tabTask.GetComponent<Image>().sprite = m_texTabs[1];
+                m_tabReward.GetComponent<Image>().sprite = m_texTabs[0];
+                break;
+            case 1: // 報酬一覧を表示する
+                m_taskScrollView.SetActive(false);
+                m_rewardScrollView.SetActive(true);
+                m_tabTask.GetComponent<Image>().sprite = m_texTabs[0];
+                m_tabReward.GetComponent<Image>().sprite = m_texTabs[1];
                 break;
         }
     }
