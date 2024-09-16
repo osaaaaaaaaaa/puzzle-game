@@ -17,12 +17,14 @@ public class SignalGuestLogBar : MonoBehaviour
     [SerializeField] GameObject m_btnDestroy;             // 破棄するボタン
     [SerializeField] GameObject m_btnReward;              // 報酬受け取りボタン
     [SerializeField] Sprite m_spriteReward;               // 報酬アイテムの画像
+    LoadingContainer m_loading;
     UISignalManager m_signalManager;
     GameObject m_logBar;
     int m_signalID;
 
     public void UpdateLogBar(UISignalManager signalManager,int signalID, int elapsed_days, Sprite icon, bool isAgreement, string hostName, int stageID, int guestCnt, bool action,bool is_rewarded)
     {
+        m_loading = GameObject.Find("LoadingContainer").GetComponent<LoadingContainer>();
         m_signalManager = signalManager;
         m_logBar = this.gameObject;
         m_signalID = signalID;
@@ -67,11 +69,14 @@ public class SignalGuestLogBar : MonoBehaviour
     /// </summary>
     public void OnRewardButton()
     {
+        SEManager.Instance.PlayButtonSE();
+        m_loading.ToggleLoadingUIVisibility(1);
         // ゲストの報酬受け取り処理
         StartCoroutine(NetworkManager.Instance.UpdateSignalGuestReward(
             m_signalID,
             result =>
             {
+                m_loading.ToggleLoadingUIVisibility(-1);
                 if (result == null)
                 {
                     m_signalManager.ShowPanelError("通信エラーが発生しました");
@@ -92,18 +97,20 @@ public class SignalGuestLogBar : MonoBehaviour
     /// </summary>
     public void OnDestroyButton()
     {
+        SEManager.Instance.PlayCanselSE();
+        m_loading.ToggleLoadingUIVisibility(1);
         // ゲスト削除処理
         StartCoroutine(NetworkManager.Instance.DestroySignalGuest(
             m_signalID,
             NetworkManager.Instance.UserID,
             result =>
             {
+                m_loading.ToggleLoadingUIVisibility(-1);
                 if (!result)
                 {
                     m_signalManager.ShowPanelError("通信エラーが発生しました");
                     return;
                 };
-                SEManager.Instance.PlayCanselSE();
                 Destroy(m_logBar);
             }));
     }

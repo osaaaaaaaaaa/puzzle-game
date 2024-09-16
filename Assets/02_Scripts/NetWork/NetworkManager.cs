@@ -501,7 +501,7 @@ public class NetworkManager : MonoBehaviour
     /// <summary>
     /// ランキング取得処理
     /// </summary>
-    public IEnumerator GetRankingList(Action<ShowUserProfileResponse[]> result)
+    public IEnumerator GetRankingList(Action<ShowRankingResponse[]> result)
     {
         // 送信
         UnityWebRequest request = UnityWebRequest.Get(API_BASE_URL + "users/ranking/show?user_id=" + UserID);
@@ -514,7 +514,7 @@ public class NetworkManager : MonoBehaviour
         {
             // 通信が成功した場合、返ってきたJSONをオブジェクトに変換
             string resultJson = request.downloadHandler.text;
-            ShowUserProfileResponse[] response = JsonConvert.DeserializeObject<ShowUserProfileResponse[]>(resultJson);
+            ShowRankingResponse[] response = JsonConvert.DeserializeObject<ShowRankingResponse[]>(resultJson);
 
             // 呼び出し元のresult処理を呼び出す
             result?.Invoke(response);
@@ -703,7 +703,6 @@ public class NetworkManager : MonoBehaviour
         // 呼び出し元のresult処理を呼び出す
         result?.Invoke(isSuccess);
     }
-
 
     /// <summary>
     /// 自分が募集中(未クリア)の救難信号取得処理
@@ -1127,6 +1126,34 @@ public class NetworkManager : MonoBehaviour
             // 通信が成功した場合、返ってきたJSONをオブジェクトに変換
             string resultJson = request.downloadHandler.text;
             ShowUserItemResponse response = JsonConvert.DeserializeObject<ShowUserItemResponse>(resultJson);
+
+            // 呼び出し元のresult処理を呼び出す
+            result?.Invoke(response);
+        }
+        else
+        {
+            // 呼び出し元のresult処理を呼び出す
+            result?.Invoke(null);
+        }
+    }
+
+    /// <summary>
+    /// 定数取得処理
+    /// </summary>
+    public IEnumerator GetConstant(int type,Action<ShowConstantResponse> result)
+    {
+        // 送信
+        UnityWebRequest request = UnityWebRequest.Get(API_BASE_URL + "constant?type=" + type);
+
+        // 結果を受信するなで待機
+        yield return request.SendWebRequest();
+
+        if (request.result == UnityWebRequest.Result.Success
+            && request.responseCode == 200)
+        {
+            // 通信が成功した場合、返ってきたJSONをオブジェクトに変換
+            string resultJson = request.downloadHandler.text;
+            ShowConstantResponse response = JsonConvert.DeserializeObject<ShowConstantResponse>(resultJson);
 
             // 呼び出し元のresult処理を呼び出す
             result?.Invoke(response);

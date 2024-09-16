@@ -7,6 +7,7 @@ using DG.Tweening;
 public class UISignalManager : MonoBehaviour
 {
     [SerializeField] GameObject m_textEmpty;
+    [SerializeField] LoadingContainer m_loading;
 
     #region 救難信号
     [SerializeField] GameObject m_uiPanelError;              // 通信エラー時のパネル
@@ -36,6 +37,8 @@ public class UISignalManager : MonoBehaviour
     [SerializeField] List<GameObject> m_panelTutrials;
     #endregion
 
+    [SerializeField] GameObject m_uiRewardUnclaimed;    // 未受け取りのゲスト報酬があるかどうかのUI
+
     /// <summary>
     /// ウィンドウの表示モード
     /// </summary>
@@ -63,6 +66,45 @@ public class UISignalManager : MonoBehaviour
         LOG_GUEST,          // ゲストのときのログ一覧
     }
 
+    private void OnEnable()
+    {
+        if (NetworkManager.Instance == null || NetworkManager.Instance.UserID == 0) return;
+        CheckRewardUnclaimed();
+    }
+
+    /// <summary>
+    /// 未受け取りの報酬があるかどうかチェック
+    /// </summary>
+    public void CheckRewardUnclaimed()
+    {
+        // 受け取り可能なゲスト報酬があるかどうか
+        StartCoroutine(NetworkManager.Instance.GetSignalGuestLogList(
+            result =>
+            {
+                if (result == null || result.Length == 0)
+                {
+                    m_uiRewardUnclaimed.SetActive(false);
+                    return;
+                };
+
+                foreach (ShowGuestLogResponse log in result)
+                {
+                    if(log.IsStageClear && !log.IsRewarded)
+                    {
+                        m_uiRewardUnclaimed.SetActive(true);
+                        return;
+                    }
+
+                    m_uiRewardUnclaimed.SetActive(false);
+                }
+            }));
+    }
+
+    public void HideRewardUnclaimedUI()
+    {
+        m_uiRewardUnclaimed.SetActive(false);
+    }
+
     public void ToggleTextEmpty(string text, bool isVisibility)
     {
         m_textEmpty.SetActive(isVisibility);
@@ -74,6 +116,8 @@ public class UISignalManager : MonoBehaviour
     /// </summary>
     void UpdateSignalLogUI(SIGNAL_LOG_LIST_MODE mode)
     {
+        m_loading.ToggleLoadingUIVisibility(1);
+
         // ログプレファブの格納先を取得する
         GameObject contentLog = m_logScloleView.transform.GetChild(0).transform.GetChild(0).gameObject;
 
@@ -90,6 +134,8 @@ public class UISignalManager : MonoBehaviour
                 StartCoroutine(NetworkManager.Instance.GetSignalHostLogList(
                     result =>
                     {
+                        m_loading.ToggleLoadingUIVisibility(-1);
+
                         ToggleTextEmpty("募集した履歴が見つかりませんでした。", result == null);
                         m_textDataCnt.text = result == null ? "0/10" : result.Length + "/10";
 
@@ -109,6 +155,8 @@ public class UISignalManager : MonoBehaviour
                 StartCoroutine(NetworkManager.Instance.GetSignalGuestLogList(
                     result =>
                     {
+                        m_loading.ToggleLoadingUIVisibility(-1);
+
                         ToggleTextEmpty("参加した履歴が見つかりませんでした。", result == null); 
                         m_textDataCnt.text = result == null ? "0/10" : result.Length + "/10";
 
@@ -131,6 +179,8 @@ public class UISignalManager : MonoBehaviour
     /// </summary>
     void UpdateSignalListUI()
     {
+        m_loading.ToggleLoadingUIVisibility(1);
+
         // 募救難信号のプレファブの格納先を取得する
         GameObject content = m_signalScloleView.transform.GetChild(0).transform.GetChild(0).gameObject;
 
@@ -144,7 +194,9 @@ public class UISignalManager : MonoBehaviour
         StartCoroutine(NetworkManager.Instance.GetRndSignalList(
             result =>
             {
-                ToggleTextEmpty("募集が見つかりませんでした。", result == null);
+                m_loading.ToggleLoadingUIVisibility(-1);
+
+                ToggleTextEmpty("募集が見つかりませんでした。", result == null || result.Length == 0);
                 m_textDataCnt.text = result == null ? "0/10" : result.Length + "/10";
 
                 if (result == null) return;

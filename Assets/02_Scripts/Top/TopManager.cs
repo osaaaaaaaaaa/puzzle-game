@@ -10,6 +10,9 @@ using Newtonsoft.Json;
 
 public class TopManager : MonoBehaviour
 {
+    [SerializeField] Text m_textEmpty;
+    [SerializeField] LoadingContainer m_loading;
+
     [SerializeField] UIUserManager m_uiUserManager;
     [SerializeField] UISignalManager m_uiSignalManager;
 
@@ -44,7 +47,7 @@ public class TopManager : MonoBehaviour
     /// <summary>
     /// 最大ステージ数
     /// </summary>
-    public static int stageMax { get; set; }
+    public static int stageMax { get; private set; }
 
     /// <summary>
     /// 選択したステージID
@@ -73,7 +76,6 @@ public class TopManager : MonoBehaviour
 
     private void OnEnable()
     {
-       
         isOnStageButton = false;
         isUseItem = false;
     }
@@ -111,28 +113,44 @@ public class TopManager : MonoBehaviour
         // ユーザーデータが保存されていない場合
         if (!NetworkManager.Instance.LoadUserData())
         {
+            m_loading.ToggleLoadingUIVisibility(1);
+
             // ユーザー登録処理
             StartCoroutine(NetworkManager.Instance.StoreUser(
                 Guid.NewGuid().ToString(),
                 result =>
                 {
+                    m_loading.ToggleLoadingUIVisibility(-1);
                     if (result) OnClickTitleWindow();
                 }));    // 登録処理後の処理
         }
         else
         {
+            m_loading.ToggleLoadingUIVisibility(4);
+
+            // 最大ステージ数を取得
+            StartCoroutine(NetworkManager.Instance.GetConstant(
+                1,
+                result => 
+                {
+                    stageMax = result.Constant;
+                    m_loading.ToggleLoadingUIVisibility(-1);
+                    Debug.Log(stageMax);
+                }
+                ));
+
             // 所持アイテムを取得する
             StartCoroutine(NetworkManager.Instance.GetUserItem(
                 3,
-                result => { }
+                result => { m_loading.ToggleLoadingUIVisibility(-1); }
                 ));
 
             // 自分が募集中の救難信号を取得する
             StartCoroutine(NetworkManager.Instance.GetDistressSignalList(
-                result => { }
+                result => { m_loading.ToggleLoadingUIVisibility(-1); }
                 ));
 
-            // ユーザー情報を更新する
+            // ユーザー情報を取得する
             StartCoroutine(NetworkManager.Instance.GetUserData(
                 result => 
                 {
@@ -140,6 +158,7 @@ public class TopManager : MonoBehaviour
                     StartCoroutine(NetworkManager.Instance.GetStageResults(
                         result =>
                         {
+                            m_loading.ToggleLoadingUIVisibility(-1);
                             OnClickTitleWindow();
                         }));
                 }
@@ -190,7 +209,12 @@ public class TopManager : MonoBehaviour
     {
         if (isOnStageButton) return;
 
+        // ユーザーのプロフィールを更新
         m_uiUserManager.UpdateUserDataUI(true, m_parent_top);
+
+        // 未受け取りの報酬があるかどうかチェック
+        m_uiUserManager.CheckRewardUnclaimed();
+        m_uiSignalManager.CheckRewardUnclaimed();
 
         // 救難信号ボタンのカラー変更
         m_imgSignalButton.color = NetworkManager.Instance.IsDistressSignalEnabled ? new Color(1f, 1f, 1f, 1f) : new Color(0.7f, 0.7f, 0.7f, 1f);
@@ -226,6 +250,11 @@ public class TopManager : MonoBehaviour
         // 表示処理
         m_sys_panelList[systemNum].SetActive(true);     // 選択したシステム画面
         m_parent_top.transform.DOLocalMove(new Vector3(m_parent_top.transform.localPosition.x, -1080, 0), 0.5f).SetEase(Ease.Linear);
+
+        // 未受け取りのUIを隠す
+        if(systemNum == (int)SYSTEM.MAILBOX) m_uiUserManager.HideMailUnclaimedUI();
+        if(systemNum == (int)SYSTEM.ACHIEVEMENT) m_uiUserManager.HideRewardUnclaimedUI();
+        if(systemNum == (int)SYSTEM.D_SIGNAL) m_uiSignalManager.HideRewardUnclaimedUI();
     }
 
     /// <summary>
@@ -234,6 +263,8 @@ public class TopManager : MonoBehaviour
     public void OnBackButtonSystemPanel()
     {
         if (isOnStageButton) return;
+
+        m_textEmpty.text = "";
 
         // 救難信号ボタンのカラー変更
         m_imgSignalButton.color = NetworkManager.Instance.IsDistressSignalEnabled ? new Color(1f, 1f, 1f, 1f) : new Color(0.7f, 0.7f, 0.7f, 1f);

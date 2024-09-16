@@ -12,12 +12,14 @@ public class SignalBar : MonoBehaviour
     [SerializeField] Text m_textHostName;                 // ホスト名
     [SerializeField] Text m_textGuestCnt;                 // ゲストの参加人数
     [SerializeField] Text m_textDays;                     // 経過日数
+    LoadingContainer m_loading;
     UISignalManager m_signalManager;
     int m_signalID;
     int m_stageID;
 
     public void UpdateSignalBar(UISignalManager signalManager,int signalID, int elapsed_days, Sprite icon, bool isAgreement, string hostName, int stageID, int guestCnt)
     {
+        m_loading = GameObject.Find("LoadingContainer").GetComponent<LoadingContainer>();
         m_signalManager = signalManager;
         m_signalID = signalID;
         m_stageID = stageID;
@@ -35,6 +37,8 @@ public class SignalBar : MonoBehaviour
     /// </summary>
     public void OnSignalBarButton()
     {
+        m_loading.ToggleLoadingUIVisibility(1);
+
         // ゲスト登録(救難信号参加)処理
         StartCoroutine(NetworkManager.Instance.UpdateSignalGuest(
             m_signalID,
@@ -42,6 +46,7 @@ public class SignalBar : MonoBehaviour
             Vector3.zero.ToString(),
             result =>
             {
+                m_loading.ToggleLoadingUIVisibility(-1);
                 SEManager.Instance.PlayButtonSE();
                 if (result != null)
                 {

@@ -1,9 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ReplayPlayer : MonoBehaviour
 {
+    [SerializeField] Button m_buttonReplay;        // リプレイ再生ボタン
     [SerializeField] GameObject m_son;
     [SerializeField] GameObject m_sonRun;
     [SerializeField] GameObject m_sonCow;
@@ -60,6 +62,7 @@ public class ReplayPlayer : MonoBehaviour
             yield return new WaitForSeconds(saveInterval);
         }
 
+        m_buttonReplay.interactable = true;
         gameManager.IsReplayEnd = true;
         ResetRB();
     }

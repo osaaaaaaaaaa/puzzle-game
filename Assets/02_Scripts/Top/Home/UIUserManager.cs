@@ -7,6 +7,7 @@ using DG.Tweening;
 public class UIUserManager : MonoBehaviour
 {
     [SerializeField] GameObject m_textEmpty;
+    [SerializeField] LoadingContainer m_loading;
 
     #region ユーザー情報
     [SerializeField] StageButtonController m_stageButtonController;
@@ -41,15 +42,18 @@ public class UIUserManager : MonoBehaviour
     [SerializeField] GameObject m_tabCandidate;                 // おすすめのユーザーリストを表示するタブ
     [SerializeField] GameObject m_profileFollowPrefab;          // フォローしているユーザーのプロフィールプレファブ
     [SerializeField] GameObject m_profileRecommendedPrefab;     // おすすめのユーザーのプロフィールプレファブ
+    [SerializeField] Text m_followMaxCnt;                       // フォロー最大人数のテキスト
     [SerializeField] Text m_followCntText;                      // フォローしている人数を示すテキスト
     [SerializeField] Text m_errorTextFollow;
     #endregion
     #region ランキング
-    [SerializeField] GameObject m_rankingScrollView;            // 全ユーザー内でのランキングビュー
-    [SerializeField] GameObject m_followRankingScrollView;      // フォロー内でのランキングビュー
-    [SerializeField] GameObject m_tabRanking;                   // 全ユーザー内を表示するタブ
-    [SerializeField] GameObject m_tabFollowRanking;             // フォロー内を表示するタブ
-    [SerializeField] GameObject m_profileRankingPrefab;         // ランキングに表示するユーザープロフィールプレファブ
+    [SerializeField] GameObject m_rankingScrollView;                // 全ユーザー内でのランキングビュー
+    [SerializeField] GameObject m_followRankingScrollView;          // フォロー内でのランキングビュー
+    [SerializeField] GameObject m_tabRanking;                       // 全ユーザー内を表示するタブ
+    [SerializeField] GameObject m_tabFollowRanking;                 // フォロー内を表示するタブ
+    [SerializeField] GameObject m_buttonRankingPrefab;              // ランキングのプレファブ
+    [SerializeField] GameObject m_followRankingPrefab;              // フォロー内ランキングのプレファブ
+    [SerializeField] PanelRankingUserFollow m_rankingUserFollow;    // ランキングのユーザーをフォロー・フォロー解除するパネル
     #endregion
     #region アチーブメント一覧
     [SerializeField] Text m_textTotalPoint;                 // 合計所持ポイント
@@ -69,6 +73,9 @@ public class UIUserManager : MonoBehaviour
     [SerializeField] MailContent m_mailContent;
     #endregion
     #endregion
+
+    [SerializeField] GameObject m_uiMailUnread;             // 未開封のメールがあるかどうかのUI
+    [SerializeField] GameObject m_uiRewardUnclaimed;        // 未受け取りのアチーブメント報酬があるかどうかのUI
 
     /// <summary>
     /// プロフィールの編集モード
@@ -106,6 +113,75 @@ public class UIUserManager : MonoBehaviour
         {
             UpdateUserDataUI(false, null);
         }
+
+        if (NetworkManager.Instance == null || NetworkManager.Instance.UserID == 0) return;
+        CheckRewardUnclaimed();
+    }
+
+    /// <summary>
+    /// 未受け取りの報酬があるかどうかチェック
+    /// </summary>
+    public void CheckRewardUnclaimed()
+    {
+        // 未開封の受信メールがあるかどうか
+        StartCoroutine(NetworkManager.Instance.GetUserMailList(
+            result =>
+            {
+                if (result == null || result.Length == 0)
+                {
+                    m_uiMailUnread.SetActive(false);
+                    return;
+                }
+
+                foreach (ShowUserMailResponse mail in result)
+                {
+                    if (!mail.IsReceived)
+                    {
+                        m_uiMailUnread.SetActive(true);
+                        return;
+                    }
+                    m_uiMailUnread.SetActive(false);
+                }
+            }));
+
+        // 末受け取りのアチーブメント報酬があるかどうか
+        StartCoroutine(NetworkManager.Instance.GetUserItem(
+            6,
+            result =>
+            {
+                int totalPoint = 0;
+                if (result == null || result.Length == 0)
+                {
+                    m_uiRewardUnclaimed.SetActive(false);
+                    return;
+                }
+                totalPoint = result[0].Amount;
+                StartCoroutine(NetworkManager.Instance.GetAchievementList(
+                    result =>
+                    {
+                        foreach (ShowAchievementResponse achieve in result)
+                        {
+                            if (achieve.Type == 3 && achieve.IsReceivedItem && achieve.AchievedVal <= totalPoint)
+                            {
+                                m_uiRewardUnclaimed.SetActive(true);
+                                return;
+                            }
+
+                            m_uiRewardUnclaimed.SetActive(false);
+                        }
+                    }));
+
+            }));
+    }
+
+    public void HideMailUnclaimedUI()
+    {
+        m_uiMailUnread.SetActive(false);
+    }
+
+    public void HideRewardUnclaimedUI()
+    {
+        m_uiRewardUnclaimed.SetActive(false);
     }
 
     public void ResetErrorText()
@@ -145,10 +221,14 @@ public class UIUserManager : MonoBehaviour
     /// </summary>
     public void UpdateUserDataUI(bool isMoveTopUI, GameObject parent_top)
     {
+        m_loading.ToggleLoadingUIVisibility(1);
+
         // ユーザー情報取得処理
         StartCoroutine(NetworkManager.Instance.GetUserData(
             result =>
             {
+                m_loading.ToggleLoadingUIVisibility(-1);
+
                 // ボタンを生成する
                 m_stageButtonController.GenerateButtons(result.StageID);
 
@@ -189,6 +269,25 @@ public class UIUserManager : MonoBehaviour
     /// </summary>
     void UpdateFollowListUI(FOLLOW_LIST_MODE mode)
     {
+        m_loading.ToggleLoadingUIVisibility(2);
+
+
+        // フォローできる最大数を取得
+        StartCoroutine(NetworkManager.Instance.GetConstant(
+            2,
+            result =>
+            {
+                m_loading.ToggleLoadingUIVisibility(-1);
+
+                if (result == null)
+                {
+                    m_followMaxCnt.text = "/30";
+                    return;
+                }
+                m_followMaxCnt.text = "/" + result.Constant;
+            }
+            ));
+
         switch (mode)
         {
             case FOLLOW_LIST_MODE.FOLLOW:
@@ -200,6 +299,8 @@ public class UIUserManager : MonoBehaviour
                 StartCoroutine(NetworkManager.Instance.GetFollowList(
                     result =>
                     {
+                        m_loading.ToggleLoadingUIVisibility(-1);
+
                         ToggleTextEmpty("ユーザーが見つかりませんでした。", result.Length == 0);
                         m_followCntText.text = "" + result.Length;
 
@@ -223,6 +324,8 @@ public class UIUserManager : MonoBehaviour
                 StartCoroutine(NetworkManager.Instance.GetRecommendedUserList(
                     result =>
                     {
+                        m_loading.ToggleLoadingUIVisibility(-1);
+
                         m_textEmpty.SetActive(result.Length == 0);
                         m_textEmpty.GetComponent<Text>().text = result.Length == 0 ? "ユーザーが見つかりませんでした。" : "";
 
@@ -245,6 +348,8 @@ public class UIUserManager : MonoBehaviour
     /// </summary>
     void UpdateRankingUI(RANKING_MODE mode)
     {
+        m_loading.ToggleLoadingUIVisibility(1);
+
         switch (mode)
         {
             case RANKING_MODE.USERS:
@@ -256,20 +361,33 @@ public class UIUserManager : MonoBehaviour
                 StartCoroutine(NetworkManager.Instance.GetRankingList(
                     result =>
                     {
+                        m_loading.ToggleLoadingUIVisibility(-1);
+
                         ToggleTextEmpty("ユーザーが見つかりませんでした。", result.Length == 0);
                         m_followCntText.text = "" + result.Length;
 
+                        m_rankingUserFollow.IniRankingtUserData(result);
+
                         // 取得したフォローリストの情報を元に各ユーザーのプロフィールを作成する
                         int i = 0;
-                        foreach (ShowUserProfileResponse user in result)
+                        foreach (ShowRankingResponse user in result)
                         {
                             bool isMyData = NetworkManager.Instance.UserID == user.UserID ? true : false;
 
                             // プロフィールを生成する
-                            GameObject profile = Instantiate(m_profileRankingPrefab, contentRanking.transform);
+                            GameObject profile = Instantiate(m_buttonRankingPrefab, contentRanking.transform);
                             profile.GetComponent<RankingUserProfile>().UpdateProfile(i + 1, isMyData,
                                 user.Name, user.Title, user.StageID, user.TotalScore,
                                 TopManager.TexIcons[user.IconID - 1], user.IsAgreement);
+
+                            // フォロー・フォロー解除イベントを設定する
+                            int index = new int();
+                            index = i;
+                            profile.GetComponent<Button>().onClick.AddListener(() => 
+                            {
+                                SEManager.Instance.PlayButtonSE();
+                                m_rankingUserFollow.SetPanelContent(user.UserID, user.Name, index); 
+                            });
                             i++;
                         }
                     }));
@@ -283,6 +401,8 @@ public class UIUserManager : MonoBehaviour
                 StartCoroutine(NetworkManager.Instance.GetFollowRankingList(
                     result =>
                     {
+                        m_loading.ToggleLoadingUIVisibility(-1);
+
                         ToggleTextEmpty("ユーザーが見つかりませんでした。", result.Length <= 1);
                         if (result.Length <= 1) return;
 
@@ -292,7 +412,7 @@ public class UIUserManager : MonoBehaviour
                         {
                             bool isMyData = NetworkManager.Instance.UserID == user.UserID ? true : false;
                             // プロフィールを生成する
-                            GameObject profile = Instantiate(m_profileRankingPrefab, contentRankingFollow.transform);
+                            GameObject profile = Instantiate(m_followRankingPrefab, contentRankingFollow.transform);
                             profile.GetComponent<RankingUserProfile>().UpdateProfile(i + 1, isMyData,
                                 user.Name, user.Title, user.StageID, user.TotalScore,
                                 TopManager.TexIcons[user.IconID - 1], user.IsAgreement);
@@ -308,6 +428,7 @@ public class UIUserManager : MonoBehaviour
     /// </summary>
     public void UpdateAchievementUI()
     {
+        m_loading.ToggleLoadingUIVisibility(1);
         m_textTotalPoint.text = "pt";
 
         // 古いアチーブメントを全て削除、格納先を取得する
@@ -327,6 +448,8 @@ public class UIUserManager : MonoBehaviour
                 StartCoroutine(NetworkManager.Instance.GetAchievementList(
                     result =>
                     {
+                        m_loading.ToggleLoadingUIVisibility(-1);
+
                         ToggleTextEmpty("通信エラーが発生しました。", result.Length == 0);
 
                         List<GameObject> receivedAchieve = new List<GameObject>();
@@ -363,6 +486,8 @@ public class UIUserManager : MonoBehaviour
     /// </summary>
     public void UpdateMailUI()
     {
+        m_loading.ToggleLoadingUIVisibility(1);
+
         ToggleTextEmpty("", false);
         m_textMailEmpty.SetActive(false);
 
@@ -373,6 +498,8 @@ public class UIUserManager : MonoBehaviour
         StartCoroutine(NetworkManager.Instance.GetUserMailList(
             result =>
             {
+                m_loading.ToggleLoadingUIVisibility(-1);
+
                 if (result.Length == 0)
                 {
                     m_textMailEmpty.SetActive(true);
@@ -385,11 +512,14 @@ public class UIUserManager : MonoBehaviour
                     GameObject mailButton = Instantiate(m_mailPrefab, content.transform);
                     if (mail.IsReceived) mailButton.GetComponent<Image>().sprite = m_spriteReceivedMail;
                     mailButton.transform.GetChild(0).GetComponent<Text>().text = mail.Title;
-                    mailButton.GetComponent<Button>().onClick.AddListener(() => { m_mailContent.SetMailContent(mailButton,mail.MailID,mail.Title, mail.CreatedAt, mail.Text, mail.IsReceived); });
+                    mailButton.GetComponent<Button>().onClick.AddListener(() => 
+                    {
+                        SEManager.Instance.PlayButtonSE();
+                        m_mailContent.SetMailContent(mailButton,mail.MailID,mail.Title, mail.CreatedAt, mail.ElapsedDay,mail.Text, mail.IsReceived); 
+                    });
                 }
             }));
     }
-
 
     /// <summary>
     /// 現在の編集モードによってUIの親オブジェクトを表示・非表示にする
@@ -429,6 +559,8 @@ public class UIUserManager : MonoBehaviour
     {
         if (m_inputUserName.text != "")
         {
+            m_loading.ToggleLoadingUIVisibility(1);
+
             // ユーザー更新処理
             StartCoroutine(NetworkManager.Instance.UpdateUser(
                 m_inputUserName.text,
@@ -437,6 +569,8 @@ public class UIUserManager : MonoBehaviour
                 NetworkManager.Instance.IconID,
                 result =>
                 {
+                    m_loading.ToggleLoadingUIVisibility(-1);
+
                     if (result == null)
                     {
                         // 正常に処理ができた場合、ユーザー名を更新する
@@ -470,6 +604,8 @@ public class UIUserManager : MonoBehaviour
     /// </summary>
     public void OnEditIconButton()
     {
+        m_loading.ToggleLoadingUIVisibility(1);
+
         SetActiveParents(EDITMODE.ICON);
 
         // 現在存在するアイコンの選択ボタンを全て破棄する
@@ -483,6 +619,8 @@ public class UIUserManager : MonoBehaviour
             1,
             result =>
             {
+                m_loading.ToggleLoadingUIVisibility(-1);
+
                 // 所持しているアイコンのみ生成する
                 for (int i = 0; i < result.Length; i++)
                 {
@@ -502,6 +640,8 @@ public class UIUserManager : MonoBehaviour
     /// </summary>
     public void OnDoneIconButton(int iconID)
     {
+        m_loading.ToggleLoadingUIVisibility(1);
+
         SEManager.Instance.PlayButtonSE();
         // ユーザー更新処理
         StartCoroutine(NetworkManager.Instance.UpdateUser(
@@ -511,6 +651,8 @@ public class UIUserManager : MonoBehaviour
             iconID,
             result =>
             {
+                m_loading.ToggleLoadingUIVisibility(-1);
+
                 // エラー文が返ってきた場合はリターン
                 if (result != null) return;
 
@@ -529,6 +671,8 @@ public class UIUserManager : MonoBehaviour
     /// </summary>
     public void OnEditTitleButton()
     {
+        m_loading.ToggleLoadingUIVisibility(1);
+
         SetActiveParents(EDITMODE.TITLE);
 
         // 現在存在するアイコンの選択ボタンを全て破棄する
@@ -542,6 +686,8 @@ public class UIUserManager : MonoBehaviour
             2,
             result =>
             {
+                m_loading.ToggleLoadingUIVisibility(-1);
+
                 // 称号を解除する項目を作成
                 GameObject buttonRelease = Instantiate(m_selectTitleButtonPrefab, m_contentTitle.transform);
                 buttonRelease.transform.GetChild(0).GetComponent<Text>().text = "×";
@@ -567,6 +713,8 @@ public class UIUserManager : MonoBehaviour
     /// </summary>
     public void OnDoneTitleButton(int titleID,string title)
     {
+        m_loading.ToggleLoadingUIVisibility(1);
+
         SEManager.Instance.PlayButtonSE();
         // ユーザー更新処理
         StartCoroutine(NetworkManager.Instance.UpdateUser(
@@ -576,6 +724,8 @@ public class UIUserManager : MonoBehaviour
             NetworkManager.Instance.IconID,
             result =>
             {
+                m_loading.ToggleLoadingUIVisibility(-1);
+
                 // エラー文が返ってきた場合はリターン
                 if (result != null) return;
 
@@ -626,6 +776,8 @@ public class UIUserManager : MonoBehaviour
     /// </summary>
     public void ActionFollow(bool isActive,int user_id,GameObject btnObj)
     {
+        m_loading.ToggleLoadingUIVisibility(1);
+
         if (isActive)
         {
             // フォロー処理
@@ -633,6 +785,8 @@ public class UIUserManager : MonoBehaviour
                 user_id,
                 result =>
                 {
+                    m_loading.ToggleLoadingUIVisibility(-1);
+
                     if (result != null)
                     {
                         // エラー文を表示する
@@ -655,6 +809,8 @@ public class UIUserManager : MonoBehaviour
                 user_id,
                 result =>
                 {
+                    m_loading.ToggleLoadingUIVisibility(-1);
+
                     if (!result) return;
 
                     m_errorTextFollow.text = "";

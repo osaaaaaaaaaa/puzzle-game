@@ -28,17 +28,6 @@ public class Guest : MonoBehaviour
     // 蹴るときのベクトル
     Vector3 VectorKick = Vector3.zero;
 
-    private void Start()
-    {
-        m_isKicked = false;
-
-        // オブジェクト・コンポーネントを取得する
-        m_gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
-        m_player = GameObject.Find("Player").GetComponent<Player>();
-        m_sonController = GameObject.Find("SonController").GetComponent<SonController>();
-        m_audioSouse = GetComponent<AudioSource>();
-    }
-
     private void Update()
     {
         if (VectorKick == Vector3.zero || m_sonController == null) return;
@@ -77,7 +66,6 @@ public class Guest : MonoBehaviour
         GetComponent<PlayerAnimController>().PlayKickAnim();  // 蹴るアニメ
 
         // 息子を蹴り飛ばす処理
-        Debug.Log("ゲストのベクトル：" + VectorKick.ToString());
         if (son.GetComponent<Son>())
         {
             son.GetComponent<Son>().ResetSon(transform.position);
@@ -104,8 +92,23 @@ public class Guest : MonoBehaviour
         GetComponent<PlayerAnimController>().PlayStandbyAnim();  // 通常スキンのIdleアニメ
     }
 
+    /// <summary>
+    /// 初期化処理
+    /// </summary>
+    /// <param name="name"></param>
+    /// <param name="position"></param>
+    /// <param name="vector"></param>
     public void InitMemberVariable(string name,Vector3 position,Vector3 vector)
     {
+        m_isKicked = false;
+
+        // オブジェクト・コンポーネントを取得する
+        m_gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        m_player = GameObject.Find("Player").GetComponent<Player>();
+        m_sonController = GameObject.Find("SonController").GetComponent<SonController>();
+        m_audioSouse = GetComponent<AudioSource>();
+
+        // パラメータ設定
         m_textName.text = name;
         transform.position = position;
         VectorKick = (vector / m_player.m_mulPower) * 50f;   // アイテムを使用しないで蹴るときの大きさに修正;

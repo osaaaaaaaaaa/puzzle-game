@@ -11,6 +11,7 @@ public class RewardBar : MonoBehaviour
     [SerializeField] List<Sprite> m_texItemIcons;         // アイテムアイコンの画像
     [SerializeField] GameObject m_textReceived;           // 受取済みかどうかのテキスト
     [SerializeField] GameObject m_btnReward;              // 報酬受け取りボタン
+    LoadingContainer m_loading;
     PanelItemDetails m_panelItemDetails;
     Sprite m_spriteItem;
     string m_itemDescription;
@@ -21,6 +22,7 @@ public class RewardBar : MonoBehaviour
     public void UpdateReward(PanelItemDetails panelItemDetails,int achieveType, ShowUserItemResponse itemData, int achievedValue, int progressVal, bool isReceived)
     {
         // メンバ変数取得
+        m_loading = GameObject.Find("LoadingContainer").GetComponent<LoadingContainer>();
         m_panelItemDetails = panelItemDetails;
         m_spriteItem = itemData.Type == 1 ? TopManager.TexIcons[itemData.Effect - 1] : m_texItemIcons[itemData.Type - 1];
         m_itemDescription = itemData.Type == 2 ? itemData.Name : itemData.Description;
@@ -33,6 +35,7 @@ public class RewardBar : MonoBehaviour
         m_textItemDescription.text = itemData.Description;
         m_btnIconItem.GetComponent<Image>().sprite = m_texItemIcons[itemData.Type - 1];
         m_btnIconItem.GetComponent<Button>().onClick.AddListener(() => {
+            SEManager.Instance.PlayButtonSE();
             panelItemDetails.SetPanelContent("アイテム詳細", m_itemDescription, m_spriteItem); 
         });
 
@@ -53,12 +56,14 @@ public class RewardBar : MonoBehaviour
 
     public void OnGetRewardButton()
     {
+        m_loading.ToggleLoadingUIVisibility(1);
         // アチーブメント達成状況更新処理
         StartCoroutine(NetworkManager.Instance.UpdateUserAchievement(
             m_achieveType,
             0,
             result =>
             {
+                m_loading.ToggleLoadingUIVisibility(-1);
                 if (!result) return;
 
                 // 所持アイテム更新

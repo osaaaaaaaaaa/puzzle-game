@@ -14,12 +14,14 @@ public class SignalHostLogBar : MonoBehaviour
     [SerializeField] Button m_btnAction;                  // ステージに遷移or無効化になるボタン
     [SerializeField] Text m_textAction;                   // 上のボタンのテキスト
     [SerializeField] Button m_btnDestroy;                 // 破棄するボタン
+    LoadingContainer m_loading;
     UISignalManager m_signalManager;
     GameObject m_logBar;
     int m_signalID;
 
     public void UpdateLog(UISignalManager signalManager, int signalID,DateTime created_at, int stageID, int guestCnt, bool isStageClear)
     {
+        m_loading = GameObject.Find("LoadingContainer").GetComponent<LoadingContainer>();
         m_signalManager = signalManager;
         m_logBar = this.gameObject;
         m_signalID = signalID;
@@ -52,17 +54,19 @@ public class SignalHostLogBar : MonoBehaviour
     /// </summary>
     public void OnDestroyButton()
     {
+        SEManager.Instance.PlayCanselSE();
+        m_loading.ToggleLoadingUIVisibility(1);
         // 救難信号削除処理
         StartCoroutine(NetworkManager.Instance.DestroyDistressSignal(
             m_signalID,
             result =>
             {
+                m_loading.ToggleLoadingUIVisibility(-1);
                 if (!result) 
                 {
                     m_signalManager.ShowPanelError("通信エラーが発生しました");
                     return;
                 };
-                SEManager.Instance.PlayCanselSE();
                 Destroy(m_logBar);
             }));
     }

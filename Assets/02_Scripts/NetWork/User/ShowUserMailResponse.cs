@@ -15,4 +15,6 @@ public class ShowUserMailResponse
     public bool IsReceived { get; set; }
     [JsonProperty("created_at")]
     public string CreatedAt { get; set; }
+    [JsonProperty("elapsed_days")]
+    public int ElapsedDay { get; set; }
 }

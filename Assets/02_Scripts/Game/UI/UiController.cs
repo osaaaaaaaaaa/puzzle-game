@@ -6,6 +6,8 @@ using DG.Tweening;
 
 public class UiController : MonoBehaviour
 {
+    [SerializeField] LoadingContainer m_loading;
+
     #region パネル
     [SerializeField] GameObject m_uiPanelGame;          // ゲームのUI
     [SerializeField] GameObject m_uiPanelTutorial;      // チュートリアルのUI
@@ -117,11 +119,14 @@ public class UiController : MonoBehaviour
             m_buttonReset.GetComponent<Button>().interactable = false;
         }
 
+        m_loading.ToggleLoadingUIVisibility(1);
+
         // ゲストのプロフィール取得処理
         StartCoroutine(NetworkManager.Instance.GetSignalUserProfile(
             TopSceneDirector.Instance.DistressSignalID,
             result =>
             {
+                m_loading.ToggleLoadingUIVisibility(-1);
                 m_textEmpty.text = result == null ? "参加しているユーザーが見つかりませんでした。" : "";
                 if (result == null) return;
 
@@ -146,6 +151,7 @@ public class UiController : MonoBehaviour
     /// </summary>
     public void OnGuestEditButton()
     {
+        SEManager.Instance.PlayButtonSE();
         m_gameManager.UpdateGameMode(GameManager.GAMEMODE.Edit);
         m_buttonEdit.GetComponent<Button>().interactable = false;
         m_buttonEditDone.GetComponent<Button>().interactable = true;
@@ -157,6 +163,7 @@ public class UiController : MonoBehaviour
     /// </summary>
     public void OnGuestEditDoneButton()
     {
+        SEManager.Instance.PlayButtonSE();
         m_gameManager.UpdateGameMode(GameManager.GAMEMODE.EditDone);
         m_gameManager.OnGameReset();
 
@@ -173,6 +180,8 @@ public class UiController : MonoBehaviour
             return;
         }
 
+        m_loading.ToggleLoadingUIVisibility(1);
+
         // ゲストの配置情報更新処理
         StartCoroutine(NetworkManager.Instance.UpdateSignalGuest(
             requestData.SignalID,
@@ -180,6 +189,7 @@ public class UiController : MonoBehaviour
             requestData.Vector,
             result =>
             {
+                m_loading.ToggleLoadingUIVisibility(-1);
                 if (result != null)
                 {
                     ShowPanelJsonError();
@@ -190,6 +200,7 @@ public class UiController : MonoBehaviour
 
     public void OnReplayButton()
     {
+        SEManager.Instance.PlayButtonSE();
         m_gameManager.StartReplay();
     }
 
@@ -214,6 +225,9 @@ public class UiController : MonoBehaviour
     /// <param name="isActive"></param>
     public void SetActiveGameUI(bool isActive)
     {
+        if (isActive) SEManager.Instance.PlayButtonSE();
+        if (!isActive) SEManager.Instance.PlayCanselSE();
+
         m_uiPanelGame.SetActive(isActive);
     }
 
@@ -240,6 +254,9 @@ public class UiController : MonoBehaviour
     /// </summary>
     public void OnTutorialButton(bool isActive)
     {
+        if (isActive) SEManager.Instance.PlayButtonSE();
+        if (!isActive) SEManager.Instance.PlayCanselSE();
+
         m_uiPanelTutorial.SetActive(isActive);
         m_uiPanelGame.SetActive(!isActive);
 
@@ -251,6 +268,9 @@ public class UiController : MonoBehaviour
     /// </summary>
     public void OnButtoneHome(bool isActive)
     {
+        if (isActive) SEManager.Instance.PlayButtonSE();
+        if (!isActive) SEManager.Instance.PlayCanselSE();
+
         m_uiPanelHome.SetActive(isActive);
 
         // リザルト画面ではない場合

@@ -10,6 +10,8 @@ using System.Linq;
 
 public class GameManager : MonoBehaviour
 {
+    [SerializeField] LoadingContainer m_loading;
+
     // ポーズ中かどうか
     public bool m_isPause;
 
@@ -81,14 +83,19 @@ public class GameManager : MonoBehaviour
 
             if (playMode == TopSceneDirector.PLAYMODE.GUEST)
             {
+                m_loading.ToggleLoadingUIVisibility(1);
+
                 // ホストのリプレイ情報取得処理
                 StartCoroutine(NetworkManager.Instance.GetReplayData(
                     TopSceneDirector.Instance.DistressSignalID,
                     result =>
                     {
-                        if (result == null)
+                        m_loading.ToggleLoadingUIVisibility(-1);
+                        m_buttonReplay.SetActive(true);
+                        if (result == null || result.Count == 0)
                         {
-                            m_buttonReplay.GetComponent<Button>().interactable = false; 
+                            m_buttonReplay.GetComponent<Button>().interactable = false;
+                            return;
                         };
 
                         replayDatas = result;
@@ -135,11 +142,13 @@ public class GameManager : MonoBehaviour
 
             if (TopSceneDirector.Instance.PlayMode != TopSceneDirector.PLAYMODE.SOLO)
             {
+                m_loading.ToggleLoadingUIVisibility(1);
                 // 参加しているゲストの配置情報を取得する
                 StartCoroutine(NetworkManager.Instance.GetSignalGuest(
                     TopSceneDirector.Instance.DistressSignalID,
                     result =>
                     {
+                        m_loading.ToggleLoadingUIVisibility(-1);
                         if (result == null)
                         {
                             // ゲストのプロフィールを表示する
@@ -227,22 +236,24 @@ public class GameManager : MonoBehaviour
 
         if (TopSceneDirector.Instance.PlayMode != TopSceneDirector.PLAYMODE.SOLO)
         {
+            m_loading.ToggleLoadingUIVisibility(1);
             // 参加しているゲストの配置情報を取得する
             StartCoroutine(NetworkManager.Instance.GetSignalGuest(
                 TopSceneDirector.Instance.DistressSignalID,
                 result =>
                 {
+                    m_loading.ToggleLoadingUIVisibility(-1);
                     if (result == null)
                     {
-                            // ゲストのプロフィールを表示する
-                            m_UiController.InitGuestUI();
+                        // ゲストのプロフィールを表示する
+                        m_UiController.InitGuestUI();
                         return;
                     };
 
                     foreach (ShowSignalGuestResponse user in result)
                     {
-                            // 正常に変換できるかチェック , 登録してまだ設置が完了していない場合はスキップ
-                            Vector3 pos = NetworkManager.Instance.StringToVector3(user.Pos);
+                        // 正常に変換できるかチェック , 登録してまだ設置が完了していない場合はスキップ
+                        Vector3 pos = NetworkManager.Instance.StringToVector3(user.Pos);
                         Vector3 vec = NetworkManager.Instance.StringToVector3(user.Vector);
                         if (pos == Vector3.zero || vec == Vector3.zero)
                         {
@@ -258,8 +269,8 @@ public class GameManager : MonoBehaviour
                             continue;
                         }
 
-                            // ゲストを生成する
-                            GameObject guestSet = Instantiate(m_guestSetPrefab, m_stage.transform);
+                        // ゲストを生成する
+                        GameObject guestSet = Instantiate(m_guestSetPrefab, m_stage.transform);
                         guestSet.transform.position = Vector3.zero;
                         GameObject guest = guestSet.transform.GetChild(0).gameObject;
                         guest.GetComponent<Guest>().InitMemberVariable(user.UserName, pos, vec);
@@ -402,6 +413,7 @@ public class GameManager : MonoBehaviour
         // リザルトを更新する必要がある場合
         if (isUpdateStageID || isUpdateResult)
         {
+            m_loading.ToggleLoadingUIVisibility(2);
             // ステージクリア処理
             StartCoroutine(NetworkManager.Instance.UpdateStageClear(
                 isUpdateStageID,
@@ -415,6 +427,8 @@ public class GameManager : MonoBehaviour
                 },
                 result =>
                 {
+                    m_loading.ToggleLoadingUIVisibility(-1);
+
                     // ステージをクリアしたことにする
                     m_isEndGame = true;
 
@@ -425,28 +439,30 @@ public class GameManager : MonoBehaviour
                     PlayStageClearEffect();
                 }));
 
-            if (isUpdateStageID)
-            {
-                // アチーブメント達成状況更新処理 [ステージ初回クリア]
-                StartCoroutine(NetworkManager.Instance.UpdateUserAchievement(
-                    1,
-                    TopManager.stageID,
-                    result =>
-                    {
-                        Debug.Log("アチーブメント１");
-                        if (!result) return;
-                    }));
-            }
-
             // アチーブメント達成状況更新処理 [トータルスコア]
             StartCoroutine(NetworkManager.Instance.UpdateUserAchievement(
                 2,
                 0,
                 result =>
                 {
-                    Debug.Log("アチーブメント２");
+                    m_loading.ToggleLoadingUIVisibility(-1);
                     if (!result) return;
                 }));
+
+            if (isUpdateStageID)
+            {
+                m_loading.ToggleLoadingUIVisibility(1);
+                // アチーブメント達成状況更新処理 [ステージ初回クリア]
+                StartCoroutine(NetworkManager.Instance.UpdateUserAchievement(
+                    1,
+                    TopManager.stageID,
+                    result =>
+                    {
+                        m_loading.ToggleLoadingUIVisibility(-1);
+                        if (!result) return;
+                    }));
+            }
+
         }
         else
         {
@@ -463,6 +479,7 @@ public class GameManager : MonoBehaviour
         // アイテムを使用している場合
         if (TopManager.isUseItem)
         {
+            m_loading.ToggleLoadingUIVisibility(1);
             TopManager.isUseItem = false;
             // 所持アイテム更新処理
             StartCoroutine(NetworkManager.Instance.UpdateUserItem(
@@ -471,6 +488,7 @@ public class GameManager : MonoBehaviour
                 -1,
                 result =>
                 {
+                    m_loading.ToggleLoadingUIVisibility(-1);
                     if (!result) return;
                 }));
         }
@@ -487,12 +505,14 @@ public class GameManager : MonoBehaviour
         // クリア済みかどうかチェック
         if (!NetworkManager.Instance.dSignalList.Any(item => item.SignalID == TopSceneDirector.Instance.DistressSignalID)) return;
 
+        m_loading.ToggleLoadingUIVisibility(1);
+
         // ステージクリア処理
         StartCoroutine(NetworkManager.Instance.UpdateDistressSignal(
             TopSceneDirector.Instance.DistressSignalID,
             result =>
             {
-                Debug.Log("救難信号クリア！");
+                m_loading.ToggleLoadingUIVisibility(-1);
             }));
     }
 
@@ -537,6 +557,7 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void OnNextStageButton()
     {
+        SEManager.Instance.PlayButtonSE();
         TopManager.stageID++;   // ステージIDを更新する
 
 #if !UNITY_EDITOR
@@ -551,6 +572,7 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void OnTopButton()
     {
+        SEManager.Instance.PlayButtonSE();
         Initiate.Fade("01_TopScene", Color.black, 1.0f);
     }
 
@@ -559,6 +581,8 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void OnGameReset()
     {
+        SEManager.Instance.PlayButtonSE();
+
         m_isPause = false;
         m_gameTimer -= 2f;
         m_UiController.GetComponent<UiController>().GenerateSubTimeText(2);
@@ -616,6 +640,7 @@ public class GameManager : MonoBehaviour
         // リプレイを再生できない場合
         if (!m_isReplayEnd || replayDatas.Count == 0) return;
 
+        m_buttonReplay.GetComponent<Button>().interactable = false;
         m_isReplayEnd = false;
         m_replayPlayer.SetActive(true);
         var rPlayer = m_replayPlayer.GetComponent<ReplayPlayer>();

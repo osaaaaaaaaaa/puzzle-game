@@ -7,12 +7,6 @@ public class StageButtonController : MonoBehaviour
 {
     [SerializeField] GameObject m_uiBtnPrefab;
     [SerializeField] TopManager m_manager;
-    public int m_stageMax;
-
-    private void Start()
-    {
-        TopManager.stageMax = m_stageMax;
-    }
 
     /// <summary>
     /// ƒ{ƒ^ƒ“‚ğ¶¬‚·‚é

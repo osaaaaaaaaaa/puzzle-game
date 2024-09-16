@@ -14,6 +14,7 @@ public class GuestProfile : MonoBehaviour
     [SerializeField] Button m_buttonDestroy;              // ゲスト削除ボタン
     [SerializeField] Button m_buttonToggle;               // ゲストのオブジェクトを表示・非表示するボタン
     [SerializeField] GameObject m_window;                 // 確認ウインドウ
+    [SerializeField] List<Sprite> m_spriteToggle;         // [0:非アクティブ画像 , 1:アクティブ画像]
     GameObject m_guestObj;
     int m_userID;
 
@@ -42,6 +43,8 @@ public class GuestProfile : MonoBehaviour
     /// </summary>
     public void OnGuestDestroyButton()
     {
+        SEManager.Instance.PlayButtonSE();
+
         // ゲスト削除処理
         StartCoroutine(NetworkManager.Instance.DestroySignalGuest(
             TopSceneDirector.Instance.DistressSignalID,
@@ -60,6 +63,8 @@ public class GuestProfile : MonoBehaviour
     /// </summary>
     public void OnToggleWindowVisibility(bool isVisible)
     {
+        if(isVisible) SEManager.Instance.PlayButtonSE();
+        if(!isVisible) SEManager.Instance.PlayCanselSE();
         m_window.SetActive(isVisible);
     }
 
@@ -70,7 +75,10 @@ public class GuestProfile : MonoBehaviour
     {
         // 表示・非表示を切り替える
         m_guestObj.SetActive(!m_guestObj.activeSelf);
-        m_buttonToggle.GetComponent<Image>().sprite = !m_guestObj.activeSelf ? TopManager.TexIcons[0] : TopManager.TexIcons[1];
+        m_buttonToggle.GetComponent<Image>().sprite = !m_guestObj.activeSelf ? m_spriteToggle[0] : m_spriteToggle[1];
+
+        if (m_guestObj.activeSelf) SEManager.Instance.PlayButtonSE();
+        if (!m_guestObj.activeSelf) SEManager.Instance.PlayCanselSE();
 
         // ゲストの起動予測を表示・非表示処理
         m_guestObj.GetComponent<Guest>().ToggleLineVisibility(m_guestObj.activeSelf);

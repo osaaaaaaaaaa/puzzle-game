@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class ReplayRecorder : MonoBehaviour
 {
+    [SerializeField] LoadingContainer m_loading;
     [SerializeField] GameManager m_gameManager;
 
     List<ReplayData> m_replayDatas;
@@ -85,13 +86,15 @@ public class ReplayRecorder : MonoBehaviour
 
         Debug.Log("記録完了：" + m_replayDatas.Count);
 
+        m_loading.ToggleLoadingUIVisibility(1);
+
         // リプレイ情報更新処理
         StartCoroutine(NetworkManager.Instance.UpdateReplayData(
             TopSceneDirector.Instance.DistressSignalID,
             m_replayDatas,
             result =>
             {
-                if (result) Debug.Log("更新完了");
+                m_loading.ToggleLoadingUIVisibility(-1);
             }));
 
         IsUpdateReplayData = true;
