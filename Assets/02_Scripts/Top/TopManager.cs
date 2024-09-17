@@ -16,6 +16,10 @@ public class TopManager : MonoBehaviour
     [SerializeField] UIUserManager m_uiUserManager;
     [SerializeField] UISignalManager m_uiSignalManager;
 
+    [SerializeField] GameObject m_mainCamera;
+    [SerializeField] GameObject m_characterControllerPrefab;
+    GameObject m_characterController;   // 生存確認用
+
     [SerializeField] GameObject m_parent_top;
     [SerializeField] GameObject m_ui_startTextParent;
     [SerializeField] Image m_panelImage;                    // 非表示にするパネルのイメージ
@@ -78,6 +82,10 @@ public class TopManager : MonoBehaviour
     {
         isOnStageButton = false;
         isUseItem = false;
+
+        // ユーザー情報を取得済の場合
+        Debug.Log(NetworkManager.Instance.UserID);
+        if (NetworkManager.Instance.UserID != 0) m_characterController = Instantiate(m_characterControllerPrefab, transform.parent.transform);
     }
 
     void Start()
@@ -94,9 +102,6 @@ public class TopManager : MonoBehaviour
             m_isClickTitle = true;
 
 #if !UNITY_EDITOR
-            DOTween.Kill(m_ui_startTextParent.transform);
-            m_ui_startTextParent.SetActive(false);
-
             // アセットバンドルが更新可能かどうかチェック
             m_assetDownLoader.StartCoroutine(m_assetDownLoader.checkCatalog());
 #else
@@ -154,6 +159,8 @@ public class TopManager : MonoBehaviour
             StartCoroutine(NetworkManager.Instance.GetUserData(
                 result => 
                 {
+                    if(m_characterController == null) m_characterController = Instantiate(m_characterControllerPrefab, transform.parent.transform);
+
                     // ステージのリザルト情報を取得する
                     StartCoroutine(NetworkManager.Instance.GetStageResults(
                         result =>
@@ -193,6 +200,8 @@ public class TopManager : MonoBehaviour
         isOnStageButton = true;
         isUseItem = m_boxStage.GetComponent<StageBox>().m_isUseItem;
         m_boxStage.GetComponent<StageBox>().OnCloseButton();
+        Destroy(m_characterController);
+
 #if !UNITY_EDITOR
         // ゲームUIシーンに遷移する
         Initiate.Fade("02_UIScene", Color.black, 1.0f);
@@ -209,8 +218,13 @@ public class TopManager : MonoBehaviour
     {
         if (isOnStageButton) return;
 
+        // Tween作成
+        var sequence = DOTween.Sequence();
+        sequence.Join(m_parent_top.transform.DOLocalMove(new Vector3(m_parent_top.transform.localPosition.x - 1980f, 0, 0), 0.5f).SetEase(Ease.Linear))
+            .Join(m_mainCamera.transform.DOMove(new Vector3(17.83f, 0f, -10f), 0.5f).SetEase(Ease.Linear));
+
         // ユーザーのプロフィールを更新
-        m_uiUserManager.UpdateUserDataUI(true, m_parent_top);
+        m_uiUserManager.UpdateUserDataUI(true, sequence);
 
         // 未受け取りの報酬があるかどうかチェック
         m_uiUserManager.CheckRewardUnclaimed();
@@ -229,8 +243,14 @@ public class TopManager : MonoBehaviour
 
         m_ui_startTextParent.SetActive(true);
 
-        m_parent_top.transform.DOLocalMove(new Vector3(m_parent_top.transform.localPosition.x + 1980f, 0, 0), 0.5f).SetEase(Ease.Linear)
-            .OnComplete(()=> { m_isClickTitle = false; });
+        //m_parent_top.transform.DOLocalMove(new Vector3(m_parent_top.transform.localPosition.x + 1980f, 0, 0), 0.5f).SetEase(Ease.Linear)
+         //   .OnComplete(()=> { m_isClickTitle = false; });
+
+        var sequence = DOTween.Sequence();
+        sequence.Join(m_parent_top.transform.DOLocalMove(new Vector3(m_parent_top.transform.localPosition.x + 1980f, 0, 0), 0.5f).SetEase(Ease.Linear)
+            .OnComplete(() => { m_isClickTitle = false; }))
+            .Join(m_mainCamera.transform.DOMove(new Vector3(0f, 0f, -10f), 0.5f).SetEase(Ease.Linear));
+        sequence.Play();
     }
 
     /// <summary>
@@ -249,10 +269,14 @@ public class TopManager : MonoBehaviour
 
         // 表示処理
         m_sys_panelList[systemNum].SetActive(true);     // 選択したシステム画面
-        m_parent_top.transform.DOLocalMove(new Vector3(m_parent_top.transform.localPosition.x, -1080, 0), 0.5f).SetEase(Ease.Linear);
+
+        var sequence = DOTween.Sequence();
+        sequence.Join(m_parent_top.transform.DOLocalMove(new Vector3(m_parent_top.transform.localPosition.x, -1080, 0), 0.5f).SetEase(Ease.Linear))
+            .Join(m_mainCamera.transform.DOMove(new Vector3(17.83f, 9.9f, -10f), 0.5f).SetEase(Ease.Linear));
+        sequence.Play();
 
         // 未受け取りのUIを隠す
-        if(systemNum == (int)SYSTEM.MAILBOX) m_uiUserManager.HideMailUnclaimedUI();
+        if (systemNum == (int)SYSTEM.MAILBOX) m_uiUserManager.HideMailUnclaimedUI();
         if(systemNum == (int)SYSTEM.ACHIEVEMENT) m_uiUserManager.HideRewardUnclaimedUI();
         if(systemNum == (int)SYSTEM.D_SIGNAL) m_uiSignalManager.HideRewardUnclaimedUI();
     }
@@ -270,7 +294,11 @@ public class TopManager : MonoBehaviour
         m_imgSignalButton.color = NetworkManager.Instance.IsDistressSignalEnabled ? new Color(1f, 1f, 1f, 1f) : new Color(0.7f, 0.7f, 0.7f, 1f);
 
         m_uiUserManager.ResetErrorText();
-        m_parent_top.transform.DOLocalMove(new Vector3(m_parent_top.transform.localPosition.x, 0, 0), 0.5f).SetEase(Ease.Linear);
+
+        var sequence = DOTween.Sequence();
+        sequence.Join(m_parent_top.transform.DOLocalMove(new Vector3(m_parent_top.transform.localPosition.x, 0, 0), 0.5f).SetEase(Ease.Linear))
+            .Join(m_mainCamera.transform.DOMove(new Vector3(17.83f, 0f, -10f), 0.5f).SetEase(Ease.Linear));
+        sequence.Play();
     }
 
     /// <summary>

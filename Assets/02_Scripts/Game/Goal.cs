@@ -39,7 +39,7 @@ public class Goal : MonoBehaviour
     /// <param name="collision"></param>
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (m_gameManager.m_isEndGame || collision.gameObject.tag == "Ghost" 
+        if (TopSceneDirector.Instance == null || m_gameManager.m_isEndGame || collision.gameObject.tag == "Ghost" 
             || collision.gameObject.layer != 6 && collision.gameObject.layer != 10
             || TopSceneDirector.Instance.PlayMode == TopSceneDirector.PLAYMODE.GUEST) return;
 
@@ -57,8 +57,8 @@ public class Goal : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (m_gameManager.m_isEndGame || collision.gameObject.tag == "Ghost"
-            || collision.gameObject.layer != 6 && collision.gameObject.layer != 10) return;
+        if (collision.gameObject.tag == "Ghost" || collision.gameObject.layer != 6 && collision.gameObject.layer != 10) return;
+        if (m_gameManager.m_isEndGame) return;
 
         CancelCountDown();
 

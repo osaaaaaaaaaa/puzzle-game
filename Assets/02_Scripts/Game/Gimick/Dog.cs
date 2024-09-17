@@ -35,7 +35,7 @@ public class Dog : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (TopSceneDirector.Instance.PlayMode == TopSceneDirector.PLAYMODE.GUEST) return;
+        if (TopSceneDirector.Instance == null || TopSceneDirector.Instance.PlayMode == TopSceneDirector.PLAYMODE.GUEST) return;
         if (collision.gameObject.tag == "Ghost") return;    // ゴーストの場合
 
         // 吠えることが可能かつ息子が触れた場合

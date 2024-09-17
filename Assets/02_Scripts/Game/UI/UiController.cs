@@ -327,8 +327,9 @@ public class UiController : MonoBehaviour
 
         // クリアしたかどうかで動的に設定
         m_textPlateResult.text = isStageClear ? "ステージクリア！" : "しっぱい...";
-        // クリア済みのステージの場合はボタンを押せるようにする、そうでない場合は押せないようにする
-        m_buttonNextStage.GetComponent<Button>().interactable = NetworkManager.Instance.StageResults.Count < TopManager.stageID ?
+        if (TopManager.stageID >= TopManager.stageMax && isStageClear) m_textPlateResult.text = "Congratulations!";
+       // クリア済みのステージの場合はボタンを押せるようにする、そうでない場合は押せないようにする
+       m_buttonNextStage.GetComponent<Button>().interactable = NetworkManager.Instance.StageResults.Count < TopManager.stageID ?
             false : true;
 
         // パネルをリザルトに設定する

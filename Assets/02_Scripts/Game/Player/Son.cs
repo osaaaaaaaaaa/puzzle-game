@@ -9,11 +9,30 @@ public class Son : MonoBehaviour
     public Vector3 m_offset { get; private set; }      // 母親とのオフセット
 
     // 初速度
-    public float m_initialSpeed = 50f;
+    float m_initialSpeed = 50f;
     // 空気抵抗
-    public float m_dragNum = 3f;
+    float m_dragNum = 3f;
     // 重量スケール
-    public float m_gravityScale = 10f;
+    float m_gravityScale = 10f;
+
+    public ColorData.COLOR_TYPE m_coloerType { get; private set; } = ColorData.COLOR_TYPE.DEFAULT;
+    public void ChangeColorType(ColorData.COLOR_TYPE type)
+    {
+        m_coloerType = type;
+
+        switch (type)
+        {
+            case ColorData.COLOR_TYPE.RED:
+                GetComponent<SpriteRenderer>().color = new Color(1f,0.6f,0.8f,1f);
+                break;
+            case ColorData.COLOR_TYPE.BLUE:
+                GetComponent<SpriteRenderer>().color = new Color(0.5f, 0.8f, 1f, 1f);
+                break;
+            case ColorData.COLOR_TYPE.PURPLE:
+                GetComponent<SpriteRenderer>().color = new Color(0.9f, 0.5f, 1f, 1f);
+                break;
+        }
+    }
 
     /// <summary>
     /// 蹴り飛ばされる処理

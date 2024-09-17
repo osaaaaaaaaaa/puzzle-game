@@ -219,7 +219,7 @@ public class UIUserManager : MonoBehaviour
     /// <summary>
     /// ユーザー情報を更新する
     /// </summary>
-    public void UpdateUserDataUI(bool isMoveTopUI, GameObject parent_top)
+    public void UpdateUserDataUI(bool isMoveTopUI, Sequence sequence)
     {
         m_loading.ToggleLoadingUIVisibility(1);
 
@@ -259,7 +259,7 @@ public class UIUserManager : MonoBehaviour
                 if (isMoveTopUI)
                 {
                     // 表示するUIをホームへ移動する
-                    parent_top.transform.DOLocalMove(new Vector3(parent_top.transform.localPosition.x - 1980f, 0, 0), 0.5f).SetEase(Ease.Linear);
+                    sequence.Play();
                 }
             }));
     }

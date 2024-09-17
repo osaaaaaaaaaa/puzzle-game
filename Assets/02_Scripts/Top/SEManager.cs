@@ -15,6 +15,8 @@ public class SEManager : MonoBehaviour
 
             // ƒV[ƒ“‘JˆÚ‚µ‚Ä‚à”jŠü‚µ‚È‚¢‚æ‚¤‚É‚·‚é
             DontDestroyOnLoad(gameObject);
+
+            m_audio = GetComponent<AudioSource>();
         }
         else
         {
@@ -29,11 +31,6 @@ public class SEManager : MonoBehaviour
     [SerializeField] AudioClip m_canselSE;
     [SerializeField] AudioClip m_stageClearSE;
     [SerializeField] AudioClip m_stageGameOverSE;
-
-    private void Start()
-    {
-        m_audio = GetComponent<AudioSource>();
-    }
 
     public void PlayScreanMoveSE()
     {
