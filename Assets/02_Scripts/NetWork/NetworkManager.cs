@@ -258,8 +258,6 @@ public class NetworkManager : MonoBehaviour
         if (request.result == UnityWebRequest.Result.Success
             && request.responseCode == 200)
         {
-            // 通信が成功した場合、ファイルにユーザー情報を保存する
-            if (itemID == c_DistressSignalEnableItemID) this.IsDistressSignalEnabled = true;    // 救難信号システムを開放
             if (itemID == this.GolfClubItemID) this.ItemCnt = this.ItemCnt + allieAmount < 0 ? 0 : this.ItemCnt + allieAmount; // 所持アイテム数を更新する
 
             isSuccess = true;
@@ -610,6 +608,38 @@ public class NetworkManager : MonoBehaviour
     }
 
     /// <summary>
+    /// アチーブメント報酬受け取り処理
+    /// </summary>
+    public IEnumerator ReceiveRewardAchievement(int achievement_id, Action<bool> result)
+    {
+        // サーバーに送信するオブジェクトを作成
+        ReceiveRewardAchievementRequest requestData = new ReceiveRewardAchievementRequest();
+        requestData.UserID = UserID;
+        requestData.AchievementID = achievement_id;
+        // サーバーに送信オブジェクトをJSONに変換
+        string json = JsonConvert.SerializeObject(requestData);
+        // 送信
+        UnityWebRequest request = UnityWebRequest.Post(API_BASE_URL + "users/achievements/receive", json, "application/json");
+
+        // 結果を受信するまで待機
+        yield return request.SendWebRequest();
+
+        bool isSuccess = false;
+        if (request.result == UnityWebRequest.Result.Success
+            && request.responseCode == 200)
+        {
+            // 通信が成功した場合、返ってきたJSONをオブジェクトに変換
+            string resultJson = request.downloadHandler.text;
+            ShowUserItemResponse response = JsonConvert.DeserializeObject<ShowUserItemResponse>(resultJson);
+            if (response.ItemID == c_DistressSignalEnableItemID) this.IsDistressSignalEnabled = true;    // 救難信号システムを開放
+            if (response.ItemID == this.GolfClubItemID) this.ItemCnt = this.ItemCnt + response.Amount < 0 ? 0 : this.ItemCnt + response.Amount; // 所持アイテム数を更新する
+
+            isSuccess = true;
+        }
+        result?.Invoke(isSuccess);
+    }
+
+    /// <summary>
     /// 受信メール一覧取得処理
     /// </summary>
     public IEnumerator GetUserMailList(Action<ShowUserMailResponse[]> result)
@@ -640,12 +670,12 @@ public class NetworkManager : MonoBehaviour
     /// <summary>
     /// 受信メール開封処理
     /// </summary>
-    public IEnumerator UpdateUserMail(int mailID, Action<ShowUserItemResponse[]> result)
+    public IEnumerator UpdateUserMail(int userMailID, Action<ShowUserItemResponse[]> result)
     {
         // サーバーに送信するオブジェクトを作成
         UpdateUserMailRequest requestData = new UpdateUserMailRequest();
         requestData.UserID = UserID;
-        requestData.MailID = mailID;
+        requestData.UserMailID = userMailID;
         // サーバーに送信オブジェクトをJSONに変換
         string json = JsonConvert.SerializeObject(requestData);
         // 送信
@@ -679,12 +709,12 @@ public class NetworkManager : MonoBehaviour
     /// <summary>
     /// 受信メール削除処理
     /// </summary>
-    public IEnumerator DestroyUserMail(int mailID, Action<bool> result)
+    public IEnumerator DestroyUserMail(int userMailID, Action<bool> result)
     {
         // サーバーに送信するオブジェクトを作成
         UpdateUserMailRequest requestData = new UpdateUserMailRequest();
         requestData.UserID = UserID;
-        requestData.MailID = mailID;
+        requestData.UserMailID = userMailID;
         // サーバーに送信オブジェクトをJSONに変換
         string json = JsonConvert.SerializeObject(requestData);
         // 送信

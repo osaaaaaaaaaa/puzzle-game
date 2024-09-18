@@ -161,7 +161,7 @@ public class UIUserManager : MonoBehaviour
                     {
                         foreach (ShowAchievementResponse achieve in result)
                         {
-                            if (achieve.Type == 3 && achieve.IsReceivedItem && achieve.AchievedVal <= totalPoint)
+                            if (achieve.Type == 3 && !achieve.IsReceivedItem && achieve.AchievedVal <= totalPoint)
                             {
                                 m_uiRewardUnclaimed.SetActive(true);
                                 return;
@@ -230,7 +230,7 @@ public class UIUserManager : MonoBehaviour
                 m_loading.ToggleLoadingUIVisibility(-1);
 
                 // ボタンを生成する
-                m_stageButtonController.GenerateButtons(result.StageID);
+                m_stageButtonController.GenerateButtons(result.StageID);    // エラーが発生する場合はローカルのユーザーデータ削除すること
 
                 // アイコンを更新する
                 foreach (Image img in m_icons)
@@ -467,7 +467,7 @@ public class UIUserManager : MonoBehaviour
                             {
                                 // 報酬一覧を生成する
                                 barAchieve = Instantiate(m_rewardBarPrefab, contentReward.transform);
-                                barAchieve.GetComponent<RewardBar>().UpdateReward(m_panelItemDetails, achieve.Type,
+                                barAchieve.GetComponent<RewardBar>().UpdateReward(m_panelItemDetails, achieve.AchievementID,
                                     achieve.RewardItem, achieve.AchievedVal, totalPoint, achieve.IsReceivedItem);
                             }
 
@@ -515,7 +515,7 @@ public class UIUserManager : MonoBehaviour
                     mailButton.GetComponent<Button>().onClick.AddListener(() => 
                     {
                         SEManager.Instance.PlayButtonSE();
-                        m_mailContent.SetMailContent(mailButton,mail.MailID,mail.Title, mail.CreatedAt, mail.ElapsedDay,mail.Text, mail.IsReceived); 
+                        m_mailContent.SetMailContent(mailButton,mail.UserMailID,mail.Title, mail.CreatedAt, mail.ElapsedDay,mail.Text, mail.IsReceived); 
                     });
                 }
             }));

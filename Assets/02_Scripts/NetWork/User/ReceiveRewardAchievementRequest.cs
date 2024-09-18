@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using Newtonsoft.Json;
 
-public class UpdateUserMailRequest
+public class ReceiveRewardAchievementRequest
 {
-    [JsonProperty("user_mail_id")]
-    public int UserMailID { get; set; }
+    [JsonProperty("achievement_id")]
+    public int AchievementID { get; set; }
     [JsonProperty("user_id")]
     public int UserID { get; set; }
 }

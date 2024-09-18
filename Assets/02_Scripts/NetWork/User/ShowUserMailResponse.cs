@@ -5,6 +5,8 @@ using Newtonsoft.Json;
 
 public class ShowUserMailResponse
 {
+    [JsonProperty("id")]
+    public int UserMailID { get; set; }
     [JsonProperty("mail_id")]
     public int MailID { get; set; }
     [JsonProperty("title")]

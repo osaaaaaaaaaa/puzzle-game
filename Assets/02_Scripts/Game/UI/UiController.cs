@@ -165,6 +165,9 @@ public class UiController : MonoBehaviour
     {
         SEManager.Instance.PlayButtonSE();
         m_gameManager.UpdateGameMode(GameManager.GAMEMODE.EditDone);
+
+        // リセットボタンを初期化
+        SetInteractableButtonReset(false);
         m_gameManager.OnGameReset();
 
         m_buttonEdit.GetComponent<Button>().interactable = true;

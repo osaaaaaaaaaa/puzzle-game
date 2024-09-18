@@ -98,5 +98,11 @@ public class ReplayRecorder : MonoBehaviour
             }));
 
         IsUpdateReplayData = true;
+
+        if (m_gameManager.m_isExitGame)
+        {
+            // ホストが途中退出した場合
+            Initiate.Fade("01_TopScene", Color.black, 1.0f);
+        }
     }
 }

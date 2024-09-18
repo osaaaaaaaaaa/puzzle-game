@@ -115,12 +115,23 @@ public class TopManager : MonoBehaviour
     /// </summary>
     public void StoreUser()
     {
+        // 最大ステージ数を取得
+        m_loading.ToggleLoadingUIVisibility(1);
+        StartCoroutine(NetworkManager.Instance.GetConstant(
+            1,
+            result =>
+            {
+                Debug.Log(result.Constant);
+                stageMax = result.Constant;
+                m_loading.ToggleLoadingUIVisibility(-1);
+            }
+            ));
+
         // ユーザーデータが保存されていない場合
         if (!NetworkManager.Instance.LoadUserData())
         {
-            m_loading.ToggleLoadingUIVisibility(1);
-
             // ユーザー登録処理
+            m_loading.ToggleLoadingUIVisibility(1);
             StartCoroutine(NetworkManager.Instance.StoreUser(
                 Guid.NewGuid().ToString(),
                 result =>
@@ -131,18 +142,7 @@ public class TopManager : MonoBehaviour
         }
         else
         {
-            m_loading.ToggleLoadingUIVisibility(4);
-
-            // 最大ステージ数を取得
-            StartCoroutine(NetworkManager.Instance.GetConstant(
-                1,
-                result => 
-                {
-                    stageMax = result.Constant;
-                    m_loading.ToggleLoadingUIVisibility(-1);
-                    Debug.Log(stageMax);
-                }
-                ));
+            m_loading.ToggleLoadingUIVisibility(3);
 
             // 所持アイテムを取得する
             StartCoroutine(NetworkManager.Instance.GetUserItem(

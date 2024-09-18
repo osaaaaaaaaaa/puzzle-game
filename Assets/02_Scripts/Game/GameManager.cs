@@ -43,6 +43,7 @@ public class GameManager : MonoBehaviour
     bool m_isMedal2;
     float m_gameTimer;
     public bool m_isEndGame { get; private set; }
+    public bool m_isExitGame { get; private set; }
     #endregion
 
     #region ゲームクリア時の演出
@@ -69,6 +70,7 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
+        Debug.Log(TopManager.stageMax);
         m_guestList = new List<GameObject>();
 
         // ゲームモードの初期化
@@ -111,6 +113,7 @@ public class GameManager : MonoBehaviour
         // パラメータ初期化
         m_isEndAnim = false;
         m_isEndGame = false;
+        m_isExitGame = false;
         m_isMedal1 = false;
         m_isMedal2 = false;
         m_gameTimer = 40;
@@ -391,6 +394,7 @@ public class GameManager : MonoBehaviour
 
         // 現在のステージが上限以下＆＆最新のステージをクリアしたかどうか
         bool isUpdateStageID = NetworkManager.Instance.StageID < TopManager.stageMax && NetworkManager.Instance.StageID == TopManager.stageID;
+        Debug.Log(isUpdateStageID + "," + NetworkManager.Instance.StageID + ","+ TopManager.stageMax + "," + TopManager.stageID);
 
         // メダルを初獲得した||ハイスコアを上回ったかどうかチェック
         bool isUpdateResult = false;
@@ -573,7 +577,18 @@ public class GameManager : MonoBehaviour
     public void OnTopButton()
     {
         SEManager.Instance.PlayButtonSE();
-        Initiate.Fade("01_TopScene", Color.black, 1.0f);
+
+        if (TopSceneDirector.Instance.PlayMode == TopSceneDirector.PLAYMODE.HOST 
+            && !m_replayRecorder.GetComponent<ReplayRecorder>().IsUpdateReplayData)
+        {
+            // 自身がホスト&&リプレイの録画が終了していない場合
+            m_isExitGame = true;
+            m_isEndGame = true;
+        }
+        else
+        {
+            Initiate.Fade("01_TopScene", Color.black, 1.0f);
+        }
     }
 
     /// <summary>

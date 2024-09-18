@@ -14,21 +14,17 @@ public class RewardBar : MonoBehaviour
     LoadingContainer m_loading;
     PanelItemDetails m_panelItemDetails;
     Sprite m_spriteItem;
+    int m_achievementID;
     string m_itemDescription;
-    int m_achieveType;
-    int m_itemID;
-    int m_itemAmount;
 
-    public void UpdateReward(PanelItemDetails panelItemDetails,int achieveType, ShowUserItemResponse itemData, int achievedValue, int progressVal, bool isReceived)
+    public void UpdateReward(PanelItemDetails panelItemDetails, int achievementID, ShowUserItemResponse itemData, int achievedValue, int progressVal, bool isReceived)
     {
         // メンバ変数取得
         m_loading = GameObject.Find("LoadingContainer").GetComponent<LoadingContainer>();
         m_panelItemDetails = panelItemDetails;
         m_spriteItem = itemData.Type == 1 ? TopManager.TexIcons[itemData.Effect - 1] : m_texItemIcons[itemData.Type - 1];
+        m_achievementID = achievementID;
         m_itemDescription = itemData.Type == 2 ? itemData.Name : itemData.Description;
-        m_achieveType = achieveType;
-        m_itemID = itemData.ItemID;
-        m_itemAmount = itemData.Amount;
 
         // パラメータ設定
         m_textAchievedValue.text = achievedValue + "pt";
@@ -57,28 +53,19 @@ public class RewardBar : MonoBehaviour
     public void OnGetRewardButton()
     {
         m_loading.ToggleLoadingUIVisibility(1);
-        // アチーブメント達成状況更新処理
-        StartCoroutine(NetworkManager.Instance.UpdateUserAchievement(
-            m_achieveType,
-            0,
+
+        // アチーブメント報酬受け取り処理
+        StartCoroutine(NetworkManager.Instance.ReceiveRewardAchievement(
+            m_achievementID,
             result =>
             {
                 m_loading.ToggleLoadingUIVisibility(-1);
                 if (!result) return;
 
-                // 所持アイテム更新
-                StartCoroutine(NetworkManager.Instance.UpdateUserItem(
-                    m_itemID,
-                    1,
-                    m_itemAmount,
-                    result =>
-                    {
-                        if (!result) return;
-                        m_btnReward.SetActive(false);
-                        m_textReceived.SetActive(true);
-                        transform.SetAsLastSibling();
-                        m_panelItemDetails.SetPanelContent("アイテム獲得", m_itemDescription, m_spriteItem);
-                    }));
+                m_btnReward.SetActive(false);
+                m_textReceived.SetActive(true);
+                transform.SetAsLastSibling();
+                m_panelItemDetails.SetPanelContent("アイテム獲得", m_itemDescription, m_spriteItem);
             }));
     }
 }
