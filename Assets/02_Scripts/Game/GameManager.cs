@@ -442,8 +442,10 @@ public class GameManager : MonoBehaviour
         // エフェクトを生成する
         GameObject effectL = Instantiate(m_stageClearEffect, m_mainCamera.transform);
         effectL.transform.localPosition = m_offsetEffectL;
+        effectL.transform.position = new Vector3(effectL.transform.position.x, effectL.transform.position.y, 100f);
         GameObject effectR = Instantiate(m_stageClearEffect, m_mainCamera.transform);
         effectR.transform.localPosition = m_offsetEffectR;
+        effectR.transform.position = new Vector3(effectR.transform.position.x, effectR.transform.position.y, 100f);
         effectR.transform.localScale = new Vector3(-effectR.transform.localScale.x, effectR.transform.localScale.y, effectR.transform.localScale.z);
 
         if (m_cameraController.m_cameraMode == CameraController.CAMERAMODE.ZOOMOUT)
