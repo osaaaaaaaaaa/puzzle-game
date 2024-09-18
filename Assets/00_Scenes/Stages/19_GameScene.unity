@@ -1972,11 +1972,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6264172337585893151, guid: 8e445037b9f7c50408950719e5e0edc6, type: 3}
       propertyPath: m_maxPos.y
-      value: 10.31
+      value: 10.1
       objectReference: {fileID: 0}
     - target: {fileID: 6264172337585893151, guid: 8e445037b9f7c50408950719e5e0edc6, type: 3}
       propertyPath: m_minPos.y
-      value: 4
+      value: 4.27
       objectReference: {fileID: 0}
     - target: {fileID: 6264172337585893151, guid: 8e445037b9f7c50408950719e5e0edc6, type: 3}
       propertyPath: m_isInverseY

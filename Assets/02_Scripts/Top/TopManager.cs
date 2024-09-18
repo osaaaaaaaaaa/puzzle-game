@@ -101,12 +101,15 @@ public class TopManager : MonoBehaviour
         {
             m_isClickTitle = true;
 
-#if !UNITY_EDITOR
+/*#if UNITY_EDITOR
+            StoreUser();
+#else
             // アセットバンドルが更新可能かどうかチェック
             m_assetDownLoader.StartCoroutine(m_assetDownLoader.checkCatalog());
-#else
-            StoreUser();
-#endif
+#endif*/
+
+            // アセットバンドルが更新可能かどうかチェック
+            m_assetDownLoader.StartCoroutine(m_assetDownLoader.checkCatalog());
         }
     }
 
@@ -202,13 +205,16 @@ public class TopManager : MonoBehaviour
         m_boxStage.GetComponent<StageBox>().OnCloseButton();
         Destroy(m_characterController);
 
-#if !UNITY_EDITOR
-        // ゲームUIシーンに遷移する
-        Initiate.Fade("02_UIScene", Color.black, 1.0f);
-#else
+/*#if UNITY_EDITOR
         // ゲームシーンに遷移する
         Initiate.Fade(stageID + "_GameScene", Color.black, 1.0f);
-#endif
+#else
+        // ゲームUIシーンに遷移する
+        Initiate.Fade("02_UIScene", Color.black, 1.0f);
+#endif*/
+
+        // ゲームUIシーンに遷移する
+        Initiate.Fade("02_UIScene", Color.black, 1.0f);
     }
 
     /// <summary>

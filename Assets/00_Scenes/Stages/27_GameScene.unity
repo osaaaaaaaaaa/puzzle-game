@@ -1777,15 +1777,15 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 6373848529966000736}
+    m_TransformParent: {fileID: 2829477197513256923}
     m_Modifications:
     - target: {fileID: 5947769600846962815, guid: e6b11ce164c1cc948ad20d122a66a171, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 7.1
+      value: 12.61
       objectReference: {fileID: 0}
     - target: {fileID: 5947769600846962815, guid: e6b11ce164c1cc948ad20d122a66a171, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 3.91
+      value: 4.41
       objectReference: {fileID: 0}
     - target: {fileID: 5947769600846962815, guid: e6b11ce164c1cc948ad20d122a66a171, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1797,15 +1797,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5947769600846962815, guid: e6b11ce164c1cc948ad20d122a66a171, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 5947769600846962815, guid: e6b11ce164c1cc948ad20d122a66a171, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 5947769600846962815, guid: e6b11ce164c1cc948ad20d122a66a171, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 5947769600846962815, guid: e6b11ce164c1cc948ad20d122a66a171, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -7456,6 +7456,7 @@ Transform:
   - {fileID: 2863632736159979243}
   - {fileID: 6373848529966000736}
   - {fileID: 2297624902913064389}
+  - {fileID: 351184301}
   - {fileID: 429104500}
   - {fileID: 7178636380847080210}
   - {fileID: 1996416180}
@@ -13730,7 +13731,6 @@ Transform:
   - {fileID: 1802392271}
   - {fileID: 398786839}
   - {fileID: 1354863700}
-  - {fileID: 351184301}
   - {fileID: 1363194701}
   - {fileID: 2051498740}
   - {fileID: 888013537}

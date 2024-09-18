@@ -352,6 +352,11 @@ public class UiController : MonoBehaviour
         m_buttonNextStage.GetComponent<Button>().interactable = false;
     }
 
+    public void HideNextButton()
+    {
+        m_buttonNextStage.SetActive(false);
+    }
+
     /// <summary>
     /// Œ®‚ÌUI‚ğXV‚·‚é
     /// </summary>

@@ -29,7 +29,7 @@ public class NetworkManager : MonoBehaviour
     }
 
     #region API接続情報
-#if UNITY_EDITOR
+#if !UNITY_EDITOR
     const string API_BASE_URL = "http://localhost:8000/api/";
 #else
     const string API_BASE_URL = "https://api-tikokukaihi.japaneast.cloudapp.azure.com/api/";
@@ -429,11 +429,13 @@ public class NetworkManager : MonoBehaviour
         if (request.result == UnityWebRequest.Result.Success
             && request.responseCode == 200)
         {
+            Debug.Log("成功");
             // 通信が成功した場合、返ってきたJSONをオブジェクトに変換
             string resultJson = request.downloadHandler.text;
             ShowStageResultResponse[] response = JsonConvert.DeserializeObject<ShowStageResultResponse[]>(resultJson);
             this.StageResults = new (response);
 
+            Debug.Log(StageResults[0].Time);
             // 呼び出し元のresult処理を呼び出す
             result?.Invoke(response);
         }
