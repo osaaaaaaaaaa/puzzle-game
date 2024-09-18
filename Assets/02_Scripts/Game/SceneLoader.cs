@@ -7,8 +7,6 @@ public class SceneLoader : MonoBehaviour
 {
     private void Awake()
     {
-#if UNITY_EDITOR
-        SceneManager.LoadScene("02_UIScene", LoadSceneMode.Additive);
-#endif
+        //SceneManager.LoadScene("02_UIScene", LoadSceneMode.Additive);
     }
 }

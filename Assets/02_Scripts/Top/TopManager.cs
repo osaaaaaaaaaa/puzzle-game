@@ -101,13 +101,6 @@ public class TopManager : MonoBehaviour
         {
             m_isClickTitle = true;
 
-/*#if UNITY_EDITOR
-            StoreUser();
-#else
-            // アセットバンドルが更新可能かどうかチェック
-            m_assetDownLoader.StartCoroutine(m_assetDownLoader.checkCatalog());
-#endif*/
-
             // アセットバンドルが更新可能かどうかチェック
             m_assetDownLoader.StartCoroutine(m_assetDownLoader.checkCatalog());
         }
@@ -204,14 +197,6 @@ public class TopManager : MonoBehaviour
         isUseItem = m_boxStage.GetComponent<StageBox>().m_isUseItem;
         m_boxStage.GetComponent<StageBox>().OnCloseButton();
         Destroy(m_characterController);
-
-/*#if UNITY_EDITOR
-        // ゲームシーンに遷移する
-        Initiate.Fade(stageID + "_GameScene", Color.black, 1.0f);
-#else
-        // ゲームUIシーンに遷移する
-        Initiate.Fade("02_UIScene", Color.black, 1.0f);
-#endif*/
 
         // ゲームUIシーンに遷移する
         Initiate.Fade("02_UIScene", Color.black, 1.0f);
