@@ -29,7 +29,7 @@ public class NetworkManager : MonoBehaviour
     }
 
     #region APIê⁄ë±èÓïÒ
-#if !UNITY_EDITOR
+#if UNITY_EDITOR
     const string API_BASE_URL = "http://localhost:8000/api/";
 #else
     const string API_BASE_URL = "https://api-tikokukaihi.japaneast.cloudapp.azure.com/api/";
