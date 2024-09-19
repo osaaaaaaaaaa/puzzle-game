@@ -4,16 +4,16 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    #region ‘§qŠÖŒW
+    #region æ¯å­é–¢ä¿‚
     [SerializeField] GameObject m_prefabArrow;
     [SerializeField] GameObject m_sonController;
     [SerializeField] GameObject m_son;
     [SerializeField] GameObject m_ride_cow;
     #endregion
 
-    #region ƒvƒŒƒCƒ„[ŠÖŒW
-    const float m_dragSpeed = 100f;    // ƒhƒ‰ƒbƒOƒXƒs[ƒh
-    public bool m_canDragPlayer;       // ƒvƒŒƒCƒ„[‚ğƒhƒ‰ƒbƒO‚Å‚«‚é‚©‚Ç‚¤‚©
+    #region ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼é–¢ä¿‚
+    const float m_dragSpeed = 100f;    // ãƒ‰ãƒ©ãƒƒã‚°ã‚¹ãƒ”ãƒ¼ãƒ‰
+    public bool m_canDragPlayer;       // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚’ãƒ‰ãƒ©ãƒƒã‚°ã§ãã‚‹ã‹ã©ã†ã‹
     #endregion
 
     #region SE
@@ -22,22 +22,22 @@ public class Player : MonoBehaviour
     [SerializeField] AudioClip m_cowSE;
     #endregion
 
-    // ƒQ[ƒ€ƒ}ƒl[ƒWƒƒ[
+    // ã‚²ãƒ¼ãƒ ãƒãƒãƒ¼ã‚¸ãƒ£ãƒ¼
     GameManager m_gameManager;
-    // UIƒRƒ“ƒgƒ[ƒ‰[
+    // UIã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©ãƒ¼
     UiController uiController;
-    // ƒJƒƒ‰ƒRƒ“ƒgƒ[ƒ‰[
+    // ã‚«ãƒ¡ãƒ©ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©ãƒ¼
     CameraController m_cameraController;
 
-    // V‚µ‚­¶¬‚µ‚½–îˆó
+    // æ–°ã—ãç”Ÿæˆã—ãŸçŸ¢å°
     public GameObject m_arrow;
-    // R‚è”ò‚Î‚µ‚½‚©‚Ç‚¤‚©
+    // è¹´ã‚Šé£›ã°ã—ãŸã‹ã©ã†ã‹
     public bool m_isKicked;
-    // R‚è”ò‚Î‚·‚Æ‚«‚ÉæZ‚·‚é’l
+    // è¹´ã‚Šé£›ã°ã™ã¨ãã«ä¹—ç®—ã™ã‚‹å€¤
     public int m_mulPower = 50;
 
     /// <summary>
-    /// R‚é‚Æ‚«‚ÌƒxƒNƒgƒ‹
+    /// è¹´ã‚‹ã¨ãã®ãƒ™ã‚¯ãƒˆãƒ«
     /// </summary>
     public Vector3 VectorKick { get; private set; } = Vector3.zero;
 
@@ -47,7 +47,7 @@ public class Player : MonoBehaviour
         m_canDragPlayer = false;
         m_isKicked = false;
 
-        // ƒIƒuƒWƒFƒNƒgEƒRƒ“ƒ|[ƒlƒ“ƒg‚ğæ“¾‚·‚é
+        // ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆãƒ»ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã‚’å–å¾—ã™ã‚‹
         m_gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         uiController = GameObject.Find("UiController").GetComponent<UiController>();
         m_cameraController = GameObject.Find("CameraController").GetComponent<CameraController>();
@@ -58,38 +58,38 @@ public class Player : MonoBehaviour
     void Update()
     {
 #if UNITY_EDITOR
-        if(Input.GetKey(KeyCode.S)) UnityEditor.EditorApplication.isPaused = true;      // ƒGƒfƒBƒ^‚ğˆê’â~‚·‚é
+        if(Input.GetKey(KeyCode.S)) UnityEditor.EditorApplication.isPaused = true;      // ã‚¨ãƒ‡ã‚£ã‚¿ã‚’ä¸€æ™‚åœæ­¢ã™ã‚‹
 #endif
 
-        // ƒQ[ƒ€ŠJn‚µ‚Ä‚¢‚È‚¢ || ƒ|[ƒY’† || ƒQ[ƒ€‚ªI—¹‚µ‚½ || ƒQ[ƒ€ƒ‚[ƒh‚ª•ÒWŠ®—¹ƒ‚[ƒh
+        // ã‚²ãƒ¼ãƒ é–‹å§‹ã—ã¦ã„ãªã„ || ãƒãƒ¼ã‚ºä¸­ || ã‚²ãƒ¼ãƒ ãŒçµ‚äº†ã—ãŸ || ã‚²ãƒ¼ãƒ ãƒ¢ãƒ¼ãƒ‰ãŒç·¨é›†å®Œäº†ãƒ¢ãƒ¼ãƒ‰
         if (!m_gameManager.m_isEndAnim || m_gameManager.m_isPause 
             || m_gameManager.m_isEndGame || m_gameManager.GameMode == GameManager.GAMEMODE.EditDone) return;
 
-        // ƒvƒŒƒCƒ„[‚ğƒhƒ‰ƒbƒO‚µ‚Ä‚¢‚éê‡
+        // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚’ãƒ‰ãƒ©ãƒƒã‚°ã—ã¦ã„ã‚‹å ´åˆ
         if (m_canDragPlayer)
         {
-            // •êe‚Ìƒhƒ‰ƒbƒOˆ—
+            // æ¯è¦ªã®ãƒ‰ãƒ©ãƒƒã‚°å‡¦ç†
             Vector3 worldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             Vector2 dir = (worldPos - transform.position).normalized;
             transform.GetComponent<Rigidbody2D>().velocity = dir * m_dragSpeed;
         }
 
-        // R‚è”ò‚Î‚µ‚½‚Æ‚«ƒJƒƒ‰‚ğ’Ç]‚³‚¹‚é
+        // è¹´ã‚Šé£›ã°ã—ãŸã¨ãã‚«ãƒ¡ãƒ©ã‚’è¿½å¾“ã•ã›ã‚‹
         if (m_isKicked)
         {
-            // ƒJƒƒ‰‚ª‘§q‚ğ’Ç]‚·‚é
+            // ã‚«ãƒ¡ãƒ©ãŒæ¯å­ã‚’è¿½å¾“ã™ã‚‹
             m_cameraController.Follow();
         }
-        // R‚è”ò‚Î‚·‘O‚Ìê‡
+        // è¹´ã‚Šé£›ã°ã™å‰ã®å ´åˆ
         else
         {
-            // ‘§q‚ğŒÅ’è‚·‚é
+            // æ¯å­ã‚’å›ºå®šã™ã‚‹
             m_son.GetComponent<Son>().ResetSon();
             m_ride_cow.GetComponent<SonCow>().ResetSonCow();
 
             if(m_arrow != null)
             {
-                // ‹‚ÌŒü‚«‚ğXV‚·‚é
+                // ç‰›ã®å‘ãã‚’æ›´æ–°ã™ã‚‹
                 if (m_ride_cow.activeSelf)
                 {
                     var cowDir = m_arrow.GetComponent<Arrow>().dir.x < 0 ? -1 : 1;
@@ -98,24 +98,24 @@ public class Player : MonoBehaviour
             }
         }
 
-        // ‰æ–Êƒ^ƒbƒ`‚µ‚½&&Œ»İ–îˆó‚ğ¶¬‚Å‚«‚éê‡
+        // ç”»é¢ã‚¿ãƒƒãƒã—ãŸ&&ç¾åœ¨çŸ¢å°ã‚’ç”Ÿæˆã§ãã‚‹å ´åˆ
         if (Input.GetMouseButtonDown(0) && m_isKicked == false)
         {
-            // ƒ^ƒbƒ`‚µ‚½êŠ‚ÉRay‚ğ”ò‚Î‚·
+            // ã‚¿ãƒƒãƒã—ãŸå ´æ‰€ã«Rayã‚’é£›ã°ã™
             Vector2 worldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             RaycastHit2D hit2d = Physics2D.Raycast(worldPos, Vector2.zero);
 
-            // ƒvƒŒƒCƒ„[ƒ^ƒO‚ğ‚ÂƒRƒ‰ƒCƒ_[‚Ìê‡
+            // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚¿ã‚°ã‚’æŒã¤ã‚³ãƒ©ã‚¤ãƒ€ãƒ¼ã®å ´åˆ
             if (hit2d)
             {
                 if (hit2d.collider.gameObject.tag == "Player")
                 {
-                    // ƒhƒ‰ƒbƒO‚·‚é€”õ
+                    // ãƒ‰ãƒ©ãƒƒã‚°ã™ã‚‹æº–å‚™
                     m_canDragPlayer = true;
                 }
             }
 
-            // ƒhƒ‰ƒbƒOó‘Ô‚Å‚Í‚È‚¢ê‡
+            // ãƒ‰ãƒ©ãƒƒã‚°çŠ¶æ…‹ã§ã¯ãªã„å ´åˆ
             if(!m_canDragPlayer)
             {
                 Vector3 pivotSon;
@@ -128,43 +128,43 @@ public class Player : MonoBehaviour
                     pivotSon = m_ride_cow.GetComponent<SonCow>().GetPivotPos();
                 }
 
-                // –îˆó‚ğ¶¬
+                // çŸ¢å°ã‚’ç”Ÿæˆ
                 m_arrow = Instantiate(m_prefabArrow, pivotSon, Quaternion.identity);
 
-                // ƒŠƒZƒbƒgƒ{ƒ^ƒ“‚ğ”ñ•\¦‚É‚·‚é
+                // ãƒªã‚»ãƒƒãƒˆãƒœã‚¿ãƒ³ã‚’éè¡¨ç¤ºã«ã™ã‚‹
                 if (m_gameManager.GameMode == GameManager.GAMEMODE.Play) uiController.SetActiveButtonReset(false);
             }
         }
 
-        // w‚ğ—£‚µ‚½
+        // æŒ‡ã‚’é›¢ã—ãŸ
         if (Input.GetMouseButtonUp(0))
         {
-            // ƒhƒ‰ƒbƒOˆ—‚Ìƒpƒ‰ƒ[ƒ^‚ğ‰Šú‰»
+            // ãƒ‰ãƒ©ãƒƒã‚°å‡¦ç†ã®ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã‚’åˆæœŸåŒ–
             m_canDragPlayer = false;
             GetComponent<Rigidbody2D>().velocity = Vector2.zero;
             m_son.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
 
-            // ƒŠƒZƒbƒgƒ{ƒ^ƒ“‚ğ•\¦‚·‚é
+            // ãƒªã‚»ãƒƒãƒˆãƒœã‚¿ãƒ³ã‚’è¡¨ç¤ºã™ã‚‹
             uiController.SetActiveButtonReset(true);
 
-            // –îˆó‚ª‘¶İ‚·‚éê‡(R‚éğŒ‚ğ–‚½‚µ‚½ê‡) && ‚Ü‚¾R‚è”ò‚Î‚µ‚Ä‚¢‚È‚¢ê‡
+            // çŸ¢å°ãŒå­˜åœ¨ã™ã‚‹å ´åˆ(è¹´ã‚‹æ¡ä»¶ã‚’æº€ãŸã—ãŸå ´åˆ) && ã¾ã è¹´ã‚Šé£›ã°ã—ã¦ã„ãªã„å ´åˆ
             if (m_arrow != null && m_isKicked == false)
             {
-                // R‚é‚±‚Æ‚ª‰Â”\‚Èê‡ATweenI—¹Œã‚ÉŠÖ”‚ğcallback‚·‚é
+                // è¹´ã‚‹ã“ã¨ãŒå¯èƒ½ãªå ´åˆã€Tweençµ‚äº†å¾Œã«é–¢æ•°ã‚’callbackã™ã‚‹
                 if (m_arrow.GetComponent<Arrow>().isKick)
                 {
-                    // R‚è”ò‚Î‚µ‚½‚±‚Æ‚É‚·‚é
+                    // è¹´ã‚Šé£›ã°ã—ãŸã“ã¨ã«ã™ã‚‹
                     m_isKicked = true;
 
-                    // R‚è”ò‚Î‚·ˆ—‚ğw’è•b”Œã‚ÉÀs‚·‚é
+                    // è¹´ã‚Šé£›ã°ã™å‡¦ç†ã‚’æŒ‡å®šç§’æ•°å¾Œã«å®Ÿè¡Œã™ã‚‹
                     Invoke("DOKick", 0.2f);
                 }
                 else
                 {
-                    // •êe‚ÌƒAƒjƒ[ƒVƒ‡ƒ“‚ğÄ¶‚·‚é
-                    GetComponent<PlayerAnimController>().PlayStandbyAnim();  // ’ÊíƒXƒLƒ“‚ÌIdleƒAƒjƒ
+                    // æ¯è¦ªã®ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚’å†ç”Ÿã™ã‚‹
+                    GetComponent<PlayerAnimController>().PlayStandbyAnim();  // é€šå¸¸ã‚¹ã‚­ãƒ³ã®Idleã‚¢ãƒ‹ãƒ¡
 
-                    // ¶¬‚µ‚½–îˆó‚ğ”jŠü‚·‚é
+                    // ç”Ÿæˆã—ãŸçŸ¢å°ã‚’ç ´æ£„ã™ã‚‹
                     Destroy(m_arrow);
                     m_arrow = null;
                 }
@@ -173,13 +173,13 @@ public class Player : MonoBehaviour
     }
 
     /// <summary>
-    /// R‚è”ò‚Î‚·ˆ—
+    /// è¹´ã‚Šé£›ã°ã™å‡¦ç†
     /// </summary>
     void DOKick()
     {
         if (m_gameManager.m_isEndGame) return;
 
-        // R‚é‚Æ‚«‚Ìƒpƒ‰ƒ[ƒ^æ“¾(ƒ‰ƒ€ƒ_®‚ğg—p‚·‚é‚½‚ßnew‚ÅƒAƒhƒŒƒX•ÏX)
+        // è¹´ã‚‹ã¨ãã®ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿å–å¾—(ãƒ©ãƒ ãƒ€å¼ã‚’ä½¿ç”¨ã™ã‚‹ãŸã‚newã§ã‚¢ãƒ‰ãƒ¬ã‚¹å¤‰æ›´)
         Vector3 dir = new Vector3();
         dir = m_arrow.GetComponent<Arrow>().dir.normalized;
         float power = new float();
@@ -187,18 +187,18 @@ public class Player : MonoBehaviour
 
         if(m_gameManager.GameMode == GameManager.GAMEMODE.Edit)
         {
-            // R‚é‚Æ‚«‚ÌƒxƒNƒgƒ‹‚ğ•Û‘¶‚·‚é(ƒQƒXƒg—p)
+            // è¹´ã‚‹ã¨ãã®ãƒ™ã‚¯ãƒˆãƒ«ã‚’ä¿å­˜ã™ã‚‹(ã‚²ã‚¹ãƒˆç”¨)
             VectorKick = new Vector3(dir.x * power, dir.y * power);
         }
 
-        // •êe‚ÌƒAƒjƒ[ƒVƒ‡ƒ“‚ğÄ¶‚·‚é
-        GetComponent<PlayerAnimController>().PlayKickAnim();  // R‚éƒAƒjƒ
+        // æ¯è¦ªã®ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚’å†ç”Ÿã™ã‚‹
+        GetComponent<PlayerAnimController>().PlayKickAnim();  // è¹´ã‚‹ã‚¢ãƒ‹ãƒ¡
 
-        // ƒŠƒZƒbƒgƒ{ƒ^ƒ“‚ğ—LŒø‰»‚·‚é
+        // ãƒªã‚»ãƒƒãƒˆãƒœã‚¿ãƒ³ã‚’æœ‰åŠ¹åŒ–ã™ã‚‹
         uiController.SetInteractableButtonReset(true);
 
-        // ‘§q‚ğR‚è”ò‚Î‚·ˆ—
-        Debug.Log("ƒxƒNƒgƒ‹F" + new Vector3(dir.x * power, dir.y * power).ToString());
+        // æ¯å­ã‚’è¹´ã‚Šé£›ã°ã™å‡¦ç†
+        Debug.Log("ãƒ™ã‚¯ãƒˆãƒ«ï¼š" + new Vector3(dir.x * power, dir.y * power).ToString());
         if (m_son.activeSelf)
         {
             m_son.GetComponent<Son>().DOKick(dir, power, true);
@@ -210,24 +210,24 @@ public class Player : MonoBehaviour
         }
         m_audioSouse.PlayOneShot(m_kickSE);
 
-        // ¶¬‚µ‚½–îˆó‚ğ”jŠü‚·‚é
+        // ç”Ÿæˆã—ãŸçŸ¢å°ã‚’ç ´æ£„ã™ã‚‹
         Destroy(m_arrow);
         m_arrow = null;
     }
 
     /// <summary>
-    /// ƒvƒŒƒCƒ„[‚Ìó‘Ô‚ğƒŠƒZƒbƒg‚·‚é
+    /// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®çŠ¶æ…‹ã‚’ãƒªã‚»ãƒƒãƒˆã™ã‚‹
     /// </summary>
     public void ResetPlayer()
     {
-        // ‘§q‚ğƒŠƒZƒbƒg‚·‚é
+        // æ¯å­ã‚’ãƒªã‚»ãƒƒãƒˆã™ã‚‹
         m_sonController.GetComponent<SonController>().ResetSon();
 
-        // Ä“xR‚é‚±‚Æ‚ª‚Å‚«‚é‚æ‚¤‚É‚·‚é
+        // å†åº¦è¹´ã‚‹ã“ã¨ãŒã§ãã‚‹ã‚ˆã†ã«ã™ã‚‹
         m_isKicked = false;
         m_canDragPlayer = false;
 
-        // ƒJƒƒ‰‚ğƒY[ƒ€ƒCƒ“EƒY[ƒ€ƒAƒEƒg‚·‚é
+        // ã‚«ãƒ¡ãƒ©ã‚’ã‚ºãƒ¼ãƒ ã‚¤ãƒ³ãƒ»ã‚ºãƒ¼ãƒ ã‚¢ã‚¦ãƒˆã™ã‚‹
         switch (m_cameraController.m_cameraMode)
         {
             case CameraController.CAMERAMODE.ZOOMIN:
@@ -238,7 +238,7 @@ public class Player : MonoBehaviour
                 break;
         }
 
-        // •êe‚ÌƒAƒjƒ[ƒVƒ‡ƒ“‚ğÄ¶‚·‚é
-        GetComponent<PlayerAnimController>().PlayStandbyAnim();  // ’ÊíƒXƒLƒ“‚ÌIdleƒAƒjƒ
+        // æ¯è¦ªã®ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚’å†ç”Ÿã™ã‚‹
+        GetComponent<PlayerAnimController>().PlayStandbyAnim();  // é€šå¸¸ã‚¹ã‚­ãƒ³ã®Idleã‚¢ãƒ‹ãƒ¡
     }
 }

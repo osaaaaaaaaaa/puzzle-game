@@ -9,25 +9,25 @@ public class StageButtonController : MonoBehaviour
     [SerializeField] TopManager m_manager;
 
     /// <summary>
-    /// ƒ{ƒ^ƒ“‚ğ¶¬‚·‚é
+    /// ãƒœã‚¿ãƒ³ã‚’ç”Ÿæˆã™ã‚‹
     /// </summary>
     /// <param name="stageCnt"></param>
     public void GenerateButtons(int stageCnt)
     {
-        // Œ»İ‚Ìƒ{ƒ^ƒ“‚ğ‘S‚Ä”jŠü‚·‚é
+        // ç¾åœ¨ã®ãƒœã‚¿ãƒ³ã‚’å…¨ã¦ç ´æ£„ã™ã‚‹
         foreach(Transform child in transform)
         {
             Destroy(child.gameObject);
         }
 
-        // ƒ{ƒ^ƒ“‚ğ¶¬‚·‚é
+        // ãƒœã‚¿ãƒ³ã‚’ç”Ÿæˆã™ã‚‹
         for (int i = 0; i < stageCnt; i++)
         {
-            // ƒ{ƒ^ƒ“‚Ìƒpƒ‰ƒ[ƒ^
+            // ãƒœã‚¿ãƒ³ã®ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿
             int id = new int();
             id = i + 1;
 
-            // ƒ{ƒ^ƒ“¶¬
+            // ãƒœã‚¿ãƒ³ç”Ÿæˆ
             GameObject button = Instantiate(m_uiBtnPrefab, transform);
             button.GetComponent<Button>().onClick.AddListener(() => m_manager.OnSelectStageButton(id));
             button.GetComponent<Button>().onClick.AddListener(() => SEManager.Instance.PlayButtonSE());

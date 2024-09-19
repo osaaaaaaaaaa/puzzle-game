@@ -13,7 +13,7 @@ public class SonController : MonoBehaviour
     public GameObject SonRideCow { get { return m_ride_cow; } }
 
     /// <summary>
-    /// ƒQ[ƒ€ŠJn‚Ì‘§q‚ÌƒeƒNƒXƒ`ƒƒİ’è
+    /// ã‚²ãƒ¼ãƒ é–‹å§‹æ™‚ã®æ¯å­ã®ãƒ†ã‚¯ã‚¹ãƒãƒ£è¨­å®š
     /// </summary>
     public enum STARTSON_TEXTURE
     {
@@ -24,7 +24,7 @@ public class SonController : MonoBehaviour
     public STARTSON_TEXTURE m_startSonTex = STARTSON_TEXTURE.SON;
 
     /// <summary>
-    /// Œ³‚ÌƒeƒNƒXƒ`ƒƒ‚É–ß‚·
+    /// å…ƒã®ãƒ†ã‚¯ã‚¹ãƒãƒ£ã«æˆ»ã™
     /// </summary>
     public void ChangeDefaultTexture()
     {
@@ -33,41 +33,41 @@ public class SonController : MonoBehaviour
             m_son.transform.position = m_son_run.transform.position;
         }
 
-        // ƒeƒNƒXƒ`ƒƒ‚ğØ‚è‘Ö‚¦‚é
+        // ãƒ†ã‚¯ã‚¹ãƒãƒ£ã‚’åˆ‡ã‚Šæ›¿ãˆã‚‹
         m_son.SetActive(true);
         m_son_run.SetActive(false);
         m_ride_cow.SetActive(false);
     }
 
     /// <summary>
-    /// ‘–‚éƒeƒNƒXƒ`ƒƒ‚ÉØ‚è‘Ö‚¦‚é
+    /// èµ°ã‚‹ãƒ†ã‚¯ã‚¹ãƒãƒ£ã«åˆ‡ã‚Šæ›¿ãˆã‚‹
     /// </summary>
     public void ChangeRunTexture(int direction,float posY)
     {
-        // ’Êí‚ÌƒeƒNƒXƒ`ƒƒ‚Ì‘§q‚ªƒAƒNƒeƒBƒuó‘Ô‚Ìê‡
+        // é€šå¸¸ã®ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®æ¯å­ãŒã‚¢ã‚¯ãƒ†ã‚£ãƒ–çŠ¶æ…‹ã®å ´åˆ
         if (m_son.activeSelf)
         {
-            // À•W‚ğC³
-            m_son_run.transform.position = new Vector3(m_son.transform.position.x, posY - 0.8f, m_son.transform.position.z);    // -0.8f‚ÍŒ¢‚ğeƒIƒuƒWƒFƒNƒg‚É‚µ‚½‚Æ‚«‚Ìƒ[ƒJƒ‹À•W
+            // åº§æ¨™ã‚’ä¿®æ­£
+            m_son_run.transform.position = new Vector3(m_son.transform.position.x, posY - 0.8f, m_son.transform.position.z);    // -0.8fã¯çŠ¬ã‚’è¦ªã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã«ã—ãŸã¨ãã®ãƒ­ãƒ¼ã‚«ãƒ«åº§æ¨™
         }
-        // ‘–‚é•ûŒü
+        // èµ°ã‚‹æ–¹å‘
         m_son_run.GetComponent<SonRun>().m_direction = direction;
 
-        // ƒeƒNƒXƒ`ƒƒ‚ğØ‚è‘Ö‚¦‚é
+        // ãƒ†ã‚¯ã‚¹ãƒãƒ£ã‚’åˆ‡ã‚Šæ›¿ãˆã‚‹
         m_son_run.SetActive(true);
         m_son.SetActive(false);
         m_ride_cow.SetActive(false);
     }
 
     /// <summary>
-    /// ‹‚ÌƒeƒNƒXƒ`ƒƒ‚ÉØ‚è‘Ö‚¦‚é
+    /// ç‰›ã®ãƒ†ã‚¯ã‚¹ãƒãƒ£ã«åˆ‡ã‚Šæ›¿ãˆã‚‹
     /// </summary>
     public void ChangeCowTexture(int direction, Vector3 cowPos)
     {
-        // ‹‚Ìƒpƒ‰ƒ[ƒ^İ’è
+        // ç‰›ã®ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿è¨­å®š
         m_ride_cow.GetComponent<SonCow>().SetCowParam(direction,cowPos);
 
-        // ƒeƒNƒXƒ`ƒƒ‚ğØ‚è‘Ö‚¦‚é
+        // ãƒ†ã‚¯ã‚¹ãƒãƒ£ã‚’åˆ‡ã‚Šæ›¿ãˆã‚‹
         m_son_run.SetActive(false);
         m_son.SetActive(false);
         m_ride_cow.SetActive(true);
@@ -75,7 +75,7 @@ public class SonController : MonoBehaviour
     }
 
     /// <summary>
-    /// ƒŠƒZƒbƒgˆ—
+    /// ãƒªã‚»ãƒƒãƒˆå‡¦ç†
     /// </summary>
     public void ResetSon()
     {
@@ -94,7 +94,7 @@ public class SonController : MonoBehaviour
     }
 
     /// <summary>
-    /// ƒƒ“ƒo•Ï”‰Šú‰»ˆ—
+    /// ãƒ¡ãƒ³ãƒå¤‰æ•°åˆæœŸåŒ–å‡¦ç†
     /// </summary>
     public void InitMemberVariable()
     {
@@ -112,7 +112,7 @@ public class SonController : MonoBehaviour
     }
 
     /// <summary>
-    /// ƒQƒXƒg‚ª    ƒVƒ…ƒ~ƒŒ[ƒVƒ‡ƒ“‚·‚é‚Æ‚«‚Ég—p‚·‚éî•ñ
+    /// ã‚²ã‚¹ãƒˆãŒ    ã‚·ãƒ¥ãƒŸãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ã™ã‚‹ã¨ãã«ä½¿ç”¨ã™ã‚‹æƒ…å ±
     /// </summary>
     public Vector3 GetSonOfset()
     {

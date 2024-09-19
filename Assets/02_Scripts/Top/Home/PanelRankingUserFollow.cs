@@ -22,7 +22,7 @@ public class PanelRankingUserFollow : MonoBehaviour
         m_loading = GameObject.Find("LoadingContainer").GetComponent<LoadingContainer>();
         bool isFollow = m_rankingUsers[index].IsFollow;
         m_content.SetActive(true);
-        m_text.text = !isFollow ? name + "‚ðƒtƒHƒ[‚µ‚Ü‚·‚©H" : name + "‚ðƒtƒHƒ[‰ðœ‚µ‚Ü‚·‚©H";
+        m_text.text = !isFollow ? name + "ã‚’ãƒ•ã‚©ãƒ­ãƒ¼ã—ã¾ã™ã‹ï¼Ÿ" : name + "ã‚’ãƒ•ã‚©ãƒ­ãƒ¼è§£é™¤ã—ã¾ã™ã‹ï¼Ÿ";
         m_btnYes.onClick.RemoveAllListeners();
         m_btnYes.onClick.AddListener(() => {
             if (!isFollow) OnStoreUserFollow(user_id);
@@ -35,7 +35,7 @@ public class PanelRankingUserFollow : MonoBehaviour
     {
         SEManager.Instance.PlayButtonSE();
         m_loading.ToggleLoadingUIVisibility(1);
-        // ƒtƒHƒ[ˆ—
+        // ãƒ•ã‚©ãƒ­ãƒ¼å‡¦ç†
         StartCoroutine(NetworkManager.Instance.StoreUserFollow(
             user_id,
             result =>
@@ -53,7 +53,7 @@ public class PanelRankingUserFollow : MonoBehaviour
     {
         SEManager.Instance.PlayButtonSE();
         m_loading.ToggleLoadingUIVisibility(1);
-        // ƒtƒHƒ[‰ðœˆ—
+        // ãƒ•ã‚©ãƒ­ãƒ¼è§£é™¤å‡¦ç†
         StartCoroutine(NetworkManager.Instance.DestroyUserFollow(
             user_id,
             result =>

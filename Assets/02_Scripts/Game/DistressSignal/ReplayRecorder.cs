@@ -13,32 +13,32 @@ public class ReplayRecorder : MonoBehaviour
     GameObject m_son_run;
     GameObject m_ride_cow;
 
-    // ƒf[ƒ^‚ğ•Û‘¶‚·‚éŠÔŠu
+    // ãƒ‡ãƒ¼ã‚¿ã‚’ä¿å­˜ã™ã‚‹é–“éš”
     const float saveInterval = 0.05f;
 
-    // ƒŠƒvƒŒƒC‚ÌXVˆ—‚ªI—¹‚µ‚½‚©‚Ç‚¤‚©
+    // ãƒªãƒ—ãƒ¬ã‚¤ã®æ›´æ–°å‡¦ç†ãŒçµ‚äº†ã—ãŸã‹ã©ã†ã‹
     public bool IsUpdateReplayData { get; private set; }
 
     void OnEnable()
     {
         m_replayDatas = new List<ReplayData>();
 
-        // ‘§q‚ÌƒIƒuƒWƒFƒNƒg‚ğæ“¾‚·‚é
+        // æ¯å­ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’å–å¾—ã™ã‚‹
         var sonController = GameObject.Find("SonController").GetComponent<SonController>();
         m_son = sonController.Son;
         m_son_run = sonController.SonRun;
         m_ride_cow = sonController.SonRideCow;
 
-        // ‹L˜^ŠJn
+        // è¨˜éŒ²é–‹å§‹
         StartCoroutine(SaveCoroutine());
     }
 
     IEnumerator SaveCoroutine()
     {
-        // ƒQ[ƒ€‚ªI—¹‚·‚é‚Ü‚Å(‚¨‚æ‚»10~30•b)‹L˜^‚·‚é
+        // ã‚²ãƒ¼ãƒ ãŒçµ‚äº†ã™ã‚‹ã¾ã§(ãŠã‚ˆã10~30ç§’)è¨˜éŒ²ã™ã‚‹
         while (!m_gameManager.m_isEndGame)
         {
-            // ƒ|[ƒY’†‚Ìê‡
+            // ãƒãƒ¼ã‚ºä¸­ã®å ´åˆ
             if (m_gameManager.m_isPause)
             {
                 yield return null;
@@ -48,7 +48,7 @@ public class ReplayRecorder : MonoBehaviour
             ReplayData replayData = new ReplayData();
             GameObject targetSon = null;
 
-            // Œ»İ•\¦‚³‚ê‚Ä‚¢‚é‘§q‚ğ’T‚·
+            // ç¾åœ¨è¡¨ç¤ºã•ã‚Œã¦ã„ã‚‹æ¯å­ã‚’æ¢ã™
             if (m_son.activeSelf)
             {
                 targetSon = m_son;
@@ -72,23 +72,23 @@ public class ReplayRecorder : MonoBehaviour
                 continue;
             }
 
-            // ƒŠƒvƒŒƒCƒf[ƒ^‚É•K—v‚È‚à‚Ì‚ğ‡ŸŠi”[
+            // ãƒªãƒ—ãƒ¬ã‚¤ãƒ‡ãƒ¼ã‚¿ã«å¿…è¦ãªã‚‚ã®ã‚’é †æ¬¡æ ¼ç´
             replayData.Dir = targetSon.transform.localScale.x > 0 ? 1 : -1;
             replayData.Gravity = targetSon.GetComponent<Rigidbody2D>().gravityScale;
             replayData.Pos = targetSon.transform.position;
             replayData.Vel = targetSon.GetComponent<Rigidbody2D>().velocity;
 
-            // ƒŠƒXƒg‚É’Ç‰Á‚·‚é
+            // ãƒªã‚¹ãƒˆã«è¿½åŠ ã™ã‚‹
             m_replayDatas.Add(replayData);
 
             yield return new WaitForSeconds(saveInterval);
         }
 
-        Debug.Log("‹L˜^Š®—¹F" + m_replayDatas.Count);
+        Debug.Log("è¨˜éŒ²å®Œäº†ï¼š" + m_replayDatas.Count);
 
         m_loading.ToggleLoadingUIVisibility(1);
 
-        // ƒŠƒvƒŒƒCî•ñXVˆ—
+        // ãƒªãƒ—ãƒ¬ã‚¤æƒ…å ±æ›´æ–°å‡¦ç†
         StartCoroutine(NetworkManager.Instance.UpdateReplayData(
             TopSceneDirector.Instance.DistressSignalID,
             m_replayDatas,
@@ -101,7 +101,7 @@ public class ReplayRecorder : MonoBehaviour
 
         if (m_gameManager.m_isExitGame)
         {
-            // ƒzƒXƒg‚ª“r’†‘Şo‚µ‚½ê‡
+            // ãƒ›ã‚¹ãƒˆãŒé€”ä¸­é€€å‡ºã—ãŸå ´åˆ
             Initiate.Fade("01_TopScene", Color.black, 1.0f);
         }
     }

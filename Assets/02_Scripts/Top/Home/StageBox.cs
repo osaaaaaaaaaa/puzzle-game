@@ -43,41 +43,41 @@ public class StageBox : MonoBehaviour
             };
         }
 
-        m_textStageID.text = "ƒXƒe[ƒW  " + TopManager.stageID;
+        m_textStageID.text = "ã‚¹ãƒ†ãƒ¼ã‚¸  " + TopManager.stageID;
 
-        // ƒƒ_ƒ‹‚ÌUI‚ğXV‚·‚é
+        // ãƒ¡ãƒ€ãƒ«ã®UIã‚’æ›´æ–°ã™ã‚‹
         if (resultData.IsMedal1) m_medalContainers[0].sprite = m_texMedals[0];
         if (resultData.IsMedal2) m_medalContainers[1].sprite = m_texMedals[1];
 
-        // ƒNƒŠƒAƒ^ƒCƒ€•\‹L
+        // ã‚¯ãƒªã‚¢ã‚¿ã‚¤ãƒ è¡¨è¨˜
         string text = "" + Mathf.Floor(resultData.Time * 100);
         text = text.Length == 3 ? "0" + text : text;
         text = text.Length == 2 ? "00" + text : text;
         text = text.Length == 1 ? "000" + text : text;
-        m_textClearTime.text = "ƒNƒŠƒAƒ^ƒCƒ€     " + text.Insert(2, ":");
+        m_textClearTime.text = "ã‚¯ãƒªã‚¢ã‚¿ã‚¤ãƒ      " + text.Insert(2, ":");
 
-        // ƒXƒRƒA‚ğ•\‹L
-        m_textScore.text = "ƒnƒCƒXƒRƒA          " + resultData.Score;
+        // ã‚¹ã‚³ã‚¢ã‚’è¡¨è¨˜
+        m_textScore.text = "ãƒã‚¤ã‚¹ã‚³ã‚¢          " + resultData.Score;
 
-        // •]‰¿‚ğ•\‹L
+        // è©•ä¾¡ã‚’è¡¨è¨˜
         m_imgRank.color = new Color(1, 1, 1, 1);
         if (resultData.Score > 0) m_imgRank.sprite = TopManager.GetScoreRank(m_texRanks, resultData.Score);
         if (resultData.Score == 0) m_imgRank.sprite = m_texRanks[m_texRanks.Count - 1];
 
-        // ƒAƒCƒeƒ€ƒ{ƒ^ƒ“‚ğ‰Šú‰»
+        // ã‚¢ã‚¤ãƒ†ãƒ ãƒœã‚¿ãƒ³ã‚’åˆæœŸåŒ–
         m_isUseItem = false;
         m_btnItem.interactable = NetworkManager.Instance.ItemCnt > 0;
         DOTween.Kill(m_itemFrame.transform);
         m_itemFrame.GetComponent<Image>().color = new Color(0.7f, 0.7f, 0.7f, 1f);
         m_itemFrame.SetActive(true);
-        m_textItemCnt.text = "~" + NetworkManager.Instance.ItemCnt;
+        m_textItemCnt.text = "Ã—" + NetworkManager.Instance.ItemCnt;
 
         if (NetworkManager.Instance.IsDistressSignalEnabled)
         {
-            // •åWƒ{ƒ^ƒ“‚ğ•ÒW (•åWÏ‚Ìê‡=> text‚ğ•åW’† & ƒ{ƒ^ƒ“‚ğ‰Ÿ‚¹‚È‚­‚·‚é)
+            // å‹Ÿé›†ãƒœã‚¿ãƒ³ã‚’ç·¨é›† (å‹Ÿé›†æ¸ˆã®å ´åˆ=> textã‚’å‹Ÿé›†ä¸­ & ãƒœã‚¿ãƒ³ã‚’æŠ¼ã›ãªãã™ã‚‹)
             m_btnRecruiting.SetActive(true);
-            m_distressSignal = NetworkManager.Instance.dSignalList.FirstOrDefault(item => item.StageID == TopManager.stageID);    // ƒŠƒXƒg‚©‚çŒŸõ‚µ‚Äæ“¾
-            m_textRecruiting.text = m_distressSignal != null ? "•åW’†" : "•åW‚·‚é";
+            m_distressSignal = NetworkManager.Instance.dSignalList.FirstOrDefault(item => item.StageID == TopManager.stageID);    // ãƒªã‚¹ãƒˆã‹ã‚‰æ¤œç´¢ã—ã¦å–å¾—
+            m_textRecruiting.text = m_distressSignal != null ? "å‹Ÿé›†ä¸­" : "å‹Ÿé›†ã™ã‚‹";
             m_btnRecruiting.GetComponent<Button>().interactable = m_distressSignal != null ? false : true;
         }
         else
@@ -92,16 +92,16 @@ public class StageBox : MonoBehaviour
     {
         m_isUseItem = !m_isUseItem;
         int currentItemCnt = m_isUseItem && (NetworkManager.Instance.ItemCnt - 1) >= 0 ? (NetworkManager.Instance.ItemCnt - 1) : NetworkManager.Instance.ItemCnt;
-        m_textItemCnt.text = "~" + currentItemCnt;
+        m_textItemCnt.text = "Ã—" + currentItemCnt;
 
         if (m_isUseItem)
         {
-            Debug.Log("Ä¶");
+            Debug.Log("å†ç”Ÿ");
             m_itemFrame.GetComponent<Image>().DOFade(0.1f, 0.5f).SetEase(Ease.OutCubic).SetLoops(-1, LoopType.Yoyo);
         }
         else
         {
-            Debug.Log("’â~");
+            Debug.Log("åœæ­¢");
             DOTween.Kill(m_itemFrame.GetComponent<Image>());
             m_itemFrame.GetComponent<Image>().color = new Color(0.7f, 0.7f, 0.7f, 1f);
         }
@@ -112,8 +112,8 @@ public class StageBox : MonoBehaviour
         SEManager.Instance.PlayCanselSE();
         m_medalContainers[0].sprite = m_texMedalContainer;
         m_medalContainers[1].sprite = m_texMedalContainer;
-        m_textClearTime.text = "ƒNƒŠƒAƒ^ƒCƒ€";
-        m_textScore.text = "ƒXƒRƒA";
+        m_textClearTime.text = "ã‚¯ãƒªã‚¢ã‚¿ã‚¤ãƒ ";
+        m_textScore.text = "ã‚¹ã‚³ã‚¢";
         m_imgRank.color = new Color(1, 1, 1, 0);
         m_imgRank.sprite = null;
         gameObject.SetActive(false);
@@ -122,13 +122,13 @@ public class StageBox : MonoBehaviour
     public void OnRecruiting()
     {
         SEManager.Instance.PlayButtonSE();
-        // ‹~“ïM†“o˜^ˆ—
+        // æ•‘é›£ä¿¡å·ç™»éŒ²å‡¦ç†
         StartCoroutine(NetworkManager.Instance.StoreDistressSignal(
             TopManager.stageID,
             result =>
             {
                 if (result == null) return;
-                m_textRecruiting.text = "•åW’†";
+                m_textRecruiting.text = "å‹Ÿé›†ä¸­";
                 m_btnRecruiting.GetComponent<Button>().interactable = false;
                 m_distressSignal = result;
             },
@@ -141,7 +141,7 @@ public class StageBox : MonoBehaviour
 
     public void OnTransitionButton()
     {
-        // •åW’†‚Ìê‡‚ÍƒzƒXƒgƒ‚[ƒhA•åW‚µ‚Ä‚¢‚È‚¢ê‡‚Íƒ\ƒƒ‚[ƒh
+        // å‹Ÿé›†ä¸­ã®å ´åˆã¯ãƒ›ã‚¹ãƒˆãƒ¢ãƒ¼ãƒ‰ã€å‹Ÿé›†ã—ã¦ã„ãªã„å ´åˆã¯ã‚½ãƒ­ãƒ¢ãƒ¼ãƒ‰
         var mode = m_distressSignal != null ? TopSceneDirector.PLAYMODE.HOST : TopSceneDirector.PLAYMODE.SOLO;
         int signalID = m_distressSignal != null ? m_distressSignal.SignalID : 0;
         int stageID = m_distressSignal != null ? m_distressSignal.StageID : 0;

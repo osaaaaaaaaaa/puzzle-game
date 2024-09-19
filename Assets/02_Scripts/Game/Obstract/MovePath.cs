@@ -9,7 +9,7 @@ public class MovePath : MonoBehaviour
     [SerializeField] float m_time;
 
     /// <summary>
-    /// ƒ‹[ƒv‚·‚éƒ^ƒCƒv
+    /// ãƒ«ãƒ¼ãƒ—ã™ã‚‹ã‚¿ã‚¤ãƒ—
     /// </summary>
     public enum LOOPTYPE
     {
@@ -34,11 +34,11 @@ public class MovePath : MonoBehaviour
     }
 
     /// <summary>
-    /// ƒŠƒXƒ^[ƒgˆ—(Looptype.Restart‚Ì‹““®‚ª‚¨‚©‚µ‚­‚È‚é‚½‚ß—pˆÓ‚µ‚½ŠÖ”)
+    /// ãƒªã‚¹ã‚¿ãƒ¼ãƒˆå‡¦ç†(Looptype.Restartã®æŒ™å‹•ãŒãŠã‹ã—ããªã‚‹ãŸã‚ç”¨æ„ã—ãŸé–¢æ•°)
     /// </summary>
     void DoRestart()
     {
-        // n“_‚ÆI“_‚ğC³‚·‚é
+        // å§‹ç‚¹ã¨çµ‚ç‚¹ã‚’ä¿®æ­£ã™ã‚‹
         m_rootPath[0] = transform.position;
         m_rootPath[m_rootPath.Length - 1] = transform.position;
 

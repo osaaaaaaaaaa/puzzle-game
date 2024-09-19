@@ -8,43 +8,43 @@ public class UiController : MonoBehaviour
 {
     [SerializeField] LoadingContainer m_loading;
 
-    #region ƒpƒlƒ‹
-    [SerializeField] GameObject m_uiPanelGame;          // ƒQ[ƒ€‚ÌUI
-    [SerializeField] GameObject m_uiPanelTutorial;      // ƒ`ƒ…[ƒgƒŠƒAƒ‹‚ÌUI
-    [SerializeField] GameObject m_uiPanelHome;          // ƒz[ƒ€‰æ–Ê‚É–ß‚é‚©‚ÌŠm”F‚·‚éUI
-    [SerializeField] GameObject m_uiPanelResult;        // ƒŠƒUƒ‹ƒg‚ÌUI
-    [SerializeField] GameObject m_uiPanelGameOver;      // ƒQ[ƒ€ƒI[ƒo[‚ÌUI
-    [SerializeField] GameObject m_uiPanelJsonError;     // ’ÊMƒGƒ‰[‚Ìƒpƒlƒ‹
-    [SerializeField] GameObject m_uiPanelParamError;    // ƒpƒ‰ƒ[ƒ^ˆÙí‚Ìƒpƒlƒ‹
+    #region ãƒ‘ãƒãƒ«
+    [SerializeField] GameObject m_uiPanelGame;          // ã‚²ãƒ¼ãƒ ã®UI
+    [SerializeField] GameObject m_uiPanelTutorial;      // ãƒãƒ¥ãƒ¼ãƒˆãƒªã‚¢ãƒ«ã®UI
+    [SerializeField] GameObject m_uiPanelHome;          // ãƒ›ãƒ¼ãƒ ç”»é¢ã«æˆ»ã‚‹ã‹ã®ç¢ºèªã™ã‚‹UI
+    [SerializeField] GameObject m_uiPanelResult;        // ãƒªã‚¶ãƒ«ãƒˆã®UI
+    [SerializeField] GameObject m_uiPanelGameOver;      // ã‚²ãƒ¼ãƒ ã‚ªãƒ¼ãƒãƒ¼ã®UI
+    [SerializeField] GameObject m_uiPanelJsonError;     // é€šä¿¡ã‚¨ãƒ©ãƒ¼æ™‚ã®ãƒ‘ãƒãƒ«
+    [SerializeField] GameObject m_uiPanelParamError;    // ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ç•°å¸¸æ™‚ã®ãƒ‘ãƒãƒ«
     #endregion
 
-    #region ƒ{ƒ^ƒ“
-    [SerializeField] GameObject m_buttonReset;      // ƒŠƒZƒbƒgƒ{ƒ^ƒ“
-    [SerializeField] GameObject m_buttonNextStage;  // Ÿ‚ÌƒXƒe[ƒW‚Öi‚Şƒ{ƒ^ƒ“
-    [SerializeField] GameObject m_buttonZoomIn;     // ƒY[ƒ€ƒCƒ“ƒ{ƒ^ƒ“
+    #region ãƒœã‚¿ãƒ³
+    [SerializeField] GameObject m_buttonReset;      // ãƒªã‚»ãƒƒãƒˆãƒœã‚¿ãƒ³
+    [SerializeField] GameObject m_buttonNextStage;  // æ¬¡ã®ã‚¹ãƒ†ãƒ¼ã‚¸ã¸é€²ã‚€ãƒœã‚¿ãƒ³
+    [SerializeField] GameObject m_buttonZoomIn;     // ã‚ºãƒ¼ãƒ ã‚¤ãƒ³ãƒœã‚¿ãƒ³
     public GameObject ButtonZoomIn { get { return m_buttonZoomIn; }}
-    [SerializeField] GameObject m_buttonZoomOut;    // ƒY[ƒ€ƒAƒEƒgƒ{ƒ^ƒ“
+    [SerializeField] GameObject m_buttonZoomOut;    // ã‚ºãƒ¼ãƒ ã‚¢ã‚¦ãƒˆãƒœã‚¿ãƒ³
     public GameObject ButtonZoomOut { get { return m_buttonZoomOut; } }
     #endregion
 
-    #region ƒQƒXƒgŠÖŒW
+    #region ã‚²ã‚¹ãƒˆé–¢ä¿‚
     [SerializeField] Text m_textEmpty;
-    [SerializeField] GameObject m_buttonGuest;         // ƒQƒXƒg‚ÌƒvƒƒtƒB[ƒ‹‚ğ•\¦‚·‚éƒ{ƒ^ƒ“
-    [SerializeField] GameObject m_uiPanelGuests;       // ƒQƒXƒg‚ÌUIƒpƒlƒ‹
-    [SerializeField] GameObject m_guestScrollContent;  // ƒvƒŒƒtƒ@ƒu‚ÌŠi”[æ
-    [SerializeField] GameObject m_profileGuestPrefab;  // ƒQƒXƒg‚ÌƒvƒƒtƒB[ƒ‹ƒvƒŒƒtƒ@ƒu
-    [SerializeField] GameObject m_buttonEditDone;      // ƒQƒXƒg‚Ì”z’uŒˆ’èƒ{ƒ^ƒ“
-    [SerializeField] GameObject m_buttonEdit;          // ƒQƒXƒg‚Ì•ÒWŠJnƒ{ƒ^ƒ“
-    [SerializeField] GameObject m_buttonReplay;        // ƒŠƒvƒŒƒCÄ¶ƒ{ƒ^ƒ“
+    [SerializeField] GameObject m_buttonGuest;         // ã‚²ã‚¹ãƒˆã®ãƒ—ãƒ­ãƒ•ã‚£ãƒ¼ãƒ«ã‚’è¡¨ç¤ºã™ã‚‹ãƒœã‚¿ãƒ³
+    [SerializeField] GameObject m_uiPanelGuests;       // ã‚²ã‚¹ãƒˆã®UIãƒ‘ãƒãƒ«
+    [SerializeField] GameObject m_guestScrollContent;  // ãƒ—ãƒ¬ãƒ•ã‚¡ãƒ–ã®æ ¼ç´å…ˆ
+    [SerializeField] GameObject m_profileGuestPrefab;  // ã‚²ã‚¹ãƒˆã®ãƒ—ãƒ­ãƒ•ã‚£ãƒ¼ãƒ«ãƒ—ãƒ¬ãƒ•ã‚¡ãƒ–
+    [SerializeField] GameObject m_buttonEditDone;      // ã‚²ã‚¹ãƒˆã®é…ç½®æ±ºå®šãƒœã‚¿ãƒ³
+    [SerializeField] GameObject m_buttonEdit;          // ã‚²ã‚¹ãƒˆã®ç·¨é›†é–‹å§‹ãƒœã‚¿ãƒ³
+    [SerializeField] GameObject m_buttonReplay;        // ãƒªãƒ—ãƒ¬ã‚¤å†ç”Ÿãƒœã‚¿ãƒ³
     #endregion
 
-    #region ƒQ[ƒ€
+    #region ã‚²ãƒ¼ãƒ 
     [SerializeField] Text m_textTimer;
     [SerializeField] GameObject m_textSubTimePrefab;
     [SerializeField] Text m_textStageID;
     #endregion
 
-    #region ƒŠƒUƒ‹ƒg
+    #region ãƒªã‚¶ãƒ«ãƒˆ
     [SerializeField] List<Image> m_medalContainers;
     [SerializeField] List<Sprite> m_texMedals;
     [SerializeField] Text m_textPlateResult;
@@ -54,65 +54,65 @@ public class UiController : MonoBehaviour
     [SerializeField] List<Sprite> m_texRanks;
     #endregion
 
-    #region ”ñƒAƒNƒeƒBƒu‚É‚·‚éUIƒV[ƒ“‚ÌƒIƒuƒWƒFƒNƒg
+    #region éã‚¢ã‚¯ãƒ†ã‚£ãƒ–ã«ã™ã‚‹UIã‚·ãƒ¼ãƒ³ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
     [SerializeField] Image m_uiPanelImage;
     [SerializeField] GameObject m_uiCamera;
     [SerializeField] GameObject m_uiClearCamera;
     #endregion
 
-    #region Œ®‚ÌUI
+    #region éµã®UI
     [SerializeField] GameObject m_uiKeyParent;
     [SerializeField] GameObject m_uiKeyPrefab;
     #endregion
 
-    // ƒQ[ƒ€ƒ}ƒl[ƒWƒƒ[
+    // ã‚²ãƒ¼ãƒ ãƒãƒãƒ¼ã‚¸ãƒ£ãƒ¼
     [SerializeField] GameManager m_gameManager;
 
     private void Start()
     {
-        m_textStageID.text = "ƒXƒe[ƒW " + TopManager.stageID;
+        m_textStageID.text = "ã‚¹ãƒ†ãƒ¼ã‚¸ " + TopManager.stageID;
         m_textTimer.text = "40:00";
 
-        // ƒ{ƒ^ƒ“‚ğƒ\ƒEƒzƒXƒg‚Å—V‚Ô‚Æ‚«‚Ì‚à‚Ì‚Éİ’è
+        // ãƒœã‚¿ãƒ³ã‚’ã‚½ãƒ­ãƒ»ãƒ›ã‚¹ãƒˆã§éŠã¶ã¨ãã®ã‚‚ã®ã«è¨­å®š
         m_buttonGuest.SetActive(false);
         m_buttonEditDone.SetActive(false);
         m_buttonEdit.SetActive(false);
         m_buttonReplay.SetActive(false);
 
-        // ”ñƒAƒNƒeƒBƒu‚É‚·‚é
+        // éã‚¢ã‚¯ãƒ†ã‚£ãƒ–ã«ã™ã‚‹
         m_uiCamera.SetActive(false);
         m_uiClearCamera.SetActive(false);
         m_uiPanelResult.SetActive(false);
         m_uiPanelGameOver.SetActive(false);
 
-        // –³Œø‰»‚·‚é
+        // ç„¡åŠ¹åŒ–ã™ã‚‹
         m_buttonReset.GetComponent<Button>().interactable = false;
     }
 
     public void InitGuestUI()
     {
-        // ƒ\ƒ‚Å—V‚Ôê‡‚Íˆ—‚ğI—¹
+        // ã‚½ãƒ­ã§éŠã¶å ´åˆã¯å‡¦ç†ã‚’çµ‚äº†
         if (TopSceneDirector.Instance.PlayMode == TopSceneDirector.PLAYMODE.SOLO) return;
 
-        // ƒQƒXƒg‚ÌƒvƒƒtƒB[ƒ‹ˆê——‚ğ•\¦‚·‚éƒ{ƒ^ƒ“
+        // ã‚²ã‚¹ãƒˆã®ãƒ—ãƒ­ãƒ•ã‚£ãƒ¼ãƒ«ä¸€è¦§ã‚’è¡¨ç¤ºã™ã‚‹ãƒœã‚¿ãƒ³
         m_buttonGuest.SetActive(true);
 
-        // ƒQƒXƒg‚Ì‚Æ‚«‚ÌUI‚É•ÏX
+        // ã‚²ã‚¹ãƒˆã®ã¨ãã®UIã«å¤‰æ›´
         if (TopSceneDirector.Instance.PlayMode == TopSceneDirector.PLAYMODE.GUEST)
         {
             if (!TopSceneDirector.Instance.IsSignalStageClear)
             {
-                // ‚Ü‚¾ƒzƒXƒg‚ª‹~“ïM†‚ÌƒXƒe[ƒW‚ğƒNƒŠƒA‚µ‚Ä‚¢‚È‚¢ê‡
+                // ã¾ã ãƒ›ã‚¹ãƒˆãŒæ•‘é›£ä¿¡å·ã®ã‚¹ãƒ†ãƒ¼ã‚¸ã‚’ã‚¯ãƒªã‚¢ã—ã¦ã„ãªã„å ´åˆ
                 m_buttonEditDone.SetActive(true);
                 m_buttonEdit.SetActive(true);
             }
             else
             {
-                // ƒNƒŠƒAÏ‚İ‚Ìê‡
+                // ã‚¯ãƒªã‚¢æ¸ˆã¿ã®å ´åˆ
                 m_buttonReset.SetActive(false);
             }
 
-            // ƒQ[ƒ€ƒ‚[ƒh‚ğ•ÒWŠ®—¹ƒ‚[ƒh‚É•ÏX‚·‚é
+            // ã‚²ãƒ¼ãƒ ãƒ¢ãƒ¼ãƒ‰ã‚’ç·¨é›†å®Œäº†ãƒ¢ãƒ¼ãƒ‰ã«å¤‰æ›´ã™ã‚‹
             m_gameManager.UpdateGameMode(GameManager.GAMEMODE.EditDone);
             m_buttonEdit.GetComponent<Button>().interactable = true;
             m_buttonEditDone.GetComponent<Button>().interactable = false;
@@ -121,23 +121,23 @@ public class UiController : MonoBehaviour
 
         m_loading.ToggleLoadingUIVisibility(1);
 
-        // ƒQƒXƒg‚ÌƒvƒƒtƒB[ƒ‹æ“¾ˆ—
+        // ã‚²ã‚¹ãƒˆã®ãƒ—ãƒ­ãƒ•ã‚£ãƒ¼ãƒ«å–å¾—å‡¦ç†
         StartCoroutine(NetworkManager.Instance.GetSignalUserProfile(
             TopSceneDirector.Instance.DistressSignalID,
             result =>
             {
                 m_loading.ToggleLoadingUIVisibility(-1);
-                m_textEmpty.text = result == null ? "Q‰Á‚µ‚Ä‚¢‚éƒ†[ƒU[‚ªŒ©‚Â‚©‚è‚Ü‚¹‚ñ‚Å‚µ‚½B" : "";
+                m_textEmpty.text = result == null ? "å‚åŠ ã—ã¦ã„ã‚‹ãƒ¦ãƒ¼ã‚¶ãƒ¼ãŒè¦‹ã¤ã‹ã‚Šã¾ã›ã‚“ã§ã—ãŸã€‚" : "";
                 if (result == null) return;
 
-                // æ“¾‚µ‚½ƒtƒHƒ[ƒŠƒXƒg‚Ìî•ñ‚ğŒ³‚ÉŠeƒ†[ƒU[‚ÌƒvƒƒtƒB[ƒ‹‚ğì¬‚·‚é
+                // å–å¾—ã—ãŸãƒ•ã‚©ãƒ­ãƒ¼ãƒªã‚¹ãƒˆã®æƒ…å ±ã‚’å…ƒã«å„ãƒ¦ãƒ¼ã‚¶ãƒ¼ã®ãƒ—ãƒ­ãƒ•ã‚£ãƒ¼ãƒ«ã‚’ä½œæˆã™ã‚‹
                 int i = 0;
                 foreach (ShowUserProfileResponse user in result)
                 {
-                    // ƒQƒXƒg‚ÌƒIƒuƒWƒFƒNƒg
+                    // ã‚²ã‚¹ãƒˆã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
                     GameObject guestObj = i < m_gameManager.m_guestList.Count ? m_gameManager.m_guestList[i] : null;
 
-                    // ƒvƒƒtƒB[ƒ‹‚ğ¶¬‚·‚é
+                    // ãƒ—ãƒ­ãƒ•ã‚£ãƒ¼ãƒ«ã‚’ç”Ÿæˆã™ã‚‹
                     GameObject profile = Instantiate(m_profileGuestPrefab, m_guestScrollContent.transform);
                     profile.GetComponent<GuestProfile>().UpdateProfile(guestObj, user.UserID, user.Name,
                         user.Title, user.StageID, user.TotalScore,
@@ -147,7 +147,7 @@ public class UiController : MonoBehaviour
     }
 
     /// <summary>
-    /// ƒQƒXƒg‚Ì•ÒWŠJnƒ{ƒ^ƒ“
+    /// ã‚²ã‚¹ãƒˆã®ç·¨é›†é–‹å§‹ãƒœã‚¿ãƒ³
     /// </summary>
     public void OnGuestEditButton()
     {
@@ -159,14 +159,14 @@ public class UiController : MonoBehaviour
     }
 
     /// <summary>
-    /// ƒQƒXƒg‚Ì”z’uŒˆ’èƒ{ƒ^ƒ“ˆ—
+    /// ã‚²ã‚¹ãƒˆã®é…ç½®æ±ºå®šãƒœã‚¿ãƒ³å‡¦ç†
     /// </summary>
     public void OnGuestEditDoneButton()
     {
         SEManager.Instance.PlayButtonSE();
         m_gameManager.UpdateGameMode(GameManager.GAMEMODE.EditDone);
 
-        // ƒŠƒZƒbƒgƒ{ƒ^ƒ“‚ğ‰Šú‰»
+        // ãƒªã‚»ãƒƒãƒˆãƒœã‚¿ãƒ³ã‚’åˆæœŸåŒ–
         SetInteractableButtonReset(false);
         m_gameManager.OnGameReset();
 
@@ -174,18 +174,18 @@ public class UiController : MonoBehaviour
         m_buttonEditDone.GetComponent<Button>().interactable = false;
         m_buttonReset.GetComponent<Button>().interactable = false;
 
-        // ƒQƒXƒg‚Ì”z’uî•ñ‚ğæ“¾‚·‚é
+        // ã‚²ã‚¹ãƒˆã®é…ç½®æƒ…å ±ã‚’å–å¾—ã™ã‚‹
         var requestData = m_gameManager.GetGuestEditData();
         if (NetworkManager.Instance.StringToVector3(requestData.Vector) == Vector3.zero)
         {
-            // R‚è”ò‚Î‚·ƒxƒNƒgƒ‹‚ğİ’è‚µ‚Ä‚¢‚È‚¢ê‡‚ÍƒGƒ‰[
+            // è¹´ã‚Šé£›ã°ã™ãƒ™ã‚¯ãƒˆãƒ«ã‚’è¨­å®šã—ã¦ã„ãªã„å ´åˆã¯ã‚¨ãƒ©ãƒ¼
             TogglePanelParamErrorVisibility(true);
             return;
         }
 
         m_loading.ToggleLoadingUIVisibility(1);
 
-        // ƒQƒXƒg‚Ì”z’uî•ñXVˆ—
+        // ã‚²ã‚¹ãƒˆã®é…ç½®æƒ…å ±æ›´æ–°å‡¦ç†
         StartCoroutine(NetworkManager.Instance.UpdateSignalGuest(
             requestData.SignalID,
             requestData.Pos,
@@ -208,7 +208,7 @@ public class UiController : MonoBehaviour
     }
 
     /// <summary>
-    /// ‹~“ïM†‚ÉQ‰Á‚µ‚Ä‚¢‚éƒ†[ƒU[‚ÌƒvƒƒtƒB[ƒ‹•\¦E”ñ•\¦
+    /// æ•‘é›£ä¿¡å·ã«å‚åŠ ã—ã¦ã„ã‚‹ãƒ¦ãƒ¼ã‚¶ãƒ¼ã®ãƒ—ãƒ­ãƒ•ã‚£ãƒ¼ãƒ«è¡¨ç¤ºãƒ»éè¡¨ç¤º
     /// </summary>
     /// <param name="isActive"></param>
     public void SetActiveGuestProfile(bool isActive)
@@ -223,7 +223,7 @@ public class UiController : MonoBehaviour
     }
 
     /// <summary>
-    /// ƒQ[ƒ€‚Ìƒpƒlƒ‹UI‚ğ•\¦Ø‚è‘Ö‚¦
+    /// ã‚²ãƒ¼ãƒ ã®ãƒ‘ãƒãƒ«UIã‚’è¡¨ç¤ºåˆ‡ã‚Šæ›¿ãˆ
     /// </summary>
     /// <param name="isActive"></param>
     public void SetActiveGameUI(bool isActive)
@@ -235,16 +235,16 @@ public class UiController : MonoBehaviour
     }
 
     /// <summary>
-    /// ƒŠƒZƒbƒgƒ{ƒ^ƒ“‚ğ•\¦E”ñ•\¦
+    /// ãƒªã‚»ãƒƒãƒˆãƒœã‚¿ãƒ³ã‚’è¡¨ç¤ºãƒ»éè¡¨ç¤º
     /// </summary>
-    /// <param name="isActive">•\¦E”ñ•\¦</param>
+    /// <param name="isActive">è¡¨ç¤ºãƒ»éè¡¨ç¤º</param>
     public void SetActiveButtonReset(bool isActive)
     {
         m_buttonReset.SetActive(isActive);
     }
 
     /// <summary>
-    /// ƒŠƒZƒbƒgƒ{ƒ^ƒ“‚ğ–³ŒøE—LŒø‰»‚É‚·‚é
+    /// ãƒªã‚»ãƒƒãƒˆãƒœã‚¿ãƒ³ã‚’ç„¡åŠ¹ãƒ»æœ‰åŠ¹åŒ–ã«ã™ã‚‹
     /// </summary>
     /// <param name="isActive"></param>
     public void SetInteractableButtonReset(bool isActive)
@@ -253,7 +253,7 @@ public class UiController : MonoBehaviour
     }
 
     /// <summary>
-    /// ƒ`ƒ…[ƒgƒŠƒAƒ‹•\¦E”ñ•\¦ˆ—
+    /// ãƒãƒ¥ãƒ¼ãƒˆãƒªã‚¢ãƒ«è¡¨ç¤ºãƒ»éè¡¨ç¤ºå‡¦ç†
     /// </summary>
     public void OnTutorialButton(bool isActive)
     {
@@ -267,7 +267,7 @@ public class UiController : MonoBehaviour
     }
 
     /// <summary>
-    /// ƒz[ƒ€‰æ–Ê‚É–ß‚é‚©‚ÌŠm”FUI‚ğ•\¦E”ñ•\¦
+    /// ãƒ›ãƒ¼ãƒ ç”»é¢ã«æˆ»ã‚‹ã‹ã®ç¢ºèªUIã‚’è¡¨ç¤ºãƒ»éè¡¨ç¤º
     /// </summary>
     public void OnButtoneHome(bool isActive)
     {
@@ -276,19 +276,19 @@ public class UiController : MonoBehaviour
 
         m_uiPanelHome.SetActive(isActive);
 
-        // ƒŠƒUƒ‹ƒg‰æ–Ê‚Å‚Í‚È‚¢ê‡
+        // ãƒªã‚¶ãƒ«ãƒˆç”»é¢ã§ã¯ãªã„å ´åˆ
         if (!m_uiPanelResult.activeSelf)
         {
             m_uiPanelGame.SetActive(!isActive);
         }
 
 
-        // ƒpƒlƒ‹‚ğ•Â‚¶‚éê‡‚Íƒ|[ƒYOFF‚É‚·‚é
+        // ãƒ‘ãƒãƒ«ã‚’é–‰ã˜ã‚‹å ´åˆã¯ãƒãƒ¼ã‚ºOFFã«ã™ã‚‹
         if (!isActive) EventPause(false);
     }
 
     /// <summary>
-    /// ƒQ[ƒ€ƒI[ƒo[‚ÌUI‚ğ•\¦‚·‚é
+    /// ã‚²ãƒ¼ãƒ ã‚ªãƒ¼ãƒãƒ¼æ™‚ã®UIã‚’è¡¨ç¤ºã™ã‚‹
     /// </summary>
     public void SetGameOverUI(bool isMedal1, bool isMedal2, float time, int score, bool isStageClear)
     {
@@ -302,40 +302,40 @@ public class UiController : MonoBehaviour
     }
 
     /// <summary>
-    /// ƒŠƒUƒ‹ƒg‚ÌUI‚ğ•\¦‚·‚é
+    /// ãƒªã‚¶ãƒ«ãƒˆã®UIã‚’è¡¨ç¤ºã™ã‚‹
     /// </summary>
     public void SetResultUI(bool isMedal1, bool isMedal2, float time, int score, bool isStageClear)
     {
-        // ƒzƒXƒg‚Ìó‘Ô‚ÅƒNƒŠƒA‚µ‚½ê‡‚Í”ñƒAƒNƒeƒBƒu‰»
+        // ãƒ›ã‚¹ãƒˆã®çŠ¶æ…‹ã§ã‚¯ãƒªã‚¢ã—ãŸå ´åˆã¯éã‚¢ã‚¯ãƒ†ã‚£ãƒ–åŒ–
         if (TopSceneDirector.Instance.PlayMode == TopSceneDirector.PLAYMODE.HOST) m_buttonNextStage.SetActive(false);
 
-        // ƒƒ_ƒ‹‚ÌUI‚ğXV‚·‚é
+        // ãƒ¡ãƒ€ãƒ«ã®UIã‚’æ›´æ–°ã™ã‚‹
         if (isMedal1) m_medalContainers[0].sprite = m_texMedals[0];
         if (isMedal2) m_medalContainers[1].sprite = m_texMedals[1];
 
-        // ƒNƒŠƒAƒ^ƒCƒ€•\‹L
+        // ã‚¯ãƒªã‚¢ã‚¿ã‚¤ãƒ è¡¨è¨˜
         string text = "" + Mathf.Floor(time * 100);
         text = text.Length == 3 ? "0" + text : text;
         text = text.Length == 2 ? "00" + text : text;
         text = text.Length == 1 ? "000" + text : text;
         m_textClearTime.text = text.Insert(2, ":");
 
-        // ƒXƒRƒA‚ğ•\‹L
+        // ã‚¹ã‚³ã‚¢ã‚’è¡¨è¨˜
         m_textScore.text = "" + score;
 
-        // •]‰¿‚ğ•\‹L
+        // è©•ä¾¡ã‚’è¡¨è¨˜
         m_imgRank.color = new Color(1, 1, 1, 1);
         if (isStageClear) m_imgRank.sprite = TopManager.GetScoreRank(m_texRanks, score);
         if (!isStageClear) m_imgRank.sprite = m_texRanks[m_texRanks.Count - 1];
 
-        // ƒNƒŠƒA‚µ‚½‚©‚Ç‚¤‚©‚Å“®“I‚Éİ’è
-        m_textPlateResult.text = isStageClear ? "ƒXƒe[ƒWƒNƒŠƒAI" : "‚µ‚Á‚Ï‚¢...";
+        // ã‚¯ãƒªã‚¢ã—ãŸã‹ã©ã†ã‹ã§å‹•çš„ã«è¨­å®š
+        m_textPlateResult.text = isStageClear ? "ã‚¹ãƒ†ãƒ¼ã‚¸ã‚¯ãƒªã‚¢ï¼" : "ã—ã£ã±ã„...";
         if (TopManager.stageID >= TopManager.stageMax && isStageClear) m_textPlateResult.text = "Congratulations!";
-       // ƒNƒŠƒAÏ‚İ‚ÌƒXƒe[ƒW‚Ìê‡‚Íƒ{ƒ^ƒ“‚ğ‰Ÿ‚¹‚é‚æ‚¤‚É‚·‚éA‚»‚¤‚Å‚È‚¢ê‡‚Í‰Ÿ‚¹‚È‚¢‚æ‚¤‚É‚·‚é
+       // ã‚¯ãƒªã‚¢æ¸ˆã¿ã®ã‚¹ãƒ†ãƒ¼ã‚¸ã®å ´åˆã¯ãƒœã‚¿ãƒ³ã‚’æŠ¼ã›ã‚‹ã‚ˆã†ã«ã™ã‚‹ã€ãã†ã§ãªã„å ´åˆã¯æŠ¼ã›ãªã„ã‚ˆã†ã«ã™ã‚‹
        m_buttonNextStage.GetComponent<Button>().interactable = NetworkManager.Instance.StageResults.Count < TopManager.stageID ?
             false : true;
 
-        // ƒpƒlƒ‹‚ğƒŠƒUƒ‹ƒg‚Éİ’è‚·‚é
+        // ãƒ‘ãƒãƒ«ã‚’ãƒªã‚¶ãƒ«ãƒˆã«è¨­å®šã™ã‚‹
         m_uiPanelTutorial.SetActive(false);
         m_uiPanelGuests.SetActive(false);
         m_uiPanelHome.SetActive(false);
@@ -345,7 +345,7 @@ public class UiController : MonoBehaviour
     }
 
     /// <summary>
-    /// Ÿ‚ÌƒXƒe[ƒW‚É‘JˆÚ‚·‚éƒ{ƒ^ƒ“‚ğ–³Œø‰»‚·‚é
+    /// æ¬¡ã®ã‚¹ãƒ†ãƒ¼ã‚¸ã«é·ç§»ã™ã‚‹ãƒœã‚¿ãƒ³ã‚’ç„¡åŠ¹åŒ–ã™ã‚‹
     /// </summary>
     public void DisableNextStageButton()
     {
@@ -358,23 +358,23 @@ public class UiController : MonoBehaviour
     }
 
     /// <summary>
-    /// Œ®‚ÌUI‚ğXV‚·‚é
+    /// éµã®UIã‚’æ›´æ–°ã™ã‚‹
     /// </summary>
     public void UpdateKeyUI(int keyNum)
     {
         switch (keyNum)
         {
-            case -1:    // ”jŠü‚·‚é
+            case -1:    // ç ´æ£„ã™ã‚‹
                 Destroy(m_uiKeyParent.transform.GetChild(0).gameObject);
                 break;
-            case 1:     // ’Ç‰Á‚·‚é
+            case 1:     // è¿½åŠ ã™ã‚‹
                 Instantiate(m_uiKeyPrefab, m_uiKeyParent.transform.position, Quaternion.Euler(0f, 0f, -45f), m_uiKeyParent.transform);
                 break;
         }
     }
 
     /// <summary>
-    /// Œ®‚ÌŒÂ”‚ğæ“¾‚·‚é
+    /// éµã®å€‹æ•°ã‚’å–å¾—ã™ã‚‹
     /// </summary>
     /// <returns></returns>
     public int GetKeyCount()
@@ -383,7 +383,7 @@ public class UiController : MonoBehaviour
     }
 
     /// <summary>
-    /// ƒ^ƒCƒ}[ƒeƒLƒXƒg‚ğXV
+    /// ã‚¿ã‚¤ãƒãƒ¼ãƒ†ã‚­ã‚¹ãƒˆã‚’æ›´æ–°
     /// </summary>
     public void UpdateTextTimer(float time)
     {
@@ -395,14 +395,14 @@ public class UiController : MonoBehaviour
     }
 
     /// <summary>
-    /// Œ¸‚Á‚½ŠÔ‚ğ•\¦‚·‚éƒeƒLƒXƒg‚ğ¶¬‚·‚é
+    /// æ¸›ã£ãŸæ™‚é–“ã‚’è¡¨ç¤ºã™ã‚‹ãƒ†ã‚­ã‚¹ãƒˆã‚’ç”Ÿæˆã™ã‚‹
     /// </summary>
     public void GenerateSubTimeText(int subTime)
     {
         GameObject subTimeObj = Instantiate(m_textSubTimePrefab, m_uiPanelGame.transform);
         subTimeObj.GetComponent<Text>().text = "-" + subTime;
 
-        // ™X‚É“§–¾EˆÚ“®‚µ‚Äíœ
+        // å¾ã€…ã«é€æ˜ãƒ»ç§»å‹•ã—ã¦å‰Šé™¤
         var sequence = DOTween.Sequence();
         sequence.Append(subTimeObj.transform.DOLocalMoveY(487, 1f).SetEase(Ease.Linear))
             .Join(subTimeObj.GetComponent<Text>().DOFade(0,1).OnComplete(() => { Destroy(subTimeObj.gameObject); }));
@@ -410,7 +410,7 @@ public class UiController : MonoBehaviour
     }
 
     /// <summary>
-    /// ’ÊMƒGƒ‰[‚Ìƒpƒlƒ‹‚ğ•\¦‚·‚é
+    /// é€šä¿¡ã‚¨ãƒ©ãƒ¼æ™‚ã®ãƒ‘ãƒãƒ«ã‚’è¡¨ç¤ºã™ã‚‹
     /// </summary>
     public void ShowPanelJsonError()
     {
@@ -419,7 +419,7 @@ public class UiController : MonoBehaviour
     }
 
     /// <summary>
-    /// ƒpƒ‰ƒ[ƒ^ˆÙí‚Ìƒpƒlƒ‹‚ğ•\¦E”ñ•\¦ˆ—
+    /// ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ç•°å¸¸æ™‚ã®ãƒ‘ãƒãƒ«ã‚’è¡¨ç¤ºãƒ»éè¡¨ç¤ºå‡¦ç†
     /// </summary>
     public void TogglePanelParamErrorVisibility(bool isActive)
     {
@@ -428,7 +428,7 @@ public class UiController : MonoBehaviour
     }
 
     /// <summary>
-    /// ƒ{ƒ^ƒ“‚ÉƒJ[ƒ\ƒ‹‚ª“ü‚Á‚½or”²‚¯‚½‚Æ‚«‚Éˆ—
+    /// ãƒœã‚¿ãƒ³ã«ã‚«ãƒ¼ã‚½ãƒ«ãŒå…¥ã£ãŸoræŠœã‘ãŸã¨ãã«å‡¦ç†
     /// </summary>
     public void EventPause(bool frag)
     {

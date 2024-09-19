@@ -32,7 +32,7 @@ public class HandAnimController : MonoBehaviour
     }
 
     /// <summary>
-    /// ƒVƒ‡ƒbƒgƒAƒjƒ[ƒVƒ‡ƒ“
+    /// ã‚·ãƒ§ãƒƒãƒˆã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³
     /// </summary>
     void DoShotAnim()
     {
@@ -42,9 +42,9 @@ public class HandAnimController : MonoBehaviour
             new Vector3(7f,-1f,0f),
         };
 
-        //Sequence¶¬
+        //Sequenceç”Ÿæˆ
         Sequence sequence = DOTween.Sequence();
-        // ƒAƒjƒ[ƒVƒ‡ƒ“‚³‚¹‚Ä‚©‚çPathˆÚ“®‚·‚é
+        // ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã•ã›ã¦ã‹ã‚‰Pathç§»å‹•ã™ã‚‹
         sequence.Append(transform.GetComponent<SpriteRenderer>().DOFade(1.0f, 0.5f).SetDelay(4f).OnComplete(PlayAnim))
             .Append(transform.DOPath(path, 3f, PathType.CatmullRom).SetDelay(2f).SetEase(Ease.InOutSine))
             .Append(transform.GetComponent<SpriteRenderer>().DOFade(0f, 0.5f).SetDelay(2f));
@@ -52,7 +52,7 @@ public class HandAnimController : MonoBehaviour
     }
 
     /// <summary>
-    /// ƒhƒ‰ƒbƒOƒAƒjƒ[ƒVƒ‡ƒ“
+    /// ãƒ‰ãƒ©ãƒƒã‚°ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³
     /// </summary>
     void DoDrugAnim()
     {
@@ -65,9 +65,9 @@ public class HandAnimController : MonoBehaviour
             new Vector3(-1.39f,4.33f,0f),
         };
 
-        //Sequence¶¬
+        //Sequenceç”Ÿæˆ
         Sequence sequence = DOTween.Sequence();
-        // ƒAƒjƒ[ƒVƒ‡ƒ“‚³‚¹‚Ä‚©‚çPathˆÚ“®‚·‚é
+        // ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã•ã›ã¦ã‹ã‚‰Pathç§»å‹•ã™ã‚‹
         sequence
             .Append(transform.GetComponent<SpriteRenderer>().DOFade(1.0f, 0.5f).SetDelay(4f))
             .Append(transform.DORotate(new Vector3(0f, 0f, 0f), 0.5f).OnComplete(PlayAnim))
@@ -77,7 +77,7 @@ public class HandAnimController : MonoBehaviour
     }
 
     /// <summary>
-    /// ƒAƒjƒ[ƒVƒ‡ƒ“Ä¶
+    /// ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³å†ç”Ÿ
     /// </summary>
     void PlayAnim()
     {

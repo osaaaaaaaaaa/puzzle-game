@@ -4,20 +4,20 @@ using UnityEngine;
 
 public class PlayerLinkedMover : MonoBehaviour
 {
-    [SerializeField] bool m_isMoveX;    // XÀ•W‚ÉˆÚ“®‚·‚é‚©‚Ç‚¤‚©
-    [SerializeField] bool m_isMoveY;    // YÀ•W‚ÉˆÚ“®‚·‚é‚©‚Ç‚¤‚©
-    [SerializeField] bool m_isInverseX;  // XÀ•W‚ğ”½”ä—á‚³‚¹‚é‚©‚Ç‚¤‚©
-    [SerializeField] bool m_isInverseY;  // YÀ•W‚ğ”½”ä—á‚³‚¹‚é‚©‚Ç‚¤‚©
-    [SerializeField] float m_mulNumX = 1f;    // æZ‚·‚é’l
-    [SerializeField] float m_mulNumY = 1f;    // æZ‚·‚é’l
+    [SerializeField] bool m_isMoveX;    // Xåº§æ¨™ã«ç§»å‹•ã™ã‚‹ã‹ã©ã†ã‹
+    [SerializeField] bool m_isMoveY;    // Yåº§æ¨™ã«ç§»å‹•ã™ã‚‹ã‹ã©ã†ã‹
+    [SerializeField] bool m_isInverseX;  // Xåº§æ¨™ã‚’åæ¯”ä¾‹ã•ã›ã‚‹ã‹ã©ã†ã‹
+    [SerializeField] bool m_isInverseY;  // Yåº§æ¨™ã‚’åæ¯”ä¾‹ã•ã›ã‚‹ã‹ã©ã†ã‹
+    [SerializeField] float m_mulNumX = 1f;    // ä¹—ç®—ã™ã‚‹å€¤
+    [SerializeField] float m_mulNumY = 1f;    // ä¹—ç®—ã™ã‚‹å€¤
     [SerializeField] Vector2 m_minPos = Vector2.zero;
     [SerializeField] Vector2 m_maxPos = Vector2.zero;
 
-    // ƒvƒŒƒCƒ„[
+    // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼
     GameObject m_player;
-    // ƒvƒŒƒCƒ„[‚Ì‰ŠúˆÊ’u
+    // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®åˆæœŸä½ç½®
     Vector3 m_player_startPos;
-    // ©g‚Ì‰ŠúˆÊ’u
+    // è‡ªèº«ã®åˆæœŸä½ç½®
     Vector3 m_my_startPos;
 
     // Start is called before the first frame update
@@ -25,85 +25,85 @@ public class PlayerLinkedMover : MonoBehaviour
     {
         m_player = GameObject.Find("Player");
 
-        // e‚Æq‚Ì‰ŠúˆÊ’u‚ğæ“¾‚·‚é
+        // è¦ªã¨å­ã®åˆæœŸä½ç½®ã‚’å–å¾—ã™ã‚‹
         m_player_startPos = m_player.transform.position;
         m_my_startPos = transform.position;
     }
 
     void Update()
     {
-        // ƒvƒŒƒCƒ„[‚ÌˆÚ“®—Ê‚ğŒvZ
+        // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ç§»å‹•é‡ã‚’è¨ˆç®—
         Vector3 playerMovement = (m_player.transform.position - m_player_startPos);
         playerMovement = new Vector3(playerMovement.x * m_mulNumX, playerMovement.y * m_mulNumY, playerMovement.z);
 
         if(m_isMoveX && m_isMoveY)
         {
-            // XYÀ•W‚ğ”½”ä—á‚³‚¹‚ÄˆÚ“®
+            // XYåº§æ¨™ã‚’åæ¯”ä¾‹ã•ã›ã¦ç§»å‹•
             if (m_isInverseX && m_isInverseY)
             {
                 transform.position = m_my_startPos - playerMovement;
             }
-            // XÀ•W‚ğ”½”ä—á‚³‚¹‚ÄˆÚ“®
+            // Xåº§æ¨™ã‚’åæ¯”ä¾‹ã•ã›ã¦ç§»å‹•
             else if (m_isInverseX)
             {
                 transform.position = new Vector3(m_my_startPos.x - playerMovement.x, m_my_startPos.y + playerMovement.y, transform.position.z);
             }
-            // YÀ•W‚ğ”½”ä—á‚³‚¹‚ÄˆÚ“®
+            // Yåº§æ¨™ã‚’åæ¯”ä¾‹ã•ã›ã¦ç§»å‹•
             else if (m_isInverseY)
             {
                 transform.position = new Vector3(m_my_startPos.x + playerMovement.x, m_my_startPos.y - playerMovement.y, transform.position.z);
             }
-            // ”ä—á‚³‚¹‚ÄˆÚ“®
+            // æ¯”ä¾‹ã•ã›ã¦ç§»å‹•
             else
             {
                 transform.position = m_my_startPos + playerMovement;
             }
         }
-        // XÀ•W‚ğƒŠƒ“ƒN‚³‚¹‚éê‡
+        // Xåº§æ¨™ã‚’ãƒªãƒ³ã‚¯ã•ã›ã‚‹å ´åˆ
         else if (m_isMoveX)
         {
-            // ”½”ä—á‚³‚¹‚ÄˆÚ“®
+            // åæ¯”ä¾‹ã•ã›ã¦ç§»å‹•
             if (m_isInverseX)
             {
                 transform.position = new Vector3(m_my_startPos.x - playerMovement.x, m_my_startPos.y, transform.position.z);
             }
-            // ”ä—á‚³‚¹‚ÄˆÚ“®
+            // æ¯”ä¾‹ã•ã›ã¦ç§»å‹•
             else
             {
                 transform.position = new Vector3(m_my_startPos.x + playerMovement.x, m_my_startPos.y, transform.position.z);
             }
         }
-        // YÀ•W‚ğƒŠƒ“ƒN‚³‚¹‚éê‡
+        // Yåº§æ¨™ã‚’ãƒªãƒ³ã‚¯ã•ã›ã‚‹å ´åˆ
         else if (m_isMoveY)
         {
-            // ”½”ä—á‚³‚¹‚ÄˆÚ“®
+            // åæ¯”ä¾‹ã•ã›ã¦ç§»å‹•
             if (m_isInverseY)
             {
                 transform.position = new Vector3(m_my_startPos.x, m_my_startPos.y - playerMovement.y, transform.position.z);
             }
-            // ”ä—á‚³‚¹‚ÄˆÚ“®
+            // æ¯”ä¾‹ã•ã›ã¦ç§»å‹•
             else
             {
                 transform.position = new Vector3(m_my_startPos.x, m_my_startPos.y + playerMovement.y, transform.position.z);
             }
         }
 
-        // XÀ•W‚ÌÅ¬’l‚ğw’è‚µ‚Ä‚¢‚é&&Œ»İ‚Ì’l‚ªÅ¬’lˆÈ‰º‚Ìê‡
+        // Xåº§æ¨™ã®æœ€å°å€¤ã‚’æŒ‡å®šã—ã¦ã„ã‚‹&&ç¾åœ¨ã®å€¤ãŒæœ€å°å€¤ä»¥ä¸‹ã®å ´åˆ
         if(m_minPos.x != 0 && transform.localPosition.x <= m_minPos.x)
         {
             transform.localPosition = new Vector3(m_minPos.x, transform.localPosition.y, transform.localPosition.z);
         }
-        // YÀ•W‚ÌÅ¬’l‚ğw’è‚µ‚Ä‚¢‚é&&Œ»İ‚Ì’l‚ªÅ¬’lˆÈ‰º‚Ìê‡
+        // Yåº§æ¨™ã®æœ€å°å€¤ã‚’æŒ‡å®šã—ã¦ã„ã‚‹&&ç¾åœ¨ã®å€¤ãŒæœ€å°å€¤ä»¥ä¸‹ã®å ´åˆ
         if (m_minPos.y != 0 && transform.localPosition.y <= m_minPos.y)
         {
             transform.localPosition = new Vector3(transform.localPosition.x, m_minPos.y, transform.localPosition.z);
         }
-        // XÀ•W‚ÌÅ‘å’l‚ğw’è‚µ‚Ä‚¢‚é&&Œ»İ‚Ì’l‚ªÅ‘å’lˆÈã‚Ìê‡
+        // Xåº§æ¨™ã®æœ€å¤§å€¤ã‚’æŒ‡å®šã—ã¦ã„ã‚‹&&ç¾åœ¨ã®å€¤ãŒæœ€å¤§å€¤ä»¥ä¸Šã®å ´åˆ
         if (m_maxPos.x != 0 && transform.localPosition.x >= m_maxPos.x)
         {
             transform.localPosition = new Vector3(m_maxPos.x, transform.localPosition.y, transform.localPosition.z);
         }
-        // YÀ•W‚ÌÅ‘å’l‚ğw’è‚µ‚Ä‚¢‚é&&Œ»İ‚Ì’l‚ªÅ‘å’lˆÈã‚Ìê‡
+        // Yåº§æ¨™ã®æœ€å¤§å€¤ã‚’æŒ‡å®šã—ã¦ã„ã‚‹&&ç¾åœ¨ã®å€¤ãŒæœ€å¤§å€¤ä»¥ä¸Šã®å ´åˆ
         if (m_maxPos.y != 0 && transform.localPosition.y >= m_maxPos.y)
         {
             transform.localPosition = new Vector3(transform.localPosition.x, m_maxPos.y, transform.localPosition.z);

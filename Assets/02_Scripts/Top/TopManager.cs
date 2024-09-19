@@ -18,21 +18,21 @@ public class TopManager : MonoBehaviour
 
     [SerializeField] GameObject m_mainCamera;
     [SerializeField] GameObject m_characterControllerPrefab;
-    GameObject m_characterController;   // ¶‘¶Šm”F—p
+    GameObject m_characterController;   // ç”Ÿå­˜ç¢ºèªç”¨
 
     [SerializeField] GameObject m_parent_top;
     [SerializeField] GameObject m_ui_startTextParent;
-    [SerializeField] Image m_panelImage;                    // ”ñ•\¦‚É‚·‚éƒpƒlƒ‹‚ÌƒCƒ[ƒW
-    [SerializeField] Text m_uiUserName;                     // ƒ†[ƒU[–¼
-    [SerializeField] AssetDownLoader m_assetDownLoader;     // ƒAƒZƒbƒgƒ_ƒEƒ“ƒ[ƒ_[
-    [SerializeField] GameObject m_boxStage;                 // ƒXƒe[ƒWƒV[ƒ“‚É“ü‚é‘O‚ÌƒEƒCƒ“ƒhƒE
-    [SerializeField] Image m_imgSignalButton;               // ‹~“ïM†‚Ìƒ{ƒ^ƒ“‚Ì‰æ‘œ
-    [SerializeField] GameObject m_panelSignalButtonError;   // ‹~“ïM†ƒ{ƒ^ƒ“‚ğ‰Ÿ‚µ‚½‚Æ‚«‚É•\¦‚³‚ê‚éƒEƒCƒ“ƒhƒE
-    bool isOnStageButton;   //ƒXƒe[ƒWƒV[ƒ“‚É‘JˆÚ‚·‚éƒ{ƒ^ƒ“‚ğƒNƒŠƒbƒN‚µ‚½‚©‚Ç‚¤‚©
+    [SerializeField] Image m_panelImage;                    // éè¡¨ç¤ºã«ã™ã‚‹ãƒ‘ãƒãƒ«ã®ã‚¤ãƒ¡ãƒ¼ã‚¸
+    [SerializeField] Text m_uiUserName;                     // ãƒ¦ãƒ¼ã‚¶ãƒ¼å
+    [SerializeField] AssetDownLoader m_assetDownLoader;     // ã‚¢ã‚»ãƒƒãƒˆãƒ€ã‚¦ãƒ³ãƒ­ãƒ¼ãƒ€ãƒ¼
+    [SerializeField] GameObject m_boxStage;                 // ã‚¹ãƒ†ãƒ¼ã‚¸ã‚·ãƒ¼ãƒ³ã«å…¥ã‚‹å‰ã®ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦
+    [SerializeField] Image m_imgSignalButton;               // æ•‘é›£ä¿¡å·ã®ãƒœã‚¿ãƒ³ã®ç”»åƒ
+    [SerializeField] GameObject m_panelSignalButtonError;   // æ•‘é›£ä¿¡å·ãƒœã‚¿ãƒ³ã‚’æŠ¼ã—ãŸã¨ãã«è¡¨ç¤ºã•ã‚Œã‚‹ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦
+    bool isOnStageButton;   //ã‚¹ãƒ†ãƒ¼ã‚¸ã‚·ãƒ¼ãƒ³ã«é·ç§»ã™ã‚‹ãƒœã‚¿ãƒ³ã‚’ã‚¯ãƒªãƒƒã‚¯ã—ãŸã‹ã©ã†ã‹
 
-    // ƒVƒXƒeƒ€‰æ–Ê‚Ìƒpƒlƒ‹ƒŠƒXƒg
+    // ã‚·ã‚¹ãƒ†ãƒ ç”»é¢ã®ãƒ‘ãƒãƒ«ãƒªã‚¹ãƒˆ
     [SerializeField] List<GameObject> m_sys_panelList;
-    // ƒVƒXƒeƒ€ƒ{ƒ^ƒ“‚Ì˜A”Ô
+    // ã‚·ã‚¹ãƒ†ãƒ ãƒœã‚¿ãƒ³ã®é€£ç•ª
     public enum SYSTEM
     {
         PROFILE = 0,
@@ -44,27 +44,27 @@ public class TopManager : MonoBehaviour
     }
 
     /// <summary>
-    /// ƒ^ƒCƒgƒ‹‚ğƒNƒŠƒbƒN‚µ‚½‚©‚Ç‚¤‚©
+    /// ã‚¿ã‚¤ãƒˆãƒ«ã‚’ã‚¯ãƒªãƒƒã‚¯ã—ãŸã‹ã©ã†ã‹
     /// </summary>
     public static bool m_isClickTitle { get; private set; } = false;
 
     /// <summary>
-    /// Å‘åƒXƒe[ƒW”
+    /// æœ€å¤§ã‚¹ãƒ†ãƒ¼ã‚¸æ•°
     /// </summary>
     public static int stageMax { get; private set; }
 
     /// <summary>
-    /// ‘I‘ğ‚µ‚½ƒXƒe[ƒWID
+    /// é¸æŠã—ãŸã‚¹ãƒ†ãƒ¼ã‚¸ID
     /// </summary>
     public static int stageID { get; set; }
 
     /// <summary>
-    /// ƒAƒCƒeƒ€‚ğg—p‚µ‚Ä‚¢‚é‚©‚Ç‚¤‚©
+    /// ã‚¢ã‚¤ãƒ†ãƒ ã‚’ä½¿ç”¨ã—ã¦ã„ã‚‹ã‹ã©ã†ã‹
     /// </summary>
     public static bool isUseItem { get; set; }
 
     /// <summary>
-    /// ƒAƒCƒRƒ“ƒfƒUƒCƒ“‚ÌƒŠƒXƒg
+    /// ã‚¢ã‚¤ã‚³ãƒ³ãƒ‡ã‚¶ã‚¤ãƒ³ã®ãƒªã‚¹ãƒˆ
     /// </summary>
     [SerializeField] List<Sprite> m_texIcons;
     public static List<Sprite> TexIcons { get; private set; }
@@ -83,7 +83,7 @@ public class TopManager : MonoBehaviour
         isOnStageButton = false;
         isUseItem = false;
 
-        // ƒ†[ƒU[î•ñ‚ğæ“¾Ï‚Ìê‡
+        // ãƒ¦ãƒ¼ã‚¶ãƒ¼æƒ…å ±ã‚’å–å¾—æ¸ˆã®å ´åˆ
         Debug.Log(NetworkManager.Instance.UserID);
         if (NetworkManager.Instance.UserID != 0) m_characterController = Instantiate(m_characterControllerPrefab, transform.parent.transform);
     }
@@ -101,17 +101,17 @@ public class TopManager : MonoBehaviour
         {
             m_isClickTitle = true;
 
-            // ƒAƒZƒbƒgƒoƒ“ƒhƒ‹‚ªXV‰Â”\‚©‚Ç‚¤‚©ƒ`ƒFƒbƒN
+            // ã‚¢ã‚»ãƒƒãƒˆãƒãƒ³ãƒ‰ãƒ«ãŒæ›´æ–°å¯èƒ½ã‹ã©ã†ã‹ãƒã‚§ãƒƒã‚¯
             m_assetDownLoader.StartCoroutine(m_assetDownLoader.checkCatalog());
         }
     }
 
     /// <summary>
-    /// ƒ†[ƒU[“o˜^ˆ—
+    /// ãƒ¦ãƒ¼ã‚¶ãƒ¼ç™»éŒ²å‡¦ç†
     /// </summary>
     public void StoreUser()
     {
-        // Å‘åƒXƒe[ƒW”‚ğæ“¾
+        // æœ€å¤§ã‚¹ãƒ†ãƒ¼ã‚¸æ•°ã‚’å–å¾—
         m_loading.ToggleLoadingUIVisibility(1);
         StartCoroutine(NetworkManager.Instance.GetConstant(
             1,
@@ -123,10 +123,10 @@ public class TopManager : MonoBehaviour
             }
             ));
 
-        // ƒ†[ƒU[ƒf[ƒ^‚ª•Û‘¶‚³‚ê‚Ä‚¢‚È‚¢ê‡
+        // ãƒ¦ãƒ¼ã‚¶ãƒ¼ãƒ‡ãƒ¼ã‚¿ãŒä¿å­˜ã•ã‚Œã¦ã„ãªã„å ´åˆ
         if (!NetworkManager.Instance.LoadUserData())
         {
-            // ƒ†[ƒU[“o˜^ˆ—
+            // ãƒ¦ãƒ¼ã‚¶ãƒ¼ç™»éŒ²å‡¦ç†
             m_loading.ToggleLoadingUIVisibility(1);
             StartCoroutine(NetworkManager.Instance.StoreUser(
                 Guid.NewGuid().ToString(),
@@ -134,30 +134,30 @@ public class TopManager : MonoBehaviour
                 {
                     m_loading.ToggleLoadingUIVisibility(-1);
                     if (result) OnClickTitleWindow();
-                }));    // “o˜^ˆ—Œã‚Ìˆ—
+                }));    // ç™»éŒ²å‡¦ç†å¾Œã®å‡¦ç†
         }
         else
         {
             m_loading.ToggleLoadingUIVisibility(3);
 
-            // ŠƒAƒCƒeƒ€‚ğæ“¾‚·‚é
+            // æ‰€æŒã‚¢ã‚¤ãƒ†ãƒ ã‚’å–å¾—ã™ã‚‹
             StartCoroutine(NetworkManager.Instance.GetUserItem(
                 3,
                 result => { m_loading.ToggleLoadingUIVisibility(-1); }
                 ));
 
-            // ©•ª‚ª•åW’†‚Ì‹~“ïM†‚ğæ“¾‚·‚é
+            // è‡ªåˆ†ãŒå‹Ÿé›†ä¸­ã®æ•‘é›£ä¿¡å·ã‚’å–å¾—ã™ã‚‹
             StartCoroutine(NetworkManager.Instance.GetDistressSignalList(
                 result => { m_loading.ToggleLoadingUIVisibility(-1); }
                 ));
 
-            // ƒ†[ƒU[î•ñ‚ğæ“¾‚·‚é
+            // ãƒ¦ãƒ¼ã‚¶ãƒ¼æƒ…å ±ã‚’å–å¾—ã™ã‚‹
             StartCoroutine(NetworkManager.Instance.GetUserData(
                 result => 
                 {
                     if(m_characterController == null) m_characterController = Instantiate(m_characterControllerPrefab, transform.parent.transform);
 
-                    // ƒXƒe[ƒW‚ÌƒŠƒUƒ‹ƒgî•ñ‚ğæ“¾‚·‚é
+                    // ã‚¹ãƒ†ãƒ¼ã‚¸ã®ãƒªã‚¶ãƒ«ãƒˆæƒ…å ±ã‚’å–å¾—ã™ã‚‹
                     StartCoroutine(NetworkManager.Instance.GetStageResults(
                         result =>
                         {
@@ -170,7 +170,7 @@ public class TopManager : MonoBehaviour
     }
 
     /// <summary>
-    /// ƒXƒe[ƒW‘I‘ğ‚Ìƒ{ƒ^ƒ“
+    /// ã‚¹ãƒ†ãƒ¼ã‚¸é¸æŠã®ãƒœã‚¿ãƒ³
     /// </summary>
     public void OnSelectStageButton(int id)
     {
@@ -178,55 +178,55 @@ public class TopManager : MonoBehaviour
 
         stageID = id;
 
-        // ƒXƒe[ƒW‚É“ü‚é‘O‚ÌƒEƒCƒ“ƒhƒE‚ğ•\¦‚·‚é
+        // ã‚¹ãƒ†ãƒ¼ã‚¸ã«å…¥ã‚‹å‰ã®ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ã‚’è¡¨ç¤ºã™ã‚‹
         ShowStageResultResponse resultData = NetworkManager.Instance.StageResults.Count < stageID ? null : NetworkManager.Instance.StageResults[stageID - 1];
         m_boxStage.SetActive(true);
         m_boxStage.GetComponent<StageBox>().InitStatus(resultData);
     }
 
     /// <summary>
-    /// ƒXƒe[ƒWƒV[ƒ“‚É‘JˆÚ‚·‚é
+    /// ã‚¹ãƒ†ãƒ¼ã‚¸ã‚·ãƒ¼ãƒ³ã«é·ç§»ã™ã‚‹
     /// </summary>
     public void OnPlayStageButton(TopSceneDirector.PLAYMODE playMode,int signalID, int id, bool isStageClear)
     {
         if (isOnStageButton) return;
 
-        stageID = id == 0 ? stageID : id;   // ƒ\ƒ‚Å—V‚Ôê‡(id=0)‚ÍXV‚µ‚È‚¢
+        stageID = id == 0 ? stageID : id;   // ã‚½ãƒ­ã§éŠã¶å ´åˆ(id=0)ã¯æ›´æ–°ã—ãªã„
         TopSceneDirector.Instance.SetPlayMode(playMode, signalID, isStageClear);
         isOnStageButton = true;
         isUseItem = m_boxStage.GetComponent<StageBox>().m_isUseItem;
         m_boxStage.GetComponent<StageBox>().OnCloseButton();
         Destroy(m_characterController);
 
-        // ƒQ[ƒ€UIƒV[ƒ“‚É‘JˆÚ‚·‚é
+        // ã‚²ãƒ¼ãƒ UIã‚·ãƒ¼ãƒ³ã«é·ç§»ã™ã‚‹
         Initiate.Fade("02_UIScene", Color.black, 1.0f);
     }
 
     /// <summary>
-    /// ƒ^ƒCƒgƒ‹‰æ–Ê‚©‚çƒz[ƒ€‰æ–Ê‚ÖˆÚ“®‚·‚é
+    /// ã‚¿ã‚¤ãƒˆãƒ«ç”»é¢ã‹ã‚‰ãƒ›ãƒ¼ãƒ ç”»é¢ã¸ç§»å‹•ã™ã‚‹
     /// </summary>
     void OnClickTitleWindow()
     {
         if (isOnStageButton) return;
 
-        // Tweenì¬
+        // Tweenä½œæˆ
         var sequence = DOTween.Sequence();
         sequence.Join(m_parent_top.transform.DOLocalMove(new Vector3(m_parent_top.transform.localPosition.x - 1980f, 0, 0), 0.5f).SetEase(Ease.Linear))
             .Join(m_mainCamera.transform.DOMove(new Vector3(17.83f, 0f, -10f), 0.5f).SetEase(Ease.Linear));
 
-        // ƒ†[ƒU[‚ÌƒvƒƒtƒB[ƒ‹‚ğXV
+        // ãƒ¦ãƒ¼ã‚¶ãƒ¼ã®ãƒ—ãƒ­ãƒ•ã‚£ãƒ¼ãƒ«ã‚’æ›´æ–°
         m_uiUserManager.UpdateUserDataUI(true, sequence);
 
-        // –¢ó‚¯æ‚è‚Ì•ñV‚ª‚ ‚é‚©‚Ç‚¤‚©ƒ`ƒFƒbƒN
+        // æœªå—ã‘å–ã‚Šã®å ±é…¬ãŒã‚ã‚‹ã‹ã©ã†ã‹ãƒã‚§ãƒƒã‚¯
         m_uiUserManager.CheckRewardUnclaimed();
         m_uiSignalManager.CheckRewardUnclaimed();
 
-        // ‹~“ïM†ƒ{ƒ^ƒ“‚ÌƒJƒ‰[•ÏX
+        // æ•‘é›£ä¿¡å·ãƒœã‚¿ãƒ³ã®ã‚«ãƒ©ãƒ¼å¤‰æ›´
         m_imgSignalButton.color = NetworkManager.Instance.IsDistressSignalEnabled ? new Color(1f, 1f, 1f, 1f) : new Color(0.7f, 0.7f, 0.7f, 1f);
     }
 
     /// <summary>
-    /// ƒz[ƒ€‰æ–Ê‚©‚çƒ^ƒCƒgƒ‹‰æ–Ê‚Ö–ß‚é
+    /// ãƒ›ãƒ¼ãƒ ç”»é¢ã‹ã‚‰ã‚¿ã‚¤ãƒˆãƒ«ç”»é¢ã¸æˆ»ã‚‹
     /// </summary>
     public void OnBackButtonHome()
     {
@@ -245,35 +245,35 @@ public class TopManager : MonoBehaviour
     }
 
     /// <summary>
-    /// ƒz[ƒ€‰æ–Ê‚©‚çƒVƒXƒeƒ€‰æ–Ê(ƒvƒƒtƒB[ƒ‹Aƒ[ƒ‹ƒ{ƒbƒNƒX‚È‚Ç)‚ÖˆÚ“®‚·‚é
+    /// ãƒ›ãƒ¼ãƒ ç”»é¢ã‹ã‚‰ã‚·ã‚¹ãƒ†ãƒ ç”»é¢(ãƒ—ãƒ­ãƒ•ã‚£ãƒ¼ãƒ«ã€ãƒ¡ãƒ¼ãƒ«ãƒœãƒƒã‚¯ã‚¹ãªã©)ã¸ç§»å‹•ã™ã‚‹
     /// </summary>
-    /// <param name="systemNum">SYSTEMiƒVƒXƒeƒ€ƒ{ƒ^ƒ“‚Ì˜A”ÔjQÆ</param>
+    /// <param name="systemNum">SYSTEMï¼ˆã‚·ã‚¹ãƒ†ãƒ ãƒœã‚¿ãƒ³ã®é€£ç•ªï¼‰å‚ç…§</param>
     public void OnButtonSystemPanel(int systemNum)
     {
         if (isOnStageButton) return;
 
-        // ‘S‚Ä‚ÌƒVƒXƒeƒ€‰æ–Ê‚ğ”ñ•\¦‚É‚·‚é
+        // å…¨ã¦ã®ã‚·ã‚¹ãƒ†ãƒ ç”»é¢ã‚’éè¡¨ç¤ºã«ã™ã‚‹
         foreach (GameObject item in m_sys_panelList)
         {
             item.SetActive(false);
         }
 
-        // •\¦ˆ—
-        m_sys_panelList[systemNum].SetActive(true);     // ‘I‘ğ‚µ‚½ƒVƒXƒeƒ€‰æ–Ê
+        // è¡¨ç¤ºå‡¦ç†
+        m_sys_panelList[systemNum].SetActive(true);     // é¸æŠã—ãŸã‚·ã‚¹ãƒ†ãƒ ç”»é¢
 
         var sequence = DOTween.Sequence();
         sequence.Join(m_parent_top.transform.DOLocalMove(new Vector3(m_parent_top.transform.localPosition.x, -1080, 0), 0.5f).SetEase(Ease.Linear))
             .Join(m_mainCamera.transform.DOMove(new Vector3(17.83f, 9.9f, -10f), 0.5f).SetEase(Ease.Linear));
         sequence.Play();
 
-        // –¢ó‚¯æ‚è‚ÌUI‚ğ‰B‚·
+        // æœªå—ã‘å–ã‚Šã®UIã‚’éš ã™
         if (systemNum == (int)SYSTEM.MAILBOX) m_uiUserManager.HideMailUnclaimedUI();
         if(systemNum == (int)SYSTEM.ACHIEVEMENT) m_uiUserManager.HideRewardUnclaimedUI();
         if(systemNum == (int)SYSTEM.D_SIGNAL) m_uiSignalManager.HideRewardUnclaimedUI();
     }
 
     /// <summary>
-    /// ƒVƒXƒeƒ€‰æ–Ê‚©‚çƒz[ƒ€‰æ–Ê‚Ö–ß‚é
+    /// ã‚·ã‚¹ãƒ†ãƒ ç”»é¢ã‹ã‚‰ãƒ›ãƒ¼ãƒ ç”»é¢ã¸æˆ»ã‚‹
     /// </summary>
     public void OnBackButtonSystemPanel()
     {
@@ -281,7 +281,7 @@ public class TopManager : MonoBehaviour
 
         m_textEmpty.text = "";
 
-        // ‹~“ïM†ƒ{ƒ^ƒ“‚ÌƒJƒ‰[•ÏX
+        // æ•‘é›£ä¿¡å·ãƒœã‚¿ãƒ³ã®ã‚«ãƒ©ãƒ¼å¤‰æ›´
         m_imgSignalButton.color = NetworkManager.Instance.IsDistressSignalEnabled ? new Color(1f, 1f, 1f, 1f) : new Color(0.7f, 0.7f, 0.7f, 1f);
 
         m_uiUserManager.ResetErrorText();
@@ -293,7 +293,7 @@ public class TopManager : MonoBehaviour
     }
 
     /// <summary>
-    /// ‹~“ïM†ƒ{ƒ^ƒ“ˆ—
+    /// æ•‘é›£ä¿¡å·ãƒœã‚¿ãƒ³å‡¦ç†
     /// </summary>
     public void OnDistressSignalButton()
     {
@@ -307,12 +307,12 @@ public class TopManager : MonoBehaviour
 
         if (TopSceneDirector.Instance != null && TopSceneDirector.Instance.PlayMode == TopSceneDirector.PLAYMODE.SOLO && !NetworkManager.Instance.IsDistressSignalTutrial)
         {
-            NetworkManager.Instance.TutrialViewed();        // ƒ`ƒ…[ƒgƒŠƒAƒ‹‚ğŒ©‚½‚±‚Æ‚É‚·‚é
-            m_uiSignalManager.ToggleWindowVisibility(1);    // ƒ`ƒ…[ƒgƒŠƒAƒ‹‰æ–Ê‚ğ•\¦‚·‚é
+            NetworkManager.Instance.TutrialViewed();        // ãƒãƒ¥ãƒ¼ãƒˆãƒªã‚¢ãƒ«ã‚’è¦‹ãŸã“ã¨ã«ã™ã‚‹
+            m_uiSignalManager.ToggleWindowVisibility(1);    // ãƒãƒ¥ãƒ¼ãƒˆãƒªã‚¢ãƒ«ç”»é¢ã‚’è¡¨ç¤ºã™ã‚‹
         }
         else
         {
-            // ƒ`ƒ…[ƒgƒŠƒAƒ‹‰æ–Ê‚ğŒ©‚½‚±‚Æ‚ª‚ ‚éê‡‚Í‹~“ïM†‚Ì‰æ–Ê‚ğ•\¦‚·‚é
+            // ãƒãƒ¥ãƒ¼ãƒˆãƒªã‚¢ãƒ«ç”»é¢ã‚’è¦‹ãŸã“ã¨ãŒã‚ã‚‹å ´åˆã¯æ•‘é›£ä¿¡å·ã®ç”»é¢ã‚’è¡¨ç¤ºã™ã‚‹
             m_uiSignalManager.ToggleWindowVisibility(0);
         }
     }
@@ -323,12 +323,12 @@ public class TopManager : MonoBehaviour
     }
 
     /// <summary>
-    /// ƒ‰ƒ“ƒN‚ğæ“¾
+    /// ãƒ©ãƒ³ã‚¯ã‚’å–å¾—
     /// </summary>
     /// <returns></returns>
     public static Sprite GetScoreRank(List<Sprite> spriteRanks, int score)
     {
-        // ŒÄ‚Ño‚µ‚ªX‚©‚çs‚í‚ê‚é , spriteRanks‚Íã‚©‚çS~X‚Ì‡‚ÅŠi”[‚³‚ê‚Ä‚¢‚é
+        // å‘¼ã³å‡ºã—ãŒXã‹ã‚‰è¡Œã‚ã‚Œã‚‹ , spriteRanksã¯ä¸Šã‹ã‚‰S~Xã®é †ã§æ ¼ç´ã•ã‚Œã¦ã„ã‚‹
         int i = spriteRanks.Count - 1;
         foreach (var value in Enum.GetValues(typeof(TopManager.ScoreRank)))
         {
@@ -339,7 +339,7 @@ public class TopManager : MonoBehaviour
             i--;
         }
 
-        // ‚Ç‚ê‚É‚à“–‚Ä‚Í‚Ü‚ç‚È‚©‚Á‚½ê‡‚ÍÅ’á’l‚Ìƒ‰ƒ“ƒN
+        // ã©ã‚Œã«ã‚‚å½“ã¦ã¯ã¾ã‚‰ãªã‹ã£ãŸå ´åˆã¯æœ€ä½å€¤ã®ãƒ©ãƒ³ã‚¯
         return spriteRanks[spriteRanks.Count - 1];
     }
 }

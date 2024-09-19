@@ -5,12 +5,12 @@ using UnityEngine.UI;
 
 public class ReplayPlayer : MonoBehaviour
 {
-    [SerializeField] Button m_buttonReplay;        // ƒŠƒvƒŒƒCÄ¶ƒ{ƒ^ƒ“
+    [SerializeField] Button m_buttonReplay;        // ãƒªãƒ—ãƒ¬ã‚¤å†ç”Ÿãƒœã‚¿ãƒ³
     [SerializeField] GameObject m_son;
     [SerializeField] GameObject m_sonRun;
     [SerializeField] GameObject m_sonCow;
 
-    // ƒf[ƒ^‚ğÄ¶‚·‚éŠÔŠu
+    // ãƒ‡ãƒ¼ã‚¿ã‚’å†ç”Ÿã™ã‚‹é–“éš”
     const float saveInterval = 0.05f;
 
     private void Start()
@@ -21,7 +21,7 @@ public class ReplayPlayer : MonoBehaviour
     }
 
     /// <summary>
-    /// ƒŠƒvƒŒƒCˆ—
+    /// ãƒªãƒ—ãƒ¬ã‚¤å‡¦ç†
     /// </summary>
     public IEnumerator ReplayCoroutine(GameManager gameManager,List<ReplayData> replayDatas)
     {
@@ -35,7 +35,7 @@ public class ReplayPlayer : MonoBehaviour
 
             GameObject targetSon = null;
 
-            // “®‚©‚·‘§q‚ğæ“¾‚·‚é
+            // å‹•ã‹ã™æ¯å­ã‚’å–å¾—ã™ã‚‹
             switch (data.TypeSon)
             {
                 case ReplayData.TYPESON.DEFAULT:
@@ -49,10 +49,10 @@ public class ReplayPlayer : MonoBehaviour
                     break;
             }
 
-            // ŠÖŒW‚È‚¢‘¼‚Ì‘§q‚ÌƒIƒuƒWƒFƒNƒg‚ğ”ñ•\¦ˆ—
+            // é–¢ä¿‚ãªã„ä»–ã®æ¯å­ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’éè¡¨ç¤ºå‡¦ç†
             ToggleSonObjVisibility(targetSon);
 
-            // ƒpƒ‰ƒ[ƒ^‚ğİ’è‚·‚é
+            // ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã‚’è¨­å®šã™ã‚‹
             var scale = targetSon.transform.localScale;
             targetSon.transform.localScale = new Vector3(Mathf.Abs(scale.x) * data.Dir, scale.y, scale.z);
             targetSon.GetComponent<Rigidbody2D>().gravityScale = data.Gravity;
@@ -68,9 +68,9 @@ public class ReplayPlayer : MonoBehaviour
     }
 
     /// <summary>
-    /// ‘§q‚ÌƒIƒuƒWƒFƒNƒg‚ğ•\¦E”ñ•\¦ˆ—
+    /// æ¯å­ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’è¡¨ç¤ºãƒ»éè¡¨ç¤ºå‡¦ç†
     /// </summary>
-    /// <param name="currentSon">Œ»İ“®‚©‚·‘§q‚ÌƒIƒuƒWƒFƒNƒg</param>
+    /// <param name="currentSon">ç¾åœ¨å‹•ã‹ã™æ¯å­ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ</param>
     void ToggleSonObjVisibility(GameObject currentSon)
     {
         m_son.SetActive(m_son == currentSon);
@@ -79,7 +79,7 @@ public class ReplayPlayer : MonoBehaviour
     }
 
     /// <summary>
-    /// ‘§q‚ÌRigidbody2D‚ğƒŠƒZƒbƒg‚·‚é
+    /// æ¯å­ã®Rigidbody2Dã‚’ãƒªã‚»ãƒƒãƒˆã™ã‚‹
     /// </summary>
     void ResetRB()
     {

@@ -16,16 +16,16 @@ public class Guest : MonoBehaviour
     [SerializeField] GameObject m_simulationController;
     [SerializeField] GameObject m_line;
 
-    // ƒQ[ƒ€ƒ}ƒl[ƒWƒƒ[
+    // ã‚²ãƒ¼ãƒ ãƒãƒãƒ¼ã‚¸ãƒ£ãƒ¼
     GameManager m_gameManager;
-    // ƒvƒŒƒCƒ„[
+    // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼
     Player m_player;
-    // ‘§q‚ÌƒRƒ“ƒgƒ[ƒ‰[
+    // æ¯å­ã®ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©ãƒ¼
     SonController m_sonController;
 
-    // R‚è”ò‚Î‚µ‚½‚©‚Ç‚¤‚©
+    // è¹´ã‚Šé£›ã°ã—ãŸã‹ã©ã†ã‹
     public bool m_isKicked;
-    // R‚é‚Æ‚«‚ÌƒxƒNƒgƒ‹
+    // è¹´ã‚‹ã¨ãã®ãƒ™ã‚¯ãƒˆãƒ«
     Vector3 VectorKick = Vector3.zero;
 
     private void Update()
@@ -39,33 +39,33 @@ public class Guest : MonoBehaviour
         if (m_isKicked) return;
         if (collision.gameObject.layer == 6 || collision.gameObject.layer == 11)
         {
-            // ‘§q‚ÌƒŒƒCƒ„[‚©A‘§q‚Éæ‚ç‚ê‚Ä‚é‹‚Ìê‡
+            // æ¯å­ã®ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‹ã€æ¯å­ã«ä¹—ã‚‰ã‚Œã¦ã‚‹ç‰›ã®å ´åˆ
             GameObject son = collision.gameObject;
             if (collision.gameObject.name == "son_run")
             {
-                // ‘–‚Á‚Ä‚¢‚éó‘Ô‚©‚çŒ³‚ÌƒeƒNƒXƒ`ƒƒ‚É–ß‚·
+                // èµ°ã£ã¦ã„ã‚‹çŠ¶æ…‹ã‹ã‚‰å…ƒã®ãƒ†ã‚¯ã‚¹ãƒãƒ£ã«æˆ»ã™
                 m_sonController.ChangeDefaultTexture();
                 son = m_sonController.Son;
             }
 
-            // ‘§q‚Ìê‡
+            // æ¯å­ã®å ´åˆ
             m_isKicked = true;
             DOKick(son);
         }
     }
 
     /// <summary>
-    /// R‚è”ò‚Î‚·ˆ—
+    /// è¹´ã‚Šé£›ã°ã™å‡¦ç†
     /// </summary>
     void DOKick(GameObject son)
     {
         if (m_gameManager.m_isEndGame) return;
         Debug.Log(son.name);
 
-        // •êe‚ÌƒAƒjƒ[ƒVƒ‡ƒ“‚ğÄ¶‚·‚é
-        GetComponent<PlayerAnimController>().PlayKickAnim();  // R‚éƒAƒjƒ
+        // æ¯è¦ªã®ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚’å†ç”Ÿã™ã‚‹
+        GetComponent<PlayerAnimController>().PlayKickAnim();  // è¹´ã‚‹ã‚¢ãƒ‹ãƒ¡
 
-        // ‘§q‚ğR‚è”ò‚Î‚·ˆ—
+        // æ¯å­ã‚’è¹´ã‚Šé£›ã°ã™å‡¦ç†
         if (son.GetComponent<Son>())
         {
             son.GetComponent<Son>().ResetSon(transform.position);
@@ -81,19 +81,19 @@ public class Guest : MonoBehaviour
     }
 
     /// <summary>
-    /// ó‘Ô‚ğƒŠƒZƒbƒg‚·‚é
+    /// çŠ¶æ…‹ã‚’ãƒªã‚»ãƒƒãƒˆã™ã‚‹
     /// </summary>
     public void ResetGuest()
     {
-        // Ä“xR‚é‚±‚Æ‚ª‚Å‚«‚é‚æ‚¤‚É‚·‚é
+        // å†åº¦è¹´ã‚‹ã“ã¨ãŒã§ãã‚‹ã‚ˆã†ã«ã™ã‚‹
         m_isKicked = false;
 
-        // •êe‚ÌƒAƒjƒ[ƒVƒ‡ƒ“‚ğÄ¶‚·‚é
-        GetComponent<PlayerAnimController>().PlayStandbyAnim();  // ’ÊíƒXƒLƒ“‚ÌIdleƒAƒjƒ
+        // æ¯è¦ªã®ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚’å†ç”Ÿã™ã‚‹
+        GetComponent<PlayerAnimController>().PlayStandbyAnim();  // é€šå¸¸ã‚¹ã‚­ãƒ³ã®Idleã‚¢ãƒ‹ãƒ¡
     }
 
     /// <summary>
-    /// ‰Šú‰»ˆ—
+    /// åˆæœŸåŒ–å‡¦ç†
     /// </summary>
     /// <param name="name"></param>
     /// <param name="position"></param>
@@ -102,23 +102,23 @@ public class Guest : MonoBehaviour
     {
         m_isKicked = false;
 
-        // ƒIƒuƒWƒFƒNƒgEƒRƒ“ƒ|[ƒlƒ“ƒg‚ğæ“¾‚·‚é
+        // ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆãƒ»ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã‚’å–å¾—ã™ã‚‹
         m_gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         m_player = GameObject.Find("Player").GetComponent<Player>();
         m_sonController = GameObject.Find("SonController").GetComponent<SonController>();
         m_audioSouse = GetComponent<AudioSource>();
 
-        // ƒpƒ‰ƒ[ƒ^İ’è
+        // ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿è¨­å®š
         m_textName.text = name;
         transform.position = position;
-        VectorKick = (vector / m_player.m_mulPower) * 50f;   // ƒAƒCƒeƒ€‚ğg—p‚µ‚È‚¢‚ÅR‚é‚Æ‚«‚Ì‘å‚«‚³‚ÉC³;
+        VectorKick = (vector / m_player.m_mulPower) * 50f;   // ã‚¢ã‚¤ãƒ†ãƒ ã‚’ä½¿ç”¨ã—ãªã„ã§è¹´ã‚‹ã¨ãã®å¤§ãã•ã«ä¿®æ­£;
 
-        // ‹N“®—\‘ªü‚Ì•`‰æŠJn
+        // èµ·å‹•äºˆæ¸¬ç·šã®æç”»é–‹å§‹
         m_simulationController.GetComponent<SimulationController>().vecKick = VectorKick;
     }
 
     /// <summary>
-    /// ‹N“®—\‘ªŠÖŒW‚ğ•\¦E”ñ•\¦‚·‚é
+    /// èµ·å‹•äºˆæ¸¬é–¢ä¿‚ã‚’è¡¨ç¤ºãƒ»éè¡¨ç¤ºã™ã‚‹
     /// </summary>
     public void ToggleLineVisibility(bool isVisibility)
     {

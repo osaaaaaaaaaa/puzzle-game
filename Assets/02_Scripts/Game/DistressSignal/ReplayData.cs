@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class ReplayData
 {
     /// <summary>
-    /// ‘§q‚Ìó‘Ô
+    /// æ¯å­ã®çŠ¶æ…‹
     /// </summary>
     public enum TYPESON
     {
@@ -17,22 +17,22 @@ public class ReplayData
     public TYPESON TypeSon { get; set; }
 
     /// <summary>
-    /// Œü‚«(1or-1)
+    /// å‘ã(1or-1)
     /// </summary>
     public float Dir { get; set; }
 
     /// <summary>
-    /// d—Í
+    /// é‡åŠ›
     /// </summary>
     public float Gravity { get; set; }
 
     /// <summary>
-    /// À•W
+    /// åº§æ¨™
     /// </summary>
     public Vector3 Pos { get; set; }
 
     /// <summary>
-    /// ˆÚ“®—Ê
+    /// ç§»å‹•é‡
     /// </summary>
     public Vector3 Vel { get; set; }
 }

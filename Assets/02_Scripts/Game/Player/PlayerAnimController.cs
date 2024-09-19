@@ -4,16 +4,16 @@ using UnityEngine;
 
 public class PlayerAnimController : MonoBehaviour
 {
-    [SerializeField] GameObject m_normalSkinMom;    // •êe‚ÌƒfƒtƒHƒ‹ƒgƒXƒLƒ“
-    [SerializeField] GameObject m_abnormalSkinMom;  // •êe‚ÌR‚é‚Æ‚«‚ÌƒXƒLƒ“
-    [SerializeField] GameObject m_normalSkinGrandpa;    // ‘c•ƒ‚ÌƒfƒtƒHƒ‹ƒgƒXƒLƒ“
-    [SerializeField] GameObject m_abnormalSkinGrandpa;  // ‘c•ƒ‚Ì‘Å‚Â‚Æ‚«‚ÌƒXƒLƒ“
+    [SerializeField] GameObject m_normalSkinMom;    // æ¯è¦ªã®ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã‚¹ã‚­ãƒ³
+    [SerializeField] GameObject m_abnormalSkinMom;  // æ¯è¦ªã®è¹´ã‚‹ã¨ãã®ã‚¹ã‚­ãƒ³
+    [SerializeField] GameObject m_normalSkinGrandpa;    // ç¥–çˆ¶ã®ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã‚¹ã‚­ãƒ³
+    [SerializeField] GameObject m_abnormalSkinGrandpa;  // ç¥–çˆ¶ã®æ‰“ã¤ã¨ãã®ã‚¹ã‚­ãƒ³
 
-    // ‘Ò‹@ƒAƒjƒ[ƒVƒ‡ƒ“‚Ì–¼‘O
+    // å¾…æ©Ÿã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã®åå‰
     string m_standbyAnimName;
-    // •Ê‚ÌƒAƒjƒ[ƒVƒ‡ƒ“‚ªÄ¶‚³‚ê‚éÅ’á’l
+    // åˆ¥ã®ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ãŒå†ç”Ÿã•ã‚Œã‚‹æœ€ä½å€¤
     const int m_readyAnimMax =  6;
-    // R‚éƒAƒjƒ[ƒVƒ‡ƒ“‚Ì—”
+    // è¹´ã‚‹ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã®ä¹±æ•°
     int m_readyAnimNum;
 
     public enum DEFAULT_STANDBYANIM
@@ -27,7 +27,7 @@ public class PlayerAnimController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        // ‘Ò‹@ó‘Ô‚ÌƒAƒjƒ[ƒVƒ‡ƒ“Ä¶
+        // å¾…æ©ŸçŠ¶æ…‹ã®ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³å†ç”Ÿ
         switch (m_default_animpattern)
         {
             case DEFAULT_STANDBYANIM.IDLE01:
@@ -38,101 +38,101 @@ public class PlayerAnimController : MonoBehaviour
                 break;
         }
 
-        // ‘Ò‹@ƒAƒjƒ[ƒVƒ‡ƒ“‚ğÄ¶‚·‚é
+        // å¾…æ©Ÿã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚’å†ç”Ÿã™ã‚‹
         PlayStandbyAnim();
     }
 
     /// <summary>
-    /// ’ÊíƒXƒLƒ“‚ÌIdleƒAƒjƒ[ƒVƒ‡ƒ“‚ğÄ¶‚·‚é
+    /// é€šå¸¸ã‚¹ã‚­ãƒ³ã®Idleã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚’å†ç”Ÿã™ã‚‹
     /// </summary>
     public void PlayStandbyAnim()
     {
-        // ƒeƒNƒXƒ`ƒƒ‚ğØ‚è‘Ö‚¦‚ÄƒAƒjƒ[ƒVƒ‡ƒ“Ä¶
+        // ãƒ†ã‚¯ã‚¹ãƒãƒ£ã‚’åˆ‡ã‚Šæ›¿ãˆã¦ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³å†ç”Ÿ
         if (TopManager.isUseItem)
         {
-            // ƒAƒCƒeƒ€‚ğg—p‚µ‚Ä‚¢‚éê‡‚Í‘c•ƒ‚ğÄ¶
+            // ã‚¢ã‚¤ãƒ†ãƒ ã‚’ä½¿ç”¨ã—ã¦ã„ã‚‹å ´åˆã¯ç¥–çˆ¶ã‚’å†ç”Ÿ
             ToggleSkinVisivility(m_normalSkinGrandpa);
             m_normalSkinGrandpa.GetComponent<Animator>().Play("IdleNormalAnim");
         }
         else
         {
-            // •êe‚ğÄ¶
+            // æ¯è¦ªã‚’å†ç”Ÿ
             ToggleSkinVisivility(m_normalSkinMom);
             m_normalSkinMom.GetComponent<Animator>().Play(m_standbyAnimName);
         }
     }
 
     /// <summary>
-    /// ƒAƒuƒm[ƒ}ƒ‹ƒXƒLƒ“‚ÌIdleƒAƒjƒ[ƒVƒ‡ƒ“‚ğÄ¶‚·‚é
+    /// ã‚¢ãƒ–ãƒãƒ¼ãƒãƒ«ã‚¹ã‚­ãƒ³ã®Idleã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚’å†ç”Ÿã™ã‚‹
     /// </summary>
     public void PlayIdleAnim()
     {
-        // ƒeƒNƒXƒ`ƒƒ‚ğØ‚è‘Ö‚¦‚ÄƒAƒjƒ[ƒVƒ‡ƒ“Ä¶
+        // ãƒ†ã‚¯ã‚¹ãƒãƒ£ã‚’åˆ‡ã‚Šæ›¿ãˆã¦ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³å†ç”Ÿ
         if (TopManager.isUseItem)
         {
-            // ƒAƒCƒeƒ€‚ğg—p‚µ‚Ä‚¢‚éê‡‚Í‘c•ƒ‚ğÄ¶
+            // ã‚¢ã‚¤ãƒ†ãƒ ã‚’ä½¿ç”¨ã—ã¦ã„ã‚‹å ´åˆã¯ç¥–çˆ¶ã‚’å†ç”Ÿ
             ToggleSkinVisivility(m_abnormalSkinGrandpa);
             m_abnormalSkinGrandpa.GetComponent<Animator>().Play("IdleAbnormalAnim");
         }
         else
         {
-            // •êe‚ğÄ¶
+            // æ¯è¦ªã‚’å†ç”Ÿ
             ToggleSkinVisivility(m_abnormalSkinMom);
             m_abnormalSkinMom.GetComponent<Animator>().Play("Idle");
         }
     }
 
     /// <summary>
-    /// R‚ép¨‚ÌƒAƒjƒ[ƒVƒ‡ƒ“‚ğÄ¶‚·‚é
+    /// è¹´ã‚‹å§¿å‹¢ã®ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚’å†ç”Ÿã™ã‚‹
     /// </summary>
     public void PlayReadyAnim()
     {
-        // ƒeƒNƒXƒ`ƒƒ‚ğØ‚è‘Ö‚¦‚é
+        // ãƒ†ã‚¯ã‚¹ãƒãƒ£ã‚’åˆ‡ã‚Šæ›¿ãˆã‚‹
         if (TopManager.isUseItem)
         {
-            // ƒAƒCƒeƒ€‚ğg—p‚µ‚Ä‚¢‚éê‡‚Í‘c•ƒ‚ğÄ¶
+            // ã‚¢ã‚¤ãƒ†ãƒ ã‚’ä½¿ç”¨ã—ã¦ã„ã‚‹å ´åˆã¯ç¥–çˆ¶ã‚’å†ç”Ÿ
             ToggleSkinVisivility(m_abnormalSkinGrandpa);
             m_abnormalSkinGrandpa.GetComponent<Animator>().Play("IdleAbnormalAnim");
         }
         else
         {
-            // •êe‚ÌÄ¶‚·‚éƒAƒjƒ[ƒVƒ‡ƒ“w’è
+            // æ¯è¦ªã®å†ç”Ÿã™ã‚‹ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³æŒ‡å®š
             ToggleSkinVisivility(m_abnormalSkinMom);
             m_readyAnimNum = (int)Random.Range(1, 11);
             string animName = m_readyAnimNum >= m_readyAnimMax ? "Ready02" : "Ready01";
 
-            // ƒAƒjƒ[ƒVƒ‡ƒ“‚ğÄ¶‚·‚é
+            // ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚’å†ç”Ÿã™ã‚‹
             m_abnormalSkinMom.GetComponent<Animator>().Play(animName);
         }
     }
 
     /// <summary>
-    /// R‚éƒAƒjƒ[ƒVƒ‡ƒ“‚ğÄ¶‚·‚é
+    /// è¹´ã‚‹ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚’å†ç”Ÿã™ã‚‹
     /// </summary>
     public void PlayKickAnim()
     {
-        // ƒeƒNƒXƒ`ƒƒ‚ğØ‚è‘Ö‚¦‚é
+        // ãƒ†ã‚¯ã‚¹ãƒãƒ£ã‚’åˆ‡ã‚Šæ›¿ãˆã‚‹
         if (TopManager.isUseItem)
         {
-            // ƒAƒCƒeƒ€‚ğg—p‚µ‚Ä‚¢‚éê‡‚Í‘c•ƒ‚ğÄ¶
+            // ã‚¢ã‚¤ãƒ†ãƒ ã‚’ä½¿ç”¨ã—ã¦ã„ã‚‹å ´åˆã¯ç¥–çˆ¶ã‚’å†ç”Ÿ
             ToggleSkinVisivility(m_abnormalSkinGrandpa);
             m_abnormalSkinGrandpa.GetComponent<Animator>().Play("ShotAnim");
         }
         else
         {
-            // •êe‚ÌÄ¶‚·‚éƒAƒjƒ[ƒVƒ‡ƒ“w’è
+            // æ¯è¦ªã®å†ç”Ÿã™ã‚‹ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³æŒ‡å®š
             ToggleSkinVisivility(m_abnormalSkinMom);
             string animName = m_readyAnimNum >= m_readyAnimMax ? "kick02" : "kick01";
 
-            // ƒAƒjƒ[ƒVƒ‡ƒ“‚ğÄ¶‚·‚é
+            // ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚’å†ç”Ÿã™ã‚‹
             m_abnormalSkinMom.GetComponent<Animator>().Play(animName);
         }
     }
 
     /// <summary>
-    /// ƒXƒLƒ“‚ğ•\¦E”ñ•\¦‚É‚·‚é
+    /// ã‚¹ã‚­ãƒ³ã‚’è¡¨ç¤ºãƒ»éè¡¨ç¤ºã«ã™ã‚‹
     /// </summary>
-    /// <param name="showSkin">w’è‚µ‚½ƒXƒLƒ“‚¾‚¯‚ğ•\¦‚·‚é</param>
+    /// <param name="showSkin">æŒ‡å®šã—ãŸã‚¹ã‚­ãƒ³ã ã‘ã‚’è¡¨ç¤ºã™ã‚‹</param>
     public void ToggleSkinVisivility(GameObject showSkin)
     {
         m_normalSkinMom.SetActive(showSkin == m_normalSkinMom);

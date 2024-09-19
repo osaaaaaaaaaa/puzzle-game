@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Cow : MonoBehaviour
 {
-    [SerializeField] LayerMask m_obstacleLayer;     // áŠQ•¨‚ÌƒŒƒCƒ„[ƒ^ƒO
+    [SerializeField] LayerMask m_obstacleLayer;     // éšœå®³ç‰©ã®ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚¿ã‚°
     public int m_direction = 1;
     SonController m_sonController;
 
@@ -17,10 +17,10 @@ public class Cow : MonoBehaviour
     {
         if (TopSceneDirector.Instance != null && TopSceneDirector.Instance.PlayMode == TopSceneDirector.PLAYMODE.GUEST) return;
 
-        // ƒvƒŒƒCƒ„[‚ªG‚ê‚½ê‡
+        // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãŒè§¦ã‚ŒãŸå ´åˆ
         if (collision.gameObject.layer == 6)
         {
-            // ‘§q‚ÌƒeƒNƒXƒ`ƒƒ‚ğ‹‚ÉØ‚è‘Ö‚¦‚é
+            // æ¯å­ã®ãƒ†ã‚¯ã‚¹ãƒãƒ£ã‚’ç‰›ã«åˆ‡ã‚Šæ›¿ãˆã‚‹
             m_sonController.ChangeCowTexture(m_direction, transform.position);
             Destroy(transform.gameObject);
         }

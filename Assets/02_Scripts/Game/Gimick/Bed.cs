@@ -38,9 +38,9 @@ public class Bed : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (TopSceneDirector.Instance == null || TopSceneDirector.Instance.PlayMode == TopSceneDirector.PLAYMODE.GUEST) return;
-        if (collision.gameObject.tag == "Ghost") return;    // ƒS[ƒXƒg‚Ìê‡
+        if (collision.gameObject.tag == "Ghost") return;    // ã‚´ãƒ¼ã‚¹ãƒˆã®å ´åˆ
 
-        // ‘§q‚Ìê‡
+        // æ¯å­ã®å ´åˆ
         if (collision.gameObject.layer == 6)
         {
             collision.gameObject.SetActive(false);
@@ -51,7 +51,7 @@ public class Bed : MonoBehaviour
     }
 
     /// <summary>
-    /// Q‘§‚ÌSE‚ğ–Â‚ç‚·
+    /// å¯æ¯ã®SEã‚’é³´ã‚‰ã™
     /// </summary>
     void PlaySleeperSE()
     {

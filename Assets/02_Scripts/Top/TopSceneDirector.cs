@@ -10,18 +10,18 @@ public class TopSceneDirector : MonoBehaviour
     {
         if (Instance == null)
         {
-            // ƒgƒbƒv‰æ–Ê‚Ìó‘Ô‚ğ•Û‚·‚é
+            // ãƒˆãƒƒãƒ—ç”»é¢ã®çŠ¶æ…‹ã‚’ä¿æŒã™ã‚‹
             Instance = this;
 
-            // ƒV[ƒ“‘JˆÚ‚µ‚Ä‚à”jŠü‚µ‚È‚¢‚æ‚¤‚É‚·‚é
+            // ã‚·ãƒ¼ãƒ³é·ç§»ã—ã¦ã‚‚ç ´æ£„ã—ãªã„ã‚ˆã†ã«ã™ã‚‹
             DontDestroyOnLoad(gameObject);
         }
         else
         {
-            // ƒgƒbƒv‰æ–Ê‚ğ•\¦‚·‚é
+            // ãƒˆãƒƒãƒ—ç”»é¢ã‚’è¡¨ç¤ºã™ã‚‹
             Instance.ChangeActive(true);
 
-            // ƒV[ƒ“‘JˆÚ‚µ‚ÄV‚µ‚­¶¬‚³‚ê‚é©g‚ğ”jŠü
+            // ã‚·ãƒ¼ãƒ³é·ç§»ã—ã¦æ–°ã—ãç”Ÿæˆã•ã‚Œã‚‹è‡ªèº«ã‚’ç ´æ£„
             Destroy(gameObject);
         }
     }
@@ -38,16 +38,16 @@ public class TopSceneDirector : MonoBehaviour
 
     public int DistressSignalID { get; private set; }
     /// <summary>
-    /// ‹~“ïM†‚ªƒNƒŠƒAÏ‚İ‚©‚Ç‚¤‚©
+    /// æ•‘é›£ä¿¡å·ãŒã‚¯ãƒªã‚¢æ¸ˆã¿ã‹ã©ã†ã‹
     /// </summary>
     public bool IsSignalStageClear { get; private set; }
 
     /// <summary>
-    /// ƒgƒbƒv‰æ–Ê‚Ì•\¦E”ñ•\¦‚ğØ‚è‘Ö‚¦‚é
+    /// ãƒˆãƒƒãƒ—ç”»é¢ã®è¡¨ç¤ºãƒ»éè¡¨ç¤ºã‚’åˆ‡ã‚Šæ›¿ãˆã‚‹
     /// </summary>
     public void ChangeActive(bool _active)
     {
-        topObjParent.SetActive(_active); // •\¦Ø‚è‘Ö‚¦ˆ—
+        topObjParent.SetActive(_active); // è¡¨ç¤ºåˆ‡ã‚Šæ›¿ãˆå‡¦ç†
     }
 
     public void SetPlayMode(PLAYMODE mode,int signalID,bool isStageClear)

@@ -5,14 +5,14 @@ using UnityEngine.UI;
 
 public class Goal : MonoBehaviour
 {
-    // ƒQ[ƒ€ƒ}ƒl[ƒWƒƒ[
+    // ã‚²ãƒ¼ãƒ ãƒãƒãƒ¼ã‚¸ãƒ£ãƒ¼
     GameManager m_gameManager;
-    // ƒJƒEƒ“ƒ^[—p‚ÌƒeƒLƒXƒg
+    // ã‚«ã‚¦ãƒ³ã‚¿ãƒ¼ç”¨ã®ãƒ†ã‚­ã‚¹ãƒˆ
     GameObject m_textCounter;
-    // UIƒRƒ“ƒgƒ[ƒ‰[
+    // UIã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©ãƒ¼
     UiController m_uiController;
 
-    // ƒJƒEƒ“ƒ^[
+    // ã‚«ã‚¦ãƒ³ã‚¿ãƒ¼
     const int TIME_LIMIT_MAX = 3;
     int m_timer;
 
@@ -34,7 +34,7 @@ public class Goal : MonoBehaviour
     }
 
     /// <summary>
-    /// œŠOƒŒƒCƒ„[‚ÅSonƒŒƒCƒ„[‚Ì‚İÚG”»’è‚ğE‚¤‚æ‚¤İ’èÏ‚İ
+    /// é™¤å¤–ãƒ¬ã‚¤ãƒ¤ãƒ¼ã§Sonãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ã¿æ¥è§¦åˆ¤å®šã‚’æ‹¾ã†ã‚ˆã†è¨­å®šæ¸ˆã¿
     /// </summary>
     /// <param name="collision"></param>
     private void OnTriggerEnter2D(Collider2D collision)
@@ -47,11 +47,11 @@ public class Goal : MonoBehaviour
         {
             m_textCounter = GameObject.Find("TextCounter");
         }
-        // ƒJƒEƒ“ƒgŠJn
+        // ã‚«ã‚¦ãƒ³ãƒˆé–‹å§‹
         m_textCounter.SetActive(true);
         InvokeRepeating("StartCountDown", 0, 1);
 
-        // ƒŠƒZƒbƒgƒ{ƒ^ƒ“‚ğ–³Œø‚É‚·‚é
+        // ãƒªã‚»ãƒƒãƒˆãƒœã‚¿ãƒ³ã‚’ç„¡åŠ¹ã«ã™ã‚‹
         m_uiController.SetInteractableButtonReset(false);
     }
 
@@ -62,12 +62,12 @@ public class Goal : MonoBehaviour
 
         CancelCountDown();
 
-        // ƒŠƒZƒbƒgƒ{ƒ^ƒ“‚ğ—LŒø‚É‚·‚é
+        // ãƒªã‚»ãƒƒãƒˆãƒœã‚¿ãƒ³ã‚’æœ‰åŠ¹ã«ã™ã‚‹
         m_uiController.SetInteractableButtonReset(true);
     }
 
     /// <summary>
-    /// ƒJƒEƒ“ƒ^[
+    /// ã‚«ã‚¦ãƒ³ã‚¿ãƒ¼
     /// </summary>
     private void StartCountDown()
     {
@@ -75,10 +75,10 @@ public class Goal : MonoBehaviour
 
         if (m_timer <= 0)
         {
-            // ƒQ[ƒ€ƒNƒŠƒAˆ—
+            // ã‚²ãƒ¼ãƒ ã‚¯ãƒªã‚¢å‡¦ç†
             m_gameManager.GameClear();
 
-            // ƒJƒEƒ“ƒgƒLƒƒƒ“ƒZƒ‹
+            // ã‚«ã‚¦ãƒ³ãƒˆã‚­ãƒ£ãƒ³ã‚»ãƒ«
             CancelInvoke("StartCountDown");
             m_timer = TIME_LIMIT_MAX;
         }
@@ -89,18 +89,18 @@ public class Goal : MonoBehaviour
     }
 
     /// <summary>
-    /// ƒJƒEƒ“ƒ^[‚ğƒLƒƒƒ“ƒZƒ‹‚·‚é
+    /// ã‚«ã‚¦ãƒ³ã‚¿ãƒ¼ã‚’ã‚­ãƒ£ãƒ³ã‚»ãƒ«ã™ã‚‹
     /// </summary>
     private void CancelCountDown()
     {
-        // ƒJƒEƒ“ƒgƒLƒƒƒ“ƒZƒ‹
+        // ã‚«ã‚¦ãƒ³ãƒˆã‚­ãƒ£ãƒ³ã‚»ãƒ«
         m_textCounter.SetActive(false);
         CancelInvoke("StartCountDown");
         m_timer = TIME_LIMIT_MAX;
     }
 
     /// <summary>
-    /// ƒƒ“ƒo•Ï”‰Šú‰»ˆ—
+    /// ãƒ¡ãƒ³ãƒå¤‰æ•°åˆæœŸåŒ–å‡¦ç†
     /// </summary>
     public void InitMemberVariable()
     {

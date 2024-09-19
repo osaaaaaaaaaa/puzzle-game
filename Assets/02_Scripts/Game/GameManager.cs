@@ -12,33 +12,33 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField] LoadingContainer m_loading;
 
-    // ƒ|[ƒY’†‚©‚Ç‚¤‚©
+    // ãƒãƒ¼ã‚ºä¸­ã‹ã©ã†ã‹
     public bool m_isPause;
 
-    // UIƒRƒ“ƒgƒ[ƒ‰[
+    // UIã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©ãƒ¼
     [SerializeField] UiController m_UiController;
-    // ƒvƒŒƒCƒ„[
+    // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼
     GameObject m_player;
-    // ƒJƒƒ‰ƒRƒ“ƒgƒ[ƒ‰
+    // ã‚«ãƒ¡ãƒ©ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©
     CameraController m_cameraController;
-    // ƒXƒe[ƒW
+    // ã‚¹ãƒ†ãƒ¼ã‚¸
     GameObject m_stage;
 
-    #region ƒŠƒvƒŒƒCŠÖŒW
+    #region ãƒªãƒ—ãƒ¬ã‚¤é–¢ä¿‚
     List<ReplayData> replayDatas = new List<ReplayData>();
-    [SerializeField] GameObject m_buttonReplay;        // ƒŠƒvƒŒƒCÄ¶ƒ{ƒ^ƒ“
-    [SerializeField] GameObject m_replayRecorder;      // ƒzƒXƒg‚ÌƒŠƒvƒŒƒC‚ğ˜^‰æ‚·‚é
-    [SerializeField] GameObject m_replayPlayer;        // ƒŠƒvƒŒƒC‚ğÄ¶‚·‚é
+    [SerializeField] GameObject m_buttonReplay;        // ãƒªãƒ—ãƒ¬ã‚¤å†ç”Ÿãƒœã‚¿ãƒ³
+    [SerializeField] GameObject m_replayRecorder;      // ãƒ›ã‚¹ãƒˆã®ãƒªãƒ—ãƒ¬ã‚¤ã‚’éŒ²ç”»ã™ã‚‹
+    [SerializeField] GameObject m_replayPlayer;        // ãƒªãƒ—ãƒ¬ã‚¤ã‚’å†ç”Ÿã™ã‚‹
     bool m_isReplayEnd = true;
     public bool IsReplayEnd { get { return m_isReplayEnd; }set { m_isReplayEnd = value; } }
     #endregion
 
-    #region ƒQƒXƒgŠÖŒW
+    #region ã‚²ã‚¹ãƒˆé–¢ä¿‚
     [SerializeField] GameObject m_guestSetPrefab;
     public List<GameObject> m_guestList { get; private set; }
     #endregion
 
-    #region ƒXƒe[ƒW‚Ìi’»î•ñ
+    #region ã‚¹ãƒ†ãƒ¼ã‚¸ã®é€²æ—æƒ…å ±
     bool m_isMedal1;
     bool m_isMedal2;
     float m_gameTimer;
@@ -46,25 +46,25 @@ public class GameManager : MonoBehaviour
     public bool m_isExitGame { get; private set; }
     #endregion
 
-    #region ƒQ[ƒ€ƒNƒŠƒA‚Ì‰‰o
+    #region ã‚²ãƒ¼ãƒ ã‚¯ãƒªã‚¢æ™‚ã®æ¼”å‡º
     [SerializeField] GameObject m_stageClearEffect;
     Vector3 m_offsetEffectL = new Vector3(-10.43f, -7.48999f,5);
     Vector3 m_offsetEffectR = new Vector3(10.39f, -7.48999f,5);
     #endregion
 
-    #region ƒƒCƒ“ƒJƒƒ‰‚ÌƒAƒjƒ[ƒVƒ‡ƒ“ŠÖŒW
-    GameObject m_mainCamera;   // ƒƒCƒ“ƒJƒƒ‰
-    public bool m_isEndAnim;   // ƒAƒjƒ[ƒVƒ‡ƒ“‚ªI—¹‚µ‚½‚©‚Ç‚¤‚©
+    #region ãƒ¡ã‚¤ãƒ³ã‚«ãƒ¡ãƒ©ã®ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³é–¢ä¿‚
+    GameObject m_mainCamera;   // ãƒ¡ã‚¤ãƒ³ã‚«ãƒ¡ãƒ©
+    public bool m_isEndAnim;   // ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ãŒçµ‚äº†ã—ãŸã‹ã©ã†ã‹
     #endregion
 
     /// <summary>
-    /// ƒQ[ƒ€ƒ‚[ƒh
+    /// ã‚²ãƒ¼ãƒ ãƒ¢ãƒ¼ãƒ‰
     /// </summary>
     public enum GAMEMODE
     {
-        Play,       // ’Êí’Ê‚è‚É—V‚×‚é
-        Edit,       // ƒQƒXƒg‚Ì•ÒWƒ‚[ƒh
-        EditDone    // ƒQƒXƒg‚Ì•ÒWŠ®—¹ƒ‚[ƒh
+        Play,       // é€šå¸¸é€šã‚Šã«éŠã¹ã‚‹
+        Edit,       // ã‚²ã‚¹ãƒˆã®ç·¨é›†ãƒ¢ãƒ¼ãƒ‰
+        EditDone    // ã‚²ã‚¹ãƒˆã®ç·¨é›†å®Œäº†ãƒ¢ãƒ¼ãƒ‰
     }
     public GAMEMODE GameMode { get; private set; }
 
@@ -73,10 +73,10 @@ public class GameManager : MonoBehaviour
         Debug.Log(TopManager.stageMax);
         m_guestList = new List<GameObject>();
 
-        // ƒQ[ƒ€ƒ‚[ƒh‚Ì‰Šú‰»
+        // ã‚²ãƒ¼ãƒ ãƒ¢ãƒ¼ãƒ‰ã®åˆæœŸåŒ–
         if (TopSceneDirector.Instance != null)
         {
-            // ƒQ[ƒ€ƒ‚[ƒh‚ğİ’è‚·‚é
+            // ã‚²ãƒ¼ãƒ ãƒ¢ãƒ¼ãƒ‰ã‚’è¨­å®šã™ã‚‹
             var playMode = TopSceneDirector.Instance.PlayMode;
             var gameMode = playMode != TopSceneDirector.PLAYMODE.GUEST ? GAMEMODE.Play : GAMEMODE.EditDone;
             GameMode = gameMode;
@@ -85,7 +85,7 @@ public class GameManager : MonoBehaviour
             {
                 m_loading.ToggleLoadingUIVisibility(1);
 
-                // ƒzƒXƒg‚ÌƒŠƒvƒŒƒCî•ñæ“¾ˆ—
+                // ãƒ›ã‚¹ãƒˆã®ãƒªãƒ—ãƒ¬ã‚¤æƒ…å ±å–å¾—å‡¦ç†
                 StartCoroutine(NetworkManager.Instance.GetReplayData(
                     TopSceneDirector.Instance.DistressSignalID,
                     result =>
@@ -108,7 +108,7 @@ public class GameManager : MonoBehaviour
             GameMode = GAMEMODE.Play;
         }
 
-        // ƒpƒ‰ƒ[ƒ^‰Šú‰»
+        // ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿åˆæœŸåŒ–
         m_isEndAnim = false;
         m_isEndGame = false;
         m_isExitGame = false;
@@ -116,18 +116,18 @@ public class GameManager : MonoBehaviour
         m_isMedal2 = false;
         m_gameTimer = 40;
 
-        // ƒgƒbƒv‰æ–Ê‚ğ”ñ•\¦‚É‚·‚é
+        // ãƒˆãƒƒãƒ—ç”»é¢ã‚’éè¡¨ç¤ºã«ã™ã‚‹
         if (TopSceneDirector.Instance != null) TopSceneDirector.Instance.ChangeActive(false);
     }
 
     // Start is called before the first frame update
     IEnumerator Start()
     {
-        // ƒQ[ƒ€ƒV[ƒ“‚ğ“Ç‚İ‚Ş‚Ü‚Å‘Ò‹@‚·‚é
+        // ã‚²ãƒ¼ãƒ ã‚·ãƒ¼ãƒ³ã‚’èª­ã¿è¾¼ã‚€ã¾ã§å¾…æ©Ÿã™ã‚‹
         var op = Addressables.LoadSceneAsync(TopManager.stageID + "_GameScene", LoadSceneMode.Additive);
         yield return op;
 
-        // ŠeíƒXƒNƒŠƒvƒg‚Ìƒƒ“ƒo•Ï”‰Šú‰»ˆ—
+        // å„ç¨®ã‚¹ã‚¯ãƒªãƒ—ãƒˆã®ãƒ¡ãƒ³ãƒå¤‰æ•°åˆæœŸåŒ–å‡¦ç†
         GameObject.Find("CameraController").GetComponent<CameraController>().
             InitMemberVariable(m_UiController.ButtonZoomIn, m_UiController.ButtonZoomOut);
         GameObject.Find("ride_cow").GetComponent<SonCow>().InitMemberVariable();
@@ -137,10 +137,10 @@ public class GameManager : MonoBehaviour
 
         if (TopSceneDirector.Instance != null)
         {
-            // ƒzƒXƒg‚Å—V‚Ôê‡‚ÍƒŠƒvƒŒƒC‚Ì˜^‰æŠJn
+            // ãƒ›ã‚¹ãƒˆã§éŠã¶å ´åˆã¯ãƒªãƒ—ãƒ¬ã‚¤ã®éŒ²ç”»é–‹å§‹
             m_replayRecorder.SetActive(TopSceneDirector.Instance.PlayMode == TopSceneDirector.PLAYMODE.HOST);
 
-            // ‘O‰ñƒƒ_ƒ‹‚ğæ“¾‚µ‚Ä‚¢‚éê‡‚Í•\¦‚ğ•ÏX‚·‚é A ƒŠƒUƒ‹ƒg‚ª‘¶İ‚µ‚È‚¢ê‡‚Í•K‚¸false
+            // å‰å›ãƒ¡ãƒ€ãƒ«ã‚’å–å¾—ã—ã¦ã„ã‚‹å ´åˆã¯è¡¨ç¤ºã‚’å¤‰æ›´ã™ã‚‹ ã€ ãƒªã‚¶ãƒ«ãƒˆãŒå­˜åœ¨ã—ãªã„å ´åˆã¯å¿…ãšfalse
             bool isMedal1 = NetworkManager.Instance.StageResults.Count < TopManager.stageID ?
             false : NetworkManager.Instance.StageResults[TopManager.stageID - 1].IsMedal1;
             bool isMedal2 = NetworkManager.Instance.StageResults.Count < TopManager.stageID ?
@@ -148,16 +148,16 @@ public class GameManager : MonoBehaviour
             GameObject.Find("Medal1").GetComponent<Medal>().InitMemberVariable(isMedal1);
             GameObject.Find("Medal2").GetComponent<Medal>().InitMemberVariable(isMedal2);
 
-            // ƒvƒŒƒtƒ@ƒu‚ÌŠi”[æ
+            // ãƒ—ãƒ¬ãƒ•ã‚¡ãƒ–ã®æ ¼ç´å…ˆ
             m_stage = GameObject.Find("Stage");
-            // ƒŠƒvƒŒƒCƒvƒŒƒCƒ„[‚ğqƒIƒuƒWƒFƒNƒg‚É‚µ‚ÄƒZƒbƒeƒBƒ“ƒO‚ğŠ®—¹‚·‚é
+            // ãƒªãƒ—ãƒ¬ã‚¤ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚’å­ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã«ã—ã¦ã‚»ãƒƒãƒ†ã‚£ãƒ³ã‚°ã‚’å®Œäº†ã™ã‚‹
             m_replayPlayer.transform.parent = m_stage.transform;
             m_replayPlayer.transform.position = Vector3.zero;
 
             if (TopSceneDirector.Instance.PlayMode != TopSceneDirector.PLAYMODE.SOLO)
             {
                 m_loading.ToggleLoadingUIVisibility(1);
-                // Q‰Á‚µ‚Ä‚¢‚éƒQƒXƒg‚Ì”z’uî•ñ‚ğæ“¾‚·‚é
+                // å‚åŠ ã—ã¦ã„ã‚‹ã‚²ã‚¹ãƒˆã®é…ç½®æƒ…å ±ã‚’å–å¾—ã™ã‚‹
                 StartCoroutine(NetworkManager.Instance.GetSignalGuest(
                     TopSceneDirector.Instance.DistressSignalID,
                     result =>
@@ -165,14 +165,14 @@ public class GameManager : MonoBehaviour
                         m_loading.ToggleLoadingUIVisibility(-1);
                         if (result == null)
                         {
-                            // ƒQƒXƒg‚ÌƒvƒƒtƒB[ƒ‹‚ğ•\¦‚·‚é
+                            // ã‚²ã‚¹ãƒˆã®ãƒ—ãƒ­ãƒ•ã‚£ãƒ¼ãƒ«ã‚’è¡¨ç¤ºã™ã‚‹
                             m_UiController.InitGuestUI();
                             return;
                         };
 
                         foreach (ShowSignalGuestResponse user in result)
                         {
-                            // ³í‚É•ÏŠ·‚Å‚«‚é‚©ƒ`ƒFƒbƒN , “o˜^‚µ‚Ä‚Ü‚¾İ’u‚ªŠ®—¹‚µ‚Ä‚¢‚È‚¢ê‡‚ÍƒXƒLƒbƒv
+                            // æ­£å¸¸ã«å¤‰æ›ã§ãã‚‹ã‹ãƒã‚§ãƒƒã‚¯ , ç™»éŒ²ã—ã¦ã¾ã è¨­ç½®ãŒå®Œäº†ã—ã¦ã„ãªã„å ´åˆã¯ã‚¹ã‚­ãƒƒãƒ—
                             Vector3 pos = NetworkManager.Instance.StringToVector3(user.Pos);
                             Vector3 vec = NetworkManager.Instance.StringToVector3(user.Vector);
                             if (pos == Vector3.zero || vec == Vector3.zero)
@@ -184,61 +184,61 @@ public class GameManager : MonoBehaviour
 
                             if (user.UserID == NetworkManager.Instance.UserID)
                             {
-                                // ©•ª©g‚Ìê‡‚ÍÅŒã‚É“o˜^‚µ‚½êŠ‚ÖˆÚ“®‚³‚¹‚é
+                                // è‡ªåˆ†è‡ªèº«ã®å ´åˆã¯æœ€å¾Œã«ç™»éŒ²ã—ãŸå ´æ‰€ã¸ç§»å‹•ã•ã›ã‚‹
                                 GameObject.Find("Player").transform.position = pos;
                                 continue;
                             }
 
-                            // ƒQƒXƒg‚ğ¶¬‚·‚é
+                            // ã‚²ã‚¹ãƒˆã‚’ç”Ÿæˆã™ã‚‹
                             GameObject guestSet = Instantiate(m_guestSetPrefab, m_stage.transform);
                             guestSet.transform.position = Vector3.zero;
                             GameObject guest = guestSet.transform.GetChild(0).gameObject;
                             guest.GetComponent<Guest>().InitMemberVariable(user.UserName, pos, vec);
 
-                            // ¶¬‚µ‚Ä‰Šú‰»‚ªÏ‚ñ‚¾‚çƒŠƒXƒg‚É’Ç‰Á
+                            // ç”Ÿæˆã—ã¦åˆæœŸåŒ–ãŒæ¸ˆã‚“ã ã‚‰ãƒªã‚¹ãƒˆã«è¿½åŠ 
                             m_guestList.Add(guest);
                         }
 
-                        // ƒQƒXƒg‚ÌƒvƒƒtƒB[ƒ‹‚ğ•\¦‚·‚é
+                        // ã‚²ã‚¹ãƒˆã®ãƒ—ãƒ­ãƒ•ã‚£ãƒ¼ãƒ«ã‚’è¡¨ç¤ºã™ã‚‹
                         m_UiController.InitGuestUI();
                     }));
             }
         }
 
 
-        // •Ç‚ğ”ñ•\¦‚É‚·‚é
+        // å£ã‚’éè¡¨ç¤ºã«ã™ã‚‹
         GameObject.Find("Wall_R").GetComponent<Renderer>().enabled = false;
         GameObject.Find("Wall_T").GetComponent<Renderer>().enabled = false;
         GameObject.Find("Wall_L").GetComponent<Renderer>().enabled = false;
 
-        // ƒQ[ƒ€ƒIƒuƒWƒFƒNƒgæ“¾
+        // ã‚²ãƒ¼ãƒ ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆå–å¾—
         m_mainCamera = GameObject.Find("MainCamera_Game");
         m_player = GameObject.Find("Player");
         m_cameraController = GameObject.Find("CameraController").GetComponent<CameraController>();
         var goal = GameObject.Find("Goal");
 
-        // ƒtƒ‰ƒOOFF
+        // ãƒ•ãƒ©ã‚°OFF
         m_isPause = false;
         m_isEndGame = false;
 
-        // ƒJƒƒ‰‚Ì‰Šú’n“_‚ğæ“¾
+        // ã‚«ãƒ¡ãƒ©ã®åˆæœŸåœ°ç‚¹ã‚’å–å¾—
         Vector3 startPos = m_mainCamera.transform.position;
 
-        // ƒJƒƒ‰‚ğƒAƒjƒ[ƒVƒ‡ƒ“‚·‚éŠJnÀ•W‚ğİ’è
+        // ã‚«ãƒ¡ãƒ©ã‚’ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã™ã‚‹é–‹å§‹åº§æ¨™ã‚’è¨­å®š
         float posX = goal.transform.position.x;
         float posY = goal.transform.position.y;
         m_mainCamera.transform.position = new Vector3(posX, posY, -10);
 
-        // ƒƒCƒ“ƒJƒƒ‰‚ÌƒAƒjƒ[ƒVƒ‡ƒ“
+        // ãƒ¡ã‚¤ãƒ³ã‚«ãƒ¡ãƒ©ã®ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³
         var sequence = DOTween.Sequence();
         sequence.Append(m_mainCamera.transform.DOMove(startPos, 2f).SetEase(Ease.InOutSine).SetDelay(1f))
                 .OnComplete(StartGame);
         sequence.Play();
 
-        // ÅIƒXƒe[ƒW‚Ìê‡
+        // æœ€çµ‚ã‚¹ãƒ†ãƒ¼ã‚¸ã®å ´åˆ
         if (TopManager.stageID >= TopManager.stageMax)
         {
-            // Ÿ‚ÌƒXƒe[ƒW‚Ö‘JˆÚ‚·‚éƒ{ƒ^ƒ“‚ğ”ñ•\¦
+            // æ¬¡ã®ã‚¹ãƒ†ãƒ¼ã‚¸ã¸é·ç§»ã™ã‚‹ãƒœã‚¿ãƒ³ã‚’éè¡¨ç¤º
             m_UiController.HideNextButton();
         }
     }
@@ -247,14 +247,14 @@ public class GameManager : MonoBehaviour
     {
         if (TopSceneDirector.Instance != null && TopSceneDirector.Instance.PlayMode == TopSceneDirector.PLAYMODE.GUEST || m_isPause) return;
 
-        // ƒJƒEƒ“ƒgƒ_ƒEƒ“
+        // ã‚«ã‚¦ãƒ³ãƒˆãƒ€ã‚¦ãƒ³
         if (m_isEndAnim && !m_isEndGame)
         {
             m_gameTimer -= Time.deltaTime;
             m_gameTimer = m_gameTimer <= 0 ? 0 : m_gameTimer;
             m_isEndGame = m_gameTimer <= 0 ? true : false;
 
-            // ƒ^ƒCƒ}[ƒeƒLƒXƒg‚ğXV
+            // ã‚¿ã‚¤ãƒãƒ¼ãƒ†ã‚­ã‚¹ãƒˆã‚’æ›´æ–°
             m_UiController.UpdateTextTimer(m_gameTimer);
 
             if (m_isEndGame) GameOver();
@@ -262,7 +262,7 @@ public class GameManager : MonoBehaviour
     }
 
     /// <summary>
-    /// ƒQ[ƒ€ŠJnˆ—
+    /// ã‚²ãƒ¼ãƒ é–‹å§‹å‡¦ç†
     /// </summary>
     public void StartGame()
     {
@@ -276,12 +276,12 @@ public class GameManager : MonoBehaviour
     }
 
     /// <summary>
-    /// WŒv‚µ‚½ƒXƒRƒAæ“¾
+    /// é›†è¨ˆã—ãŸã‚¹ã‚³ã‚¢å–å¾—
     /// </summary>
     /// <returns></returns>
     int GetResultScore(float time)
     {
-        // ƒXƒRƒAWŒv
+        // ã‚¹ã‚³ã‚¢é›†è¨ˆ
         int medalCnt = m_isMedal1 ? 1 : 0;
         medalCnt += m_isMedal2 ? 1 : 0;
         int score = (int)(time * 15) + (medalCnt * 500);
@@ -290,7 +290,7 @@ public class GameManager : MonoBehaviour
     }
 
     /// <summary>
-    /// ƒQ[ƒ€ƒI[ƒo[ˆ—
+    /// ã‚²ãƒ¼ãƒ ã‚ªãƒ¼ãƒãƒ¼å‡¦ç†
     /// </summary>
     public void GameOver()
     {
@@ -299,24 +299,24 @@ public class GameManager : MonoBehaviour
     }
 
     /// <summary>
-    /// ƒQ[ƒ€ƒNƒŠƒAˆ—
+    /// ã‚²ãƒ¼ãƒ ã‚¯ãƒªã‚¢å‡¦ç†
     /// </summary>
     public void GameClear()
     {
         float time = m_gameTimer;
         int score = GetResultScore(time);
 
-        // Œ»İ‚ÌƒXƒe[ƒW‚ªãŒÀˆÈ‰º••ÅV‚ÌƒXƒe[ƒW‚ğƒNƒŠƒA‚µ‚½‚©‚Ç‚¤‚©
+        // ç¾åœ¨ã®ã‚¹ãƒ†ãƒ¼ã‚¸ãŒä¸Šé™ä»¥ä¸‹ï¼†ï¼†æœ€æ–°ã®ã‚¹ãƒ†ãƒ¼ã‚¸ã‚’ã‚¯ãƒªã‚¢ã—ãŸã‹ã©ã†ã‹
         bool isUpdateStageID = NetworkManager.Instance.StageID < TopManager.stageMax && NetworkManager.Instance.StageID == TopManager.stageID;
         Debug.Log(isUpdateStageID + "," + NetworkManager.Instance.StageID + ","+ TopManager.stageMax + "," + TopManager.stageID);
 
-        // ƒƒ_ƒ‹‚ğ‰Šl“¾‚µ‚½||ƒnƒCƒXƒRƒA‚ğã‰ñ‚Á‚½‚©‚Ç‚¤‚©ƒ`ƒFƒbƒN
+        // ãƒ¡ãƒ€ãƒ«ã‚’åˆç²å¾—ã—ãŸ||ãƒã‚¤ã‚¹ã‚³ã‚¢ã‚’ä¸Šå›ã£ãŸã‹ã©ã†ã‹ãƒã‚§ãƒƒã‚¯
         bool isUpdateResult = false;
         if (!isUpdateStageID)
         {
             if (NetworkManager.Instance.StageResults.Count < TopManager.stageID)
             {
-                // ‚Ü‚¾ƒŠƒUƒ‹ƒg‚ª‘¶İ‚µ‚È‚¢ê‡
+                // ã¾ã ãƒªã‚¶ãƒ«ãƒˆãŒå­˜åœ¨ã—ãªã„å ´åˆ
                 isUpdateResult = true;
             }
             else
@@ -328,11 +328,11 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        // ƒŠƒUƒ‹ƒg‚ğXV‚·‚é•K—v‚ª‚ ‚éê‡
+        // ãƒªã‚¶ãƒ«ãƒˆã‚’æ›´æ–°ã™ã‚‹å¿…è¦ãŒã‚ã‚‹å ´åˆ
         if (isUpdateStageID || isUpdateResult)
         {
             m_loading.ToggleLoadingUIVisibility(2);
-            // ƒXƒe[ƒWƒNƒŠƒAˆ—
+            // ã‚¹ãƒ†ãƒ¼ã‚¸ã‚¯ãƒªã‚¢å‡¦ç†
             StartCoroutine(NetworkManager.Instance.UpdateStageClear(
                 isUpdateStageID,
                 new ShowStageResultResponse
@@ -347,17 +347,17 @@ public class GameManager : MonoBehaviour
                 {
                     m_loading.ToggleLoadingUIVisibility(-1);
 
-                    // ƒXƒe[ƒW‚ğƒNƒŠƒA‚µ‚½‚±‚Æ‚É‚·‚é
+                    // ã‚¹ãƒ†ãƒ¼ã‚¸ã‚’ã‚¯ãƒªã‚¢ã—ãŸã“ã¨ã«ã™ã‚‹
                     m_isEndGame = true;
 
-                    // UI‚ğƒQ[ƒ€ƒNƒŠƒA—p‚Éİ’è‚·‚é
+                    // UIã‚’ã‚²ãƒ¼ãƒ ã‚¯ãƒªã‚¢ç”¨ã«è¨­å®šã™ã‚‹
                     m_UiController.SetResultUI(m_isMedal1, m_isMedal2, m_gameTimer, score, true);
 
-                    // ‰ƒNƒŠƒA‰‰o
+                    // åˆã‚¯ãƒªã‚¢æ¼”å‡º
                     PlayStageClearEffect();
                 }));
 
-            // ƒAƒ`[ƒuƒƒ“ƒg’B¬ó‹µXVˆ— [ƒg[ƒ^ƒ‹ƒXƒRƒA]
+            // ã‚¢ãƒãƒ¼ãƒ–ãƒ¡ãƒ³ãƒˆé”æˆçŠ¶æ³æ›´æ–°å‡¦ç† [ãƒˆãƒ¼ã‚¿ãƒ«ã‚¹ã‚³ã‚¢]
             StartCoroutine(NetworkManager.Instance.UpdateUserAchievement(
                 2,
                 0,
@@ -370,7 +370,7 @@ public class GameManager : MonoBehaviour
             if (isUpdateStageID)
             {
                 m_loading.ToggleLoadingUIVisibility(1);
-                // ƒAƒ`[ƒuƒƒ“ƒg’B¬ó‹µXVˆ— [ƒXƒe[ƒW‰‰ñƒNƒŠƒA]
+                // ã‚¢ãƒãƒ¼ãƒ–ãƒ¡ãƒ³ãƒˆé”æˆçŠ¶æ³æ›´æ–°å‡¦ç† [ã‚¹ãƒ†ãƒ¼ã‚¸åˆå›ã‚¯ãƒªã‚¢]
                 StartCoroutine(NetworkManager.Instance.UpdateUserAchievement(
                     1,
                     TopManager.stageID,
@@ -384,22 +384,22 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            // ƒXƒe[ƒW‚ğƒNƒŠƒA‚µ‚½‚±‚Æ‚É‚·‚é
+            // ã‚¹ãƒ†ãƒ¼ã‚¸ã‚’ã‚¯ãƒªã‚¢ã—ãŸã“ã¨ã«ã™ã‚‹
             m_isEndGame = true;
 
-            // UI‚ğƒQ[ƒ€ƒNƒŠƒA—p‚Éİ’è‚·‚é
+            // UIã‚’ã‚²ãƒ¼ãƒ ã‚¯ãƒªã‚¢ç”¨ã«è¨­å®šã™ã‚‹
             m_UiController.SetResultUI(m_isMedal1, m_isMedal2, m_gameTimer, score, true);
 
-            // ‰ƒNƒŠƒA‰‰o
+            // åˆã‚¯ãƒªã‚¢æ¼”å‡º
             PlayStageClearEffect();
         }
 
-        // ƒAƒCƒeƒ€‚ğg—p‚µ‚Ä‚¢‚éê‡
+        // ã‚¢ã‚¤ãƒ†ãƒ ã‚’ä½¿ç”¨ã—ã¦ã„ã‚‹å ´åˆ
         if (TopManager.isUseItem)
         {
             m_loading.ToggleLoadingUIVisibility(1);
             TopManager.isUseItem = false;
-            // ŠƒAƒCƒeƒ€XVˆ—
+            // æ‰€æŒã‚¢ã‚¤ãƒ†ãƒ æ›´æ–°å‡¦ç†
             StartCoroutine(NetworkManager.Instance.UpdateUserItem(
                 NetworkManager.Instance.GolfClubItemID,
                 2,
@@ -411,21 +411,21 @@ public class GameManager : MonoBehaviour
                 }));
         }
 
-        // ©g‚ªƒzƒXƒg‚Ìê‡
+        // è‡ªèº«ãŒãƒ›ã‚¹ãƒˆã®å ´åˆ
         if (TopSceneDirector.Instance.PlayMode == TopSceneDirector.PLAYMODE.HOST) DistressSignalClear();
     }
 
     /// <summary>
-    /// ‹~“ïM†‚ÌƒXƒe[ƒWƒNƒŠƒAˆ—
+    /// æ•‘é›£ä¿¡å·ã®ã‚¹ãƒ†ãƒ¼ã‚¸ã‚¯ãƒªã‚¢å‡¦ç†
     /// </summary>
     void DistressSignalClear()
     {
-        // ƒNƒŠƒAÏ‚İ‚©‚Ç‚¤‚©ƒ`ƒFƒbƒN
+        // ã‚¯ãƒªã‚¢æ¸ˆã¿ã‹ã©ã†ã‹ãƒã‚§ãƒƒã‚¯
         if (!NetworkManager.Instance.dSignalList.Any(item => item.SignalID == TopSceneDirector.Instance.DistressSignalID)) return;
 
         m_loading.ToggleLoadingUIVisibility(1);
 
-        // ƒXƒe[ƒWƒNƒŠƒAˆ—
+        // ã‚¹ãƒ†ãƒ¼ã‚¸ã‚¯ãƒªã‚¢å‡¦ç†
         StartCoroutine(NetworkManager.Instance.UpdateDistressSignal(
             TopSceneDirector.Instance.DistressSignalID,
             result =>
@@ -435,11 +435,11 @@ public class GameManager : MonoBehaviour
     }
 
     /// <summary>
-    /// ƒXƒe[ƒWƒNƒŠƒA‚Ì‰‰o
+    /// ã‚¹ãƒ†ãƒ¼ã‚¸ã‚¯ãƒªã‚¢ã®æ¼”å‡º
     /// </summary>
     void PlayStageClearEffect()
     {
-        // ƒGƒtƒFƒNƒg‚ğ¶¬‚·‚é
+        // ã‚¨ãƒ•ã‚§ã‚¯ãƒˆã‚’ç”Ÿæˆã™ã‚‹
         GameObject effectL = Instantiate(m_stageClearEffect, m_mainCamera.transform);
         effectL.transform.localPosition = m_offsetEffectL;
         effectL.transform.position = new Vector3(effectL.transform.position.x, effectL.transform.position.y, 100f);
@@ -450,7 +450,7 @@ public class GameManager : MonoBehaviour
 
         if (m_cameraController.m_cameraMode == CameraController.CAMERAMODE.ZOOMOUT)
         {
-            // Œ»İ‚ÌƒJƒƒ‰‚ªƒY[ƒ€ƒAƒEƒgó‘Ô‚Ìê‡
+            // ç¾åœ¨ã®ã‚«ãƒ¡ãƒ©ãŒã‚ºãƒ¼ãƒ ã‚¢ã‚¦ãƒˆçŠ¶æ…‹ã®å ´åˆ
             effectL.transform.localScale *= 2;
             effectL.transform.localPosition *= 2;
             effectR.transform.localScale *= 2;
@@ -461,7 +461,7 @@ public class GameManager : MonoBehaviour
     }
 
     /// <summary>
-    /// ƒŠƒgƒ‰ƒCˆ—
+    /// ãƒªãƒˆãƒ©ã‚¤å‡¦ç†
     /// </summary>
     public void OnRetryButton()
     {
@@ -469,18 +469,18 @@ public class GameManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Ÿ‚ÌƒXƒe[ƒW‚Ö‘JˆÚ‚·‚é
+    /// æ¬¡ã®ã‚¹ãƒ†ãƒ¼ã‚¸ã¸é·ç§»ã™ã‚‹
     /// </summary>
     public void OnNextStageButton()
     {
         SEManager.Instance.PlayButtonSE();
-        TopManager.stageID++;   // ƒXƒe[ƒWID‚ğXV‚·‚é
+        TopManager.stageID++;   // ã‚¹ãƒ†ãƒ¼ã‚¸IDã‚’æ›´æ–°ã™ã‚‹
 
         Initiate.Fade("02_UIScene", Color.black, 1.0f);
     }
 
     /// <summary>
-    /// ƒgƒbƒv‰æ–Ê‚Ö‘JˆÚ‚·‚é
+    /// ãƒˆãƒƒãƒ—ç”»é¢ã¸é·ç§»ã™ã‚‹
     /// </summary>
     public void OnTopButton()
     {
@@ -489,7 +489,7 @@ public class GameManager : MonoBehaviour
         if (TopSceneDirector.Instance.PlayMode == TopSceneDirector.PLAYMODE.HOST 
             && !m_replayRecorder.GetComponent<ReplayRecorder>().IsUpdateReplayData)
         {
-            // ©g‚ªƒzƒXƒg&&ƒŠƒvƒŒƒC‚Ì˜^‰æ‚ªI—¹‚µ‚Ä‚¢‚È‚¢ê‡
+            // è‡ªèº«ãŒãƒ›ã‚¹ãƒˆ&&ãƒªãƒ—ãƒ¬ã‚¤ã®éŒ²ç”»ãŒçµ‚äº†ã—ã¦ã„ãªã„å ´åˆ
             m_isExitGame = true;
             m_isEndGame = true;
         }
@@ -500,7 +500,7 @@ public class GameManager : MonoBehaviour
     }
 
     /// <summary>
-    /// ƒQ[ƒ€ƒŠƒZƒbƒg
+    /// ã‚²ãƒ¼ãƒ ãƒªã‚»ãƒƒãƒˆ
     /// </summary>
     public void OnGameReset()
     {
@@ -511,7 +511,7 @@ public class GameManager : MonoBehaviour
         m_UiController.GetComponent<UiController>().GenerateSubTimeText(1);
         m_player.GetComponent<Player>().ResetPlayer();
 
-        // ƒQƒXƒg‚Ìó‘Ô‚àƒŠƒZƒbƒg
+        // ã‚²ã‚¹ãƒˆã®çŠ¶æ…‹ã‚‚ãƒªã‚»ãƒƒãƒˆ
         foreach(GameObject guest in m_guestList)
         {
             if (guest == null) continue;
@@ -533,7 +533,7 @@ public class GameManager : MonoBehaviour
     }
 
     /// <summary>
-    /// ƒQ[ƒ€ƒ‚[ƒhXV
+    /// ã‚²ãƒ¼ãƒ ãƒ¢ãƒ¼ãƒ‰æ›´æ–°
     /// </summary>
     public void UpdateGameMode(GAMEMODE mode)
     {
@@ -541,7 +541,7 @@ public class GameManager : MonoBehaviour
     }
 
     /// <summary>
-    /// ƒQƒXƒg‚Ì”z’uî•ñ‚ğæ“¾
+    /// ã‚²ã‚¹ãƒˆã®é…ç½®æƒ…å ±ã‚’å–å¾—
     /// </summary>
     /// <returns></returns>
     public UpdateSignalGuestRequest GetGuestEditData()
@@ -556,11 +556,11 @@ public class GameManager : MonoBehaviour
     }
 
     /// <summary>
-    /// ƒŠƒvƒŒƒCƒvƒŒƒCƒ„[‚ğ¶¬‚µ‚ÄÄ¶‚·‚é
+    /// ãƒªãƒ—ãƒ¬ã‚¤ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚’ç”Ÿæˆã—ã¦å†ç”Ÿã™ã‚‹
     /// </summary>
     public void StartReplay()
     {
-        // ƒŠƒvƒŒƒC‚ğÄ¶‚Å‚«‚È‚¢ê‡
+        // ãƒªãƒ—ãƒ¬ã‚¤ã‚’å†ç”Ÿã§ããªã„å ´åˆ
         if (!m_isReplayEnd || replayDatas.Count == 0) return;
 
         m_buttonReplay.GetComponent<Button>().interactable = false;

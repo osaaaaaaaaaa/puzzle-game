@@ -6,14 +6,14 @@ using UnityEngine.UI;
 
 public class SignalHostLogBar : MonoBehaviour
 {
-    [SerializeField] GameObject m_uiPanelConfirmation;    // íœŠm”Fƒpƒlƒ‹
+    [SerializeField] GameObject m_uiPanelConfirmation;    // å‰Šé™¤ç¢ºèªãƒ‘ãƒãƒ«
 
-    [SerializeField] Text m_textDay;                      // “ú•t
-    [SerializeField] Text m_textStageID;                  // ƒXƒe[ƒWID
-    [SerializeField] Text m_textGuestCnt;                 // ƒQƒXƒg‚ÌQ‰Ál”
-    [SerializeField] Button m_btnAction;                  // ƒXƒe[ƒW‚É‘JˆÚor–³Œø‰»‚É‚È‚éƒ{ƒ^ƒ“
-    [SerializeField] Text m_textAction;                   // ã‚Ìƒ{ƒ^ƒ“‚ÌƒeƒLƒXƒg
-    [SerializeField] Button m_btnDestroy;                 // ”jŠü‚·‚éƒ{ƒ^ƒ“
+    [SerializeField] Text m_textDay;                      // æ—¥ä»˜
+    [SerializeField] Text m_textStageID;                  // ã‚¹ãƒ†ãƒ¼ã‚¸ID
+    [SerializeField] Text m_textGuestCnt;                 // ã‚²ã‚¹ãƒˆã®å‚åŠ äººæ•°
+    [SerializeField] Button m_btnAction;                  // ã‚¹ãƒ†ãƒ¼ã‚¸ã«é·ç§»orç„¡åŠ¹åŒ–ã«ãªã‚‹ãƒœã‚¿ãƒ³
+    [SerializeField] Text m_textAction;                   // ä¸Šã®ãƒœã‚¿ãƒ³ã®ãƒ†ã‚­ã‚¹ãƒˆ
+    [SerializeField] Button m_btnDestroy;                 // ç ´æ£„ã™ã‚‹ãƒœã‚¿ãƒ³
     LoadingContainer m_loading;
     UISignalManager m_signalManager;
     GameObject m_logBar;
@@ -26,37 +26,37 @@ public class SignalHostLogBar : MonoBehaviour
         m_logBar = this.gameObject;
         m_signalID = signalID;
         m_textDay.text = created_at.ToString("yyyy/MM/dd HH:mm:ss");
-        m_textStageID.text = "ƒXƒe[ƒW  " + stageID;
+        m_textStageID.text = "ã‚¹ãƒ†ãƒ¼ã‚¸  " + stageID;
         m_textGuestCnt.text = "" + guestCnt;
 
         if (isStageClear)
         {
-            m_textAction.text = "ƒNƒŠƒAÏ";
+            m_textAction.text = "ã‚¯ãƒªã‚¢æ¸ˆ";
             m_btnAction.interactable = false;
         }
         else
         {
-            m_textAction.text = "ƒXƒe[ƒW‚ÖˆÚ“®";
+            m_textAction.text = "ã‚¹ãƒ†ãƒ¼ã‚¸ã¸ç§»å‹•";
 
-            // ‘JˆÚƒCƒxƒ“ƒgİ’è
+            // é·ç§»ã‚¤ãƒ™ãƒ³ãƒˆè¨­å®š
             var manager = GameObject.Find("TopManager").GetComponent<TopManager>();
             m_btnAction.onClick.AddListener(() => manager.OnPlayStageButton(TopSceneDirector.PLAYMODE.HOST, signalID ,stageID, isStageClear));
             m_btnAction.onClick.AddListener(() => signalManager.OnSignalTabButton(0));
         }
 
-        // íœŠm”Fƒpƒlƒ‹‚ğ•\¦‚·‚éƒCƒxƒ“ƒgİ’è
+        // å‰Šé™¤ç¢ºèªãƒ‘ãƒãƒ«ã‚’è¡¨ç¤ºã™ã‚‹ã‚¤ãƒ™ãƒ³ãƒˆè¨­å®š
         m_btnDestroy.GetComponent<Button>().onClick.
-            AddListener(() => m_signalManager.ShowPanelConfirmationHost("•åW‚ğæ‚èÁ‚µ‚Ü‚·‚©H", this));
+            AddListener(() => m_signalManager.ShowPanelConfirmationHost("å‹Ÿé›†ã‚’å–ã‚Šæ¶ˆã—ã¾ã™ã‹ï¼Ÿ", this));
     }
 
     /// <summary>
-    /// •åWæ‚èÁ‚µA•åW‚µ‚½ƒƒO‚ğíœˆ—
+    /// å‹Ÿé›†å–ã‚Šæ¶ˆã—ã€å‹Ÿé›†ã—ãŸãƒ­ã‚°ã‚’å‰Šé™¤å‡¦ç†
     /// </summary>
     public void OnDestroyButton()
     {
         SEManager.Instance.PlayCanselSE();
         m_loading.ToggleLoadingUIVisibility(1);
-        // ‹~“ïM†íœˆ—
+        // æ•‘é›£ä¿¡å·å‰Šé™¤å‡¦ç†
         StartCoroutine(NetworkManager.Instance.DestroyDistressSignal(
             m_signalID,
             result =>
@@ -64,7 +64,7 @@ public class SignalHostLogBar : MonoBehaviour
                 m_loading.ToggleLoadingUIVisibility(-1);
                 if (!result) 
                 {
-                    m_signalManager.ShowPanelError("’ÊMƒGƒ‰[‚ª”­¶‚µ‚Ü‚µ‚½");
+                    m_signalManager.ShowPanelError("é€šä¿¡ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã—ã¾ã—ãŸ");
                     return;
                 };
                 Destroy(m_logBar);

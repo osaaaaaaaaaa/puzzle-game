@@ -4,15 +4,15 @@ using UnityEngine;
 
 public class PlayerLinkedRotation : MonoBehaviour
 {
-    [SerializeField] float rotationSpeed = 5f;  // ‰ñ“]‘¬“x
-    [SerializeField] bool m_isLinkedY;          // ƒvƒŒƒCƒ„[‚ÌYÀ•W‚ÆƒŠƒ“ƒN‚³‚¹‚é‚©‚Ç‚¤‚©
-    [SerializeField] bool m_isLinkedX;          // ƒvƒŒƒCƒ„[‚ÌXÀ•W‚ÆƒŠƒ“ƒN‚³‚¹‚é‚©‚Ç‚¤‚©
+    [SerializeField] float rotationSpeed = 5f;  // å›è»¢é€Ÿåº¦
+    [SerializeField] bool m_isLinkedY;          // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®Yåº§æ¨™ã¨ãƒªãƒ³ã‚¯ã•ã›ã‚‹ã‹ã©ã†ã‹
+    [SerializeField] bool m_isLinkedX;          // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®Xåº§æ¨™ã¨ãƒªãƒ³ã‚¯ã•ã›ã‚‹ã‹ã©ã†ã‹
 
-    // ƒvƒŒƒCƒ„[
+    // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼
     GameObject m_player;
-    // ƒvƒŒƒCƒ„[‚Ì‰ŠúˆÊ’u
+    // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®åˆæœŸä½ç½®
     Vector3 m_playerStartPos;
-    // ‘OƒtƒŒ[ƒ€‚ÌƒvƒŒƒCƒ„[‚ÌÀ•W
+    // å‰ãƒ•ãƒ¬ãƒ¼ãƒ ã®ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®åº§æ¨™
     Vector3 m_playerPreviousPosition;
 
     void Start()

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class SonRun : MonoBehaviour
 {
-    [SerializeField] LayerMask m_obstacleLayer;     // áŠQ•¨‚ÌƒŒƒCƒ„[ƒ^ƒO
+    [SerializeField] LayerMask m_obstacleLayer;     // éšœå®³ç‰©ã®ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚¿ã‚°
     Rigidbody2D m_rb;
     float m_speed = 7f;
     public int m_direction = 1;
@@ -23,22 +23,22 @@ public class SonRun : MonoBehaviour
     {
         if (m_isStop) return;
 
-        // •Ç‚ÉÕ“Ë‚µ‚½ê‡
+        // å£ã«è¡çªã—ãŸå ´åˆ
         if (IsWall())
         {
-            m_direction *= -1;  // ˆÚ“®•ûŒü‚ğ”½“]‚³‚¹‚é
+            m_direction *= -1;  // ç§»å‹•æ–¹å‘ã‚’åè»¢ã•ã›ã‚‹
             m_rb.velocity = Vector3.zero;
         }
 
-        // ƒeƒNƒXƒ`ƒƒ‚ÌŒü‚«‚ğİ’è‚·‚é
+        // ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®å‘ãã‚’è¨­å®šã™ã‚‹
         transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x) * m_direction, transform.localScale.y, transform.localScale.z);
 
-        // ˆÚ“®ˆ—
+        // ç§»å‹•å‡¦ç†
         m_rb.velocity = new Vector2(m_speed * m_direction, m_rb.velocity.y); ;
     }
 
     /// <summary>
-    /// ”»’è‚Ìæ‚É•Ç‚ª‚ ‚é‚©‚Ç‚¤‚©
+    /// åˆ¤å®šã®å…ˆã«å£ãŒã‚ã‚‹ã‹ã©ã†ã‹
     /// </summary>
     /// <returns></returns>
     private bool IsWall()
@@ -46,17 +46,17 @@ public class SonRun : MonoBehaviour
         Vector3 startVec = Vector3.zero, endVec = Vector3.zero;
         Vector3 startVec2 = Vector3.zero, endVec2 = Vector3.zero;
 
-        startVec = transform.position + transform.right * 0.2f * transform.localScale.x + transform.up * m_lineStart;    // n“_
-        endVec = startVec + transform.up * transform.localScale.y * m_lineEnd;    // I“_
+        startVec = transform.position + transform.right * 0.2f * transform.localScale.x + transform.up * m_lineStart;    // å§‹ç‚¹
+        endVec = startVec + transform.up * transform.localScale.y * m_lineEnd;    // çµ‚ç‚¹
 
-        Debug.DrawLine(startVec, endVec, Color.red);   // •`Ê‚·‚é
+        Debug.DrawLine(startVec, endVec, Color.red);   // æå†™ã™ã‚‹
 
         return Physics2D.Linecast(startVec, endVec, m_obstacleLayer);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        // ƒS[ƒ‹‚ÉG‚ê‚½ê‡A’â~‚·‚é
+        // ã‚´ãƒ¼ãƒ«ã«è§¦ã‚ŒãŸå ´åˆã€åœæ­¢ã™ã‚‹
         if (collision.gameObject.CompareTag("Goal"))
         {
             m_isStop = true;
@@ -66,7 +66,7 @@ public class SonRun : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        // ƒS[ƒ‹‚©‚ç—£‚ê‚½ê‡AÄ‚Ñ‘–‚èo‚·
+        // ã‚´ãƒ¼ãƒ«ã‹ã‚‰é›¢ã‚ŒãŸå ´åˆã€å†ã³èµ°ã‚Šå‡ºã™
         if (collision.gameObject.CompareTag("Goal"))
         {
             m_isStop = false;

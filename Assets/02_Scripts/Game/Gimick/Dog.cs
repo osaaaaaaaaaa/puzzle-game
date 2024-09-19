@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Dog : MonoBehaviour
 {
-    #region SEŠÖŒW
+    #region SEé–¢ä¿‚
     [SerializeField] AudioClip m_roarSE;
     AudioSource m_audio;
     #endregion
@@ -28,7 +28,7 @@ public class Dog : MonoBehaviour
 
     private void Update()
     {
-        // ƒvƒŒƒCƒ„[‚ª‚¢‚é•ûŒü‚ğŒü‚­
+        // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãŒã„ã‚‹æ–¹å‘ã‚’å‘ã
         int direction = transform.position.x < m_son.transform.position.x ? 1 : -1;
         transform.localScale = new Vector3(direction, transform.localScale.y, transform.localScale.z);
     }
@@ -36,22 +36,22 @@ public class Dog : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (TopSceneDirector.Instance == null || TopSceneDirector.Instance.PlayMode == TopSceneDirector.PLAYMODE.GUEST) return;
-        if (collision.gameObject.tag == "Ghost") return;    // ƒS[ƒXƒg‚Ìê‡
+        if (collision.gameObject.tag == "Ghost") return;    // ã‚´ãƒ¼ã‚¹ãƒˆã®å ´åˆ
 
-        // –i‚¦‚é‚±‚Æ‚ª‰Â”\‚©‚Â‘§q‚ªG‚ê‚½ê‡
+        // å ãˆã‚‹ã“ã¨ãŒå¯èƒ½ã‹ã¤æ¯å­ãŒè§¦ã‚ŒãŸå ´åˆ
         if (!m_coolTime && collision.gameObject.layer == 6 && m_player.m_isKicked)
         {
             m_coolTime = true;
             m_animator.Play("RoarAnimation");
 
-            // ‘§q‚ğ‘–‚ç‚¹‚é
+            // æ¯å­ã‚’èµ°ã‚‰ã›ã‚‹
             int direction = transform.position.x < collision.gameObject.transform.position.x ? 1 : -1;
             m_sonController.ChangeRunTexture(direction, transform.position.y);
         }
     }
 
     /// <summary>
-    /// –i‚¦‚éˆ—
+    /// å ãˆã‚‹å‡¦ç†
     /// </summary>
     void DORoar()
     {
@@ -59,7 +59,7 @@ public class Dog : MonoBehaviour
     }
 
     /// <summary>
-    /// ƒN[ƒ‹ƒ_ƒEƒ“ˆ—
+    /// ã‚¯ãƒ¼ãƒ«ãƒ€ã‚¦ãƒ³å‡¦ç†
     /// </summary>
     void CoolDown()
     {

@@ -6,32 +6,32 @@ using UnityEngine.UI;
 
 public class CameraController : MonoBehaviour
 {
-    // ƒƒCƒ“ƒJƒƒ‰
+    // ãƒ¡ã‚¤ãƒ³ã‚«ãƒ¡ãƒ©
     [SerializeField] GameObject m_mainCamera;
 
-    #region ƒJƒƒ‰‚Ìƒpƒ‰ƒ[ƒ^
-    Vector3 m_startCameraPos;       // ƒJƒƒ‰‚Ì‰ŠúˆÊ’u
-    [SerializeField] float m_cameraSizeMin;  // ‹–ì‚ÌÅ¬ƒTƒCƒY
-    [SerializeField] float m_cameraSizeMax;  // ‹–ì‚ÌÅ‘åƒTƒCƒY
-    [SerializeField] Vector3 m_camera_movePos;       // ƒJƒƒ‰‚ªˆÚ“®‚·‚éÀ•W
+    #region ã‚«ãƒ¡ãƒ©ã®ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿
+    Vector3 m_startCameraPos;       // ã‚«ãƒ¡ãƒ©ã®åˆæœŸä½ç½®
+    [SerializeField] float m_cameraSizeMin;  // è¦–é‡ã®æœ€å°ã‚µã‚¤ã‚º
+    [SerializeField] float m_cameraSizeMax;  // è¦–é‡ã®æœ€å¤§ã‚µã‚¤ã‚º
+    [SerializeField] Vector3 m_camera_movePos;       // ã‚«ãƒ¡ãƒ©ãŒç§»å‹•ã™ã‚‹åº§æ¨™
     #endregion  
 
-    #region ‘§qŠÖŒW
+    #region æ¯å­é–¢ä¿‚
     GameObject m_son;
     GameObject m_son_run;
-    Vector3 m_offsetSon;           // ƒJƒƒ‰‚Æ‘§q‚Æ‚Ìˆê’è‹——£
-    Vector3 m_tmpSonPos;           // ‘§q‚ªÅŒã‚É‚¢‚½À•W
-    const float m_posY_Max = 3f;   // ‘§q‚ª‰æ–ÊŠO‚Éo‚»‚¤‚É‚È‚é‚‚³
+    Vector3 m_offsetSon;           // ã‚«ãƒ¡ãƒ©ã¨æ¯å­ã¨ã®ä¸€å®šè·é›¢
+    Vector3 m_tmpSonPos;           // æ¯å­ãŒæœ€å¾Œã«ã„ãŸåº§æ¨™
+    const float m_posY_Max = 3f;   // æ¯å­ãŒç”»é¢å¤–ã«å‡ºãã†ã«ãªã‚‹é«˜ã•
     #endregion
 
-    // ƒvƒŒƒCƒ„[
+    // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼
     GameObject m_player;
 
-    // ƒY[ƒ€ƒCƒ“ƒAƒEƒgƒ{ƒ^ƒ“
+    // ã‚ºãƒ¼ãƒ ã‚¤ãƒ³ã‚¢ã‚¦ãƒˆãƒœã‚¿ãƒ³
     GameObject m_buttonZoomIn;
     GameObject m_buttonZoomOut;
 
-    // ƒJƒƒ‰‚Ìƒ‚[ƒh
+    // ã‚«ãƒ¡ãƒ©ã®ãƒ¢ãƒ¼ãƒ‰
     public enum CAMERAMODE
     {
         ZOOMIN = 0,
@@ -40,26 +40,26 @@ public class CameraController : MonoBehaviour
 
     public CAMERAMODE m_cameraMode;
 
-    // ƒJƒƒ‰‚Ì’Ç”ö‚ª‰Â”\‚©‚Ç‚¤‚©
+    // ã‚«ãƒ¡ãƒ©ã®è¿½å°¾ãŒå¯èƒ½ã‹ã©ã†ã‹
     bool m_isFollow;
 
     private void Awake()
     {
-        // ƒIƒuƒWƒFƒNƒg‚ğæ“¾‚·‚é
+        // ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’å–å¾—ã™ã‚‹
         m_son = GameObject.Find("Son");
         m_son_run = GameObject.Find("son_run");
         m_player = GameObject.Find("Player");
 
-        // ‘§q‚Ìƒ|ƒWƒVƒ‡ƒ“‚ÆƒJƒƒ‰‚ÌƒIƒtƒZƒbƒg
+        // æ¯å­ã®ãƒã‚¸ã‚·ãƒ§ãƒ³ã¨ã‚«ãƒ¡ãƒ©ã®ã‚ªãƒ•ã‚»ãƒƒãƒˆ
         var tmp_offset = m_mainCamera.transform.position - m_son.transform.position;
         m_offsetSon = new Vector3(tmp_offset.x, tmp_offset.y, m_mainCamera.transform.position.z);
 
-        // ƒJƒƒ‰‚Ì‰ŠúˆÊ’u‚ğæ“¾
+        // ã‚«ãƒ¡ãƒ©ã®åˆæœŸä½ç½®ã‚’å–å¾—
         m_startCameraPos = m_mainCamera.transform.position;
 
-        // ƒ‚[ƒh•ÏX
+        // ãƒ¢ãƒ¼ãƒ‰å¤‰æ›´
         m_cameraMode = CAMERAMODE.ZOOMIN;
-        // ’Ç”öOFF
+        // è¿½å°¾OFF
         m_isFollow = false;
     }
 
@@ -67,48 +67,48 @@ public class CameraController : MonoBehaviour
     {
         if (!(!m_son.activeSelf && !m_son_run.activeSelf))
         {
-            // ‘§q‚ªÅŒã‚É‚¢‚½À•W‚ğæ“¾‚·‚é
+            // æ¯å­ãŒæœ€å¾Œã«ã„ãŸåº§æ¨™ã‚’å–å¾—ã™ã‚‹
             m_tmpSonPos = m_son.activeSelf ? m_son.transform.position : m_son_run.transform.position;
         }
     }
 
     /// <summary>
-    /// ƒY[ƒ€ƒAƒEƒgˆ—
+    /// ã‚ºãƒ¼ãƒ ã‚¢ã‚¦ãƒˆå‡¦ç†
     /// </summary>
     public void ZoomOut(float time)
     {
-        // ƒ‚[ƒh•ÏX
+        // ãƒ¢ãƒ¼ãƒ‰å¤‰æ›´
         m_cameraMode = CAMERAMODE.ZOOMOUT;
 
-        // Tween”jŠü‚·‚é
+        // Tweenç ´æ£„ã™ã‚‹
         DOTween.Kill(m_mainCamera.transform);
 
-        //Sequence¶¬
+        //Sequenceç”Ÿæˆ
         var sequence = DOTween.Sequence();
-        //Tween‚ğ‚Â‚È‚°‚é
+        //Tweenã‚’ã¤ãªã’ã‚‹
         sequence.Join(m_mainCamera.GetComponent<Camera>().DOOrthoSize(m_cameraSizeMax, time))
                 .Join(m_mainCamera.transform.DOMove(m_camera_movePos, time));
 
-        // TweenÄ¶‚·‚é
+        // Tweenå†ç”Ÿã™ã‚‹
         sequence.Play();
 
-        // ƒY[ƒ€ƒCƒ“ƒAƒEƒgƒ{ƒ^ƒ“‚Ì•\¦Ø‚è‘Ö‚¦
+        // ã‚ºãƒ¼ãƒ ã‚¤ãƒ³ã‚¢ã‚¦ãƒˆãƒœã‚¿ãƒ³ã®è¡¨ç¤ºåˆ‡ã‚Šæ›¿ãˆ
         m_buttonZoomIn.SetActive(true);
         m_buttonZoomOut.SetActive(false);
     }
 
     /// <summary>
-    /// ƒY[ƒ€ƒCƒ“ˆ—
+    /// ã‚ºãƒ¼ãƒ ã‚¤ãƒ³å‡¦ç†
     /// </summary>
     public void ZoomIn()
     {
-        // ƒJƒƒ‰‚Ì’Ç”öOFF
+        // ã‚«ãƒ¡ãƒ©ã®è¿½å°¾OFF
         m_isFollow = false;
 
-        // ƒ‚[ƒh•ÏX
+        // ãƒ¢ãƒ¼ãƒ‰å¤‰æ›´
         m_cameraMode = CAMERAMODE.ZOOMIN;
 
-        // ƒY[ƒ€ƒCƒ“‚·‚é‘ÎÛ‚ÌÀ•W‚ğİ’è‚·‚é
+        // ã‚ºãƒ¼ãƒ ã‚¤ãƒ³ã™ã‚‹å¯¾è±¡ã®åº§æ¨™ã‚’è¨­å®šã™ã‚‹
         Vector3 target;
         if (!m_son.activeSelf && !m_son_run.activeSelf)
         {
@@ -116,67 +116,67 @@ public class CameraController : MonoBehaviour
         }
         else
         {
-            // ƒY[ƒ€ƒCƒ“‚·‚é‘ÎÛ‚ÌÀ•W‚ğİ’è‚·‚é
+            // ã‚ºãƒ¼ãƒ ã‚¤ãƒ³ã™ã‚‹å¯¾è±¡ã®åº§æ¨™ã‚’è¨­å®šã™ã‚‹
             target = m_son.activeSelf ? m_son.transform.position : m_son_run.transform.position;
             m_tmpSonPos = target;
         }
 
-        // Tween”jŠü‚·‚é
+        // Tweenç ´æ£„ã™ã‚‹
         DOTween.Kill(m_mainCamera.transform);
-        //Sequence¶¬
+        //Sequenceç”Ÿæˆ
         var sequence = DOTween.Sequence();
 
-        // ƒvƒŒƒCƒ„[‚ªR‚é‘O‚Ìê‡
+        // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãŒè¹´ã‚‹å‰ã®å ´åˆ
         if (!m_player.GetComponent<Player>().m_isKicked)
         {
-            // ƒY[ƒ€ƒCƒ“‚·‚éÀ•W‚ğİ’è
+            // ã‚ºãƒ¼ãƒ ã‚¤ãƒ³ã™ã‚‹åº§æ¨™ã‚’è¨­å®š
             Vector3 zoomin = m_player.transform.position.y < m_startCameraPos.y ?
                 m_startCameraPos : new Vector3(m_startCameraPos.x, m_player.transform.position.y, m_startCameraPos.z);
 
-            //Tween‚ğ‚Â‚È‚°‚é
+            //Tweenã‚’ã¤ãªã’ã‚‹
             sequence.Join(m_mainCamera.GetComponent<Camera>().DOOrthoSize(m_cameraSizeMin, 0.3f))
                     .Join(m_mainCamera.transform.DOMove(zoomin, 0.3f)
                     .OnComplete(() => { m_isFollow = true; }));
         }
-        // R‚è”ò‚Î‚µ‚½Œã‚Ìê‡
+        // è¹´ã‚Šé£›ã°ã—ãŸå¾Œã®å ´åˆ
         else
         {
-            // ‘§q‚Æ‚ÌƒIƒtƒZƒbƒg‚ğİ’è
+            // æ¯å­ã¨ã®ã‚ªãƒ•ã‚»ãƒƒãƒˆã‚’è¨­å®š
             Vector3 setPos = target.y < m_posY_Max ?
                 new Vector3(target.x + m_offsetSon.x, m_startCameraPos.y, m_offsetSon.z) :
                 new Vector3(target.x + m_offsetSon.x, target.y - m_posY_Max, m_offsetSon.z);
 
-            // ƒJƒƒ‰‚ª”ÍˆÍŠO‚É‚Å‚é‚Ì‚ğ‘j~‚·‚é
+            // ã‚«ãƒ¡ãƒ©ãŒç¯„å›²å¤–ã«ã§ã‚‹ã®ã‚’é˜»æ­¢ã™ã‚‹
             if (setPos.x <= m_startCameraPos.x)
             {
                 setPos = new Vector3(m_startCameraPos.x, setPos.y, m_startCameraPos.z);
             }
 
-            // TweenI—¹Œã‚É’Ç”ö‚³‚¹‚é
+            // Tweençµ‚äº†å¾Œã«è¿½å°¾ã•ã›ã‚‹
             sequence.Join(m_mainCamera.GetComponent<Camera>().DOOrthoSize(m_cameraSizeMin, 0.05f))
                     .Join(m_mainCamera.transform.DOMove(new Vector3(setPos.x, setPos.y, -10f), 0.05f)
                     .OnComplete(()=> { m_isFollow = true; }));
         }
 
-        // TweenÄ¶‚·‚é
+        // Tweenå†ç”Ÿã™ã‚‹
         sequence.Play();
 
-        // ƒY[ƒ€ƒCƒ“ƒAƒEƒgƒ{ƒ^ƒ“‚Ì•\¦Ø‚è‘Ö‚¦
+        // ã‚ºãƒ¼ãƒ ã‚¤ãƒ³ã‚¢ã‚¦ãƒˆãƒœã‚¿ãƒ³ã®è¡¨ç¤ºåˆ‡ã‚Šæ›¿ãˆ
         m_buttonZoomIn.SetActive(false);
         m_buttonZoomOut.SetActive(true);
     }
 
     /// <summary>
-    /// ‘§q‚ğ’Ç]‚·‚é
+    /// æ¯å­ã‚’è¿½å¾“ã™ã‚‹
     /// </summary>
     public void Follow()
     {
         if (!m_son.activeSelf && !m_son_run.activeSelf) return;
 
-        // ƒJƒƒ‰‚Ìƒ‚[ƒh‚ªƒY[ƒ€ƒCƒ“‚É‚È‚Á‚Ä‚¢‚éê‡
+        // ã‚«ãƒ¡ãƒ©ã®ãƒ¢ãƒ¼ãƒ‰ãŒã‚ºãƒ¼ãƒ ã‚¤ãƒ³ã«ãªã£ã¦ã„ã‚‹å ´åˆ
         if (m_cameraMode == CAMERAMODE.ZOOMIN && m_isFollow)
         {
-            // ƒY[ƒ€ƒCƒ“‚·‚é‘ÎÛ‚ÌÀ•W‚ğİ’è‚·‚é
+            // ã‚ºãƒ¼ãƒ ã‚¤ãƒ³ã™ã‚‹å¯¾è±¡ã®åº§æ¨™ã‚’è¨­å®šã™ã‚‹
             Vector3 target;
             if (!m_son.activeSelf && !m_son_run.activeSelf)
             {
@@ -184,20 +184,20 @@ public class CameraController : MonoBehaviour
             }
             else
             {
-                // ƒY[ƒ€ƒCƒ“‚·‚é‘ÎÛ‚ÌÀ•W‚ğİ’è‚·‚é
+                // ã‚ºãƒ¼ãƒ ã‚¤ãƒ³ã™ã‚‹å¯¾è±¡ã®åº§æ¨™ã‚’è¨­å®šã™ã‚‹
                 target = m_son.activeSelf ? m_son.transform.position : m_son_run.transform.position;
             }
 
-            // ‘§q‚Æ‚ÌƒIƒtƒZƒbƒg‚ğİ’è
+            // æ¯å­ã¨ã®ã‚ªãƒ•ã‚»ãƒƒãƒˆã‚’è¨­å®š
             Vector3 offset = target.y < m_posY_Max ? 
                 new Vector3(target.x + m_offsetSon.x, m_startCameraPos.y, m_offsetSon.z) : 
                 new Vector3(target.x + m_offsetSon.x, target.y - m_posY_Max, m_offsetSon.z);
 
-            // ƒJƒƒ‰‚Ì‹–ì‚Æ’Ç]‚ğİ’è
+            // ã‚«ãƒ¡ãƒ©ã®è¦–é‡ã¨è¿½å¾“ã‚’è¨­å®š
             m_mainCamera.transform.position = new Vector3(offset.x, offset.y, -10f);
             m_mainCamera.GetComponent<Camera>().orthographicSize = m_cameraSizeMin;
 
-            // ƒJƒƒ‰‚ª”ÍˆÍŠO‚É‚Å‚é‚Ì‚ğ‘j~‚·‚é
+            // ã‚«ãƒ¡ãƒ©ãŒç¯„å›²å¤–ã«ã§ã‚‹ã®ã‚’é˜»æ­¢ã™ã‚‹
             if (m_mainCamera.transform.position.x <= m_startCameraPos.x)
             {
                 m_mainCamera.transform.position = new Vector3(m_startCameraPos.x, m_mainCamera.transform.position.y, m_startCameraPos.z);
@@ -206,17 +206,17 @@ public class CameraController : MonoBehaviour
     }
 
     /// <summary>
-    /// ƒƒ“ƒo•Ï”‰Šú‰»ˆ—
+    /// ãƒ¡ãƒ³ãƒå¤‰æ•°åˆæœŸåŒ–å‡¦ç†
     /// </summary>
     public void InitMemberVariable(GameObject zoomInBtn, GameObject zoomOutBtn)
     {
-        // ƒY[ƒ€ƒCƒ“ƒAƒEƒgƒ{ƒ^ƒ“‚ÉƒCƒxƒ“ƒg‚ğİ’è‚·‚é
+        // ã‚ºãƒ¼ãƒ ã‚¤ãƒ³ã‚¢ã‚¦ãƒˆãƒœã‚¿ãƒ³ã«ã‚¤ãƒ™ãƒ³ãƒˆã‚’è¨­å®šã™ã‚‹
         m_buttonZoomIn = zoomInBtn;
         m_buttonZoomIn.GetComponent<Button>().onClick.AddListener(() => ZoomIn());
         m_buttonZoomOut = zoomOutBtn;
         m_buttonZoomOut.GetComponent<Button>().onClick.AddListener(() => ZoomOut(0.3f));
 
-        // ƒQ[ƒ€‚Ìƒpƒlƒ‹UI‚ğ”ñ•\¦‚É‚·‚é
+        // ã‚²ãƒ¼ãƒ ã®ãƒ‘ãƒãƒ«UIã‚’éè¡¨ç¤ºã«ã™ã‚‹
         GameObject.Find("UiController").GetComponent<UiController>().SetActiveGameUI(false);
     }
 }

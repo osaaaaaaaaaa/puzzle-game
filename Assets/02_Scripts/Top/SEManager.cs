@@ -4,23 +4,23 @@ using UnityEngine;
 
 public class SEManager : MonoBehaviour
 {
-    // ƒCƒ“ƒXƒ^ƒ“ƒXì¬
+    // ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ä½œæˆ
     public static SEManager Instance;
     private void Awake()
     {
         if (Instance == null)
         {
-            // ƒgƒbƒv‰æ–Ê‚Ìó‘Ô‚ğ•Û‚·‚é
+            // ãƒˆãƒƒãƒ—ç”»é¢ã®çŠ¶æ…‹ã‚’ä¿æŒã™ã‚‹
             Instance = this;
 
-            // ƒV[ƒ“‘JˆÚ‚µ‚Ä‚à”jŠü‚µ‚È‚¢‚æ‚¤‚É‚·‚é
+            // ã‚·ãƒ¼ãƒ³é·ç§»ã—ã¦ã‚‚ç ´æ£„ã—ãªã„ã‚ˆã†ã«ã™ã‚‹
             DontDestroyOnLoad(gameObject);
 
             m_audio = GetComponent<AudioSource>();
         }
         else
         {
-            // ƒV[ƒ“‘JˆÚ‚µ‚ÄV‚µ‚­¶¬‚³‚ê‚é©g‚ğ”jŠü
+            // ã‚·ãƒ¼ãƒ³é·ç§»ã—ã¦æ–°ã—ãç”Ÿæˆã•ã‚Œã‚‹è‡ªèº«ã‚’ç ´æ£„
             Destroy(gameObject);
         }
     }

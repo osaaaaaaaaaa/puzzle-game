@@ -6,17 +6,17 @@ using UnityEngine.UI;
 
 public class SignalGuestLogBar : MonoBehaviour
 {
-    [SerializeField] Image m_icon;                        // ƒAƒCƒRƒ“
-    [SerializeField] GameObject m_heart;                  // ‘ŠŒİƒtƒHƒ[‚Ìƒ}[ƒN
-    [SerializeField] Text m_textDays;                     // Œo‰ß“ú”
-    [SerializeField] Text m_textHostName;                 // ƒzƒXƒg–¼
-    [SerializeField] Text m_textStageID;                  // ƒXƒe[ƒWID
-    [SerializeField] Text m_textGuestCnt;                 // ƒQƒXƒg‚ÌQ‰Ál”
-    [SerializeField] Button m_btnTransition;              // ƒXƒe[ƒW‚É‘JˆÚƒ{ƒ^ƒ“
-    [SerializeField] Text m_textTransition;               // ‘JˆÚƒ{ƒ^ƒ“‚ÌƒeƒLƒXƒg
-    [SerializeField] GameObject m_btnDestroy;             // ”jŠü‚·‚éƒ{ƒ^ƒ“
-    [SerializeField] GameObject m_btnReward;              // •ñVó‚¯æ‚èƒ{ƒ^ƒ“
-    [SerializeField] Sprite m_spriteReward;               // •ñVƒAƒCƒeƒ€‚Ì‰æ‘œ
+    [SerializeField] Image m_icon;                        // ã‚¢ã‚¤ã‚³ãƒ³
+    [SerializeField] GameObject m_heart;                  // ç›¸äº’ãƒ•ã‚©ãƒ­ãƒ¼ã®ãƒãƒ¼ã‚¯
+    [SerializeField] Text m_textDays;                     // çµŒéæ—¥æ•°
+    [SerializeField] Text m_textHostName;                 // ãƒ›ã‚¹ãƒˆå
+    [SerializeField] Text m_textStageID;                  // ã‚¹ãƒ†ãƒ¼ã‚¸ID
+    [SerializeField] Text m_textGuestCnt;                 // ã‚²ã‚¹ãƒˆã®å‚åŠ äººæ•°
+    [SerializeField] Button m_btnTransition;              // ã‚¹ãƒ†ãƒ¼ã‚¸ã«é·ç§»ãƒœã‚¿ãƒ³
+    [SerializeField] Text m_textTransition;               // é·ç§»ãƒœã‚¿ãƒ³ã®ãƒ†ã‚­ã‚¹ãƒˆ
+    [SerializeField] GameObject m_btnDestroy;             // ç ´æ£„ã™ã‚‹ãƒœã‚¿ãƒ³
+    [SerializeField] GameObject m_btnReward;              // å ±é…¬å—ã‘å–ã‚Šãƒœã‚¿ãƒ³
+    [SerializeField] Sprite m_spriteReward;               // å ±é…¬ã‚¢ã‚¤ãƒ†ãƒ ã®ç”»åƒ
     LoadingContainer m_loading;
     UISignalManager m_signalManager;
     GameObject m_logBar;
@@ -28,11 +28,11 @@ public class SignalGuestLogBar : MonoBehaviour
         m_signalManager = signalManager;
         m_logBar = this.gameObject;
         m_signalID = signalID;
-        m_textDays.text = elapsed_days + "“ú‘O";
+        m_textDays.text = elapsed_days + "æ—¥å‰";
         m_icon.sprite = icon;
         m_heart.SetActive(isAgreement);
         m_textHostName.text = hostName;
-        m_textStageID.text = "ƒXƒe[ƒW  " + stageID;
+        m_textStageID.text = "ã‚¹ãƒ†ãƒ¼ã‚¸  " + stageID;
         m_textGuestCnt.text = "" + guestCnt;
 
         if (action)
@@ -40,13 +40,13 @@ public class SignalGuestLogBar : MonoBehaviour
             if (is_rewarded)
             {
                 m_btnReward.SetActive(false);
-                m_textTransition.text = "ƒNƒŠƒAÏ‚İ";
+                m_textTransition.text = "ã‚¯ãƒªã‚¢æ¸ˆã¿";
             }
             else
             {
                 m_btnDestroy.SetActive(false);
                 m_btnTransition.interactable = false;
-                m_textTransition.text = "•ñVóæ‰Â”\";
+                m_textTransition.text = "å ±é…¬å—å–å¯èƒ½";
             }
         }
         else
@@ -54,24 +54,24 @@ public class SignalGuestLogBar : MonoBehaviour
             m_btnReward.SetActive(false);
         }
 
-        // ‘JˆÚƒCƒxƒ“ƒgİ’è
+        // é·ç§»ã‚¤ãƒ™ãƒ³ãƒˆè¨­å®š
         var manager = GameObject.Find("TopManager").GetComponent<TopManager>();
         m_btnTransition.onClick.AddListener(() => signalManager.OnSignalTabButton(0));
         m_btnTransition.onClick.AddListener(() => manager.OnPlayStageButton(TopSceneDirector.PLAYMODE.GUEST, signalID, stageID, action));
 
-        // íœŠm”Fƒpƒlƒ‹‚ğ•\¦‚·‚éƒCƒxƒ“ƒgİ’è
+        // å‰Šé™¤ç¢ºèªãƒ‘ãƒãƒ«ã‚’è¡¨ç¤ºã™ã‚‹ã‚¤ãƒ™ãƒ³ãƒˆè¨­å®š
         m_btnDestroy.GetComponent<Button>().onClick.
-            AddListener(() => m_signalManager.ShowPanelConfirmationGuest("Q‰Á‚ğæ‚èÁ‚µ‚Ü‚·‚©H",this));
+            AddListener(() => m_signalManager.ShowPanelConfirmationGuest("å‚åŠ ã‚’å–ã‚Šæ¶ˆã—ã¾ã™ã‹ï¼Ÿ",this));
     }
 
     /// <summary>
-    /// •ñVó‚¯æ‚èƒ{ƒ^ƒ“
+    /// å ±é…¬å—ã‘å–ã‚Šãƒœã‚¿ãƒ³
     /// </summary>
     public void OnRewardButton()
     {
         SEManager.Instance.PlayButtonSE();
         m_loading.ToggleLoadingUIVisibility(1);
-        // ƒQƒXƒg‚Ì•ñVó‚¯æ‚èˆ—
+        // ã‚²ã‚¹ãƒˆã®å ±é…¬å—ã‘å–ã‚Šå‡¦ç†
         StartCoroutine(NetworkManager.Instance.UpdateSignalGuestReward(
             m_signalID,
             result =>
@@ -79,27 +79,27 @@ public class SignalGuestLogBar : MonoBehaviour
                 m_loading.ToggleLoadingUIVisibility(-1);
                 if (result == null)
                 {
-                    m_signalManager.ShowPanelError("’ÊMƒGƒ‰[‚ª”­¶‚µ‚Ü‚µ‚½");
+                    m_signalManager.ShowPanelError("é€šä¿¡ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã—ã¾ã—ãŸ");
                     return;
                 };
 
-                GameObject.Find("ItemDetail").GetComponent<PanelItemDetails>().SetPanelContent("ƒAƒCƒeƒ€Šl“¾", result.Amount + "ƒ|ƒCƒ“ƒgŠl“¾I", m_spriteReward);
+                GameObject.Find("ItemDetail").GetComponent<PanelItemDetails>().SetPanelContent("ã‚¢ã‚¤ãƒ†ãƒ ç²å¾—", result.Amount + "ãƒã‚¤ãƒ³ãƒˆç²å¾—ï¼", m_spriteReward);
 
                 m_btnDestroy.SetActive(true);
                 m_btnReward.SetActive(false);
                 m_btnTransition.interactable = true;
-                m_textTransition.text = "ƒXƒe[ƒW‚ÖˆÚ“®";
+                m_textTransition.text = "ã‚¹ãƒ†ãƒ¼ã‚¸ã¸ç§»å‹•";
             }));
     }
 
     /// <summary>
-    /// Q‰Áæ‚èÁ‚µEƒƒOíœˆ—
+    /// å‚åŠ å–ã‚Šæ¶ˆã—ãƒ»ãƒ­ã‚°å‰Šé™¤å‡¦ç†
     /// </summary>
     public void OnDestroyButton()
     {
         SEManager.Instance.PlayCanselSE();
         m_loading.ToggleLoadingUIVisibility(1);
-        // ƒQƒXƒgíœˆ—
+        // ã‚²ã‚¹ãƒˆå‰Šé™¤å‡¦ç†
         StartCoroutine(NetworkManager.Instance.DestroySignalGuest(
             m_signalID,
             NetworkManager.Instance.UserID,
@@ -108,7 +108,7 @@ public class SignalGuestLogBar : MonoBehaviour
                 m_loading.ToggleLoadingUIVisibility(-1);
                 if (!result)
                 {
-                    m_signalManager.ShowPanelError("’ÊMƒGƒ‰[‚ª”­¶‚µ‚Ü‚µ‚½");
+                    m_signalManager.ShowPanelError("é€šä¿¡ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã—ã¾ã—ãŸ");
                     return;
                 };
                 Destroy(m_logBar);

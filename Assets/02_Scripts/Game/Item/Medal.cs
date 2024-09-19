@@ -21,7 +21,7 @@ public class Medal : MonoBehaviour
     }
 
     /// <summary>
-    /// ƒƒ“ƒo•Ï”‰Šú‰»ˆ—
+    /// ãƒ¡ãƒ³ãƒå¤‰æ•°åˆæœŸåŒ–å‡¦ç†
     /// </summary>
     public void InitMemberVariable(bool isAcquired)
     {

@@ -15,7 +15,7 @@ public class Cage : MonoBehaviour
 
     private void Update()
     {
-        // Œ®‚ğæ“¾‚µ‚Ä‚¢‚éê‡A“–‚½‚è”»’è‚ğ–³‚­‚·
+        // éµã‚’å–å¾—ã—ã¦ã„ã‚‹å ´åˆã€å½“ãŸã‚Šåˆ¤å®šã‚’ç„¡ãã™
         if(m_uiController.GetKeyCount() > 0)
         {
             m_collieder2d.enabled = false;
@@ -31,10 +31,10 @@ public class Cage : MonoBehaviour
         if (TopSceneDirector.Instance == null || TopSceneDirector.Instance.PlayMode == TopSceneDirector.PLAYMODE.GUEST) return;
         if (collision.gameObject.tag == "Ghost" || collision.gameObject.layer != 6 && collision.gameObject.layer != 10) return;
 
-        // Œ®‚ğŠ‚µ‚Ä‚¢‚éê‡
+        // éµã‚’æ‰€æŒã—ã¦ã„ã‚‹å ´åˆ
         if (m_uiController.GetKeyCount() > 0)
         {
-            // Œ®‚ğˆê‚Â”jŠü‚µA©g‚ğ”jŠü‚·‚é
+            // éµã‚’ä¸€ã¤ç ´æ£„ã—ã€è‡ªèº«ã‚’ç ´æ£„ã™ã‚‹
             m_uiController.UpdateKeyUI(-1);
             Destroy(this.transform.gameObject);
         }

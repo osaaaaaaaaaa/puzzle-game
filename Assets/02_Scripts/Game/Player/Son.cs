@@ -6,13 +6,13 @@ public class Son : MonoBehaviour
 {
     GameObject m_player;
     Rigidbody2D m_rb;
-    public Vector3 m_offset { get; private set; }      // •êe‚Æ‚ÌƒIƒtƒZƒbƒg
+    public Vector3 m_offset { get; private set; }      // æ¯è¦ªã¨ã®ã‚ªãƒ•ã‚»ãƒƒãƒˆ
 
-    // ‰‘¬“x
+    // åˆé€Ÿåº¦
     float m_initialSpeed = 50f;
-    // ‹ó‹C’ïR
+    // ç©ºæ°—æŠµæŠ—
     float m_dragNum = 3f;
-    // d—ÊƒXƒP[ƒ‹
+    // é‡é‡ã‚¹ã‚±ãƒ¼ãƒ«
     float m_gravityScale = 10f;
 
     public ColorData.COLOR_TYPE m_coloerType { get; private set; } = ColorData.COLOR_TYPE.DEFAULT;
@@ -35,63 +35,63 @@ public class Son : MonoBehaviour
     }
 
     /// <summary>
-    /// R‚è”ò‚Î‚³‚ê‚éˆ—
+    /// è¹´ã‚Šé£›ã°ã•ã‚Œã‚‹å‡¦ç†
     /// </summary>
-    /// <param name="dir">•ûŠp</param>
-    /// <param name="power">ƒpƒ[</param>
+    /// <param name="dir">æ–¹è§’</param>
+    /// <param name="power">ãƒ‘ãƒ¯ãƒ¼</param>
     public void DOKick(Vector3 dir, float power, bool isSetSpeed)
     {
         var rb = GetComponent<Rigidbody2D>();
 
-        // —Í‚ğİ’è
+        // åŠ›ã‚’è¨­å®š
         Vector3 force = new Vector3(dir.x * power, dir.y * power);
 
-        // d—Í‚ğİ’è‚·‚é
+        // é‡åŠ›ã‚’è¨­å®šã™ã‚‹
         rb.gravityScale = m_gravityScale;
 
         if (isSetSpeed)
         {
-            // ‰‘¬“x‚ğİ’è‚·‚é
+            // åˆé€Ÿåº¦ã‚’è¨­å®šã™ã‚‹
             rb.velocity = transform.forward * m_initialSpeed;
-            // —Í‚ğ‰Á‚¦‚é
+            // åŠ›ã‚’åŠ ãˆã‚‹
             rb.AddForce(force, ForceMode2D.Impulse);
         }
         else
         {
-            // —Í‚ğ‰Á‚¦‚é
+            // åŠ›ã‚’åŠ ãˆã‚‹
             rb.AddForce(force, ForceMode2D.Force);
         }
     }
 
     /// <summary>
-    /// ƒQƒXƒg‚ÉR‚è”ò‚Î‚³‚ê‚éˆ—
+    /// ã‚²ã‚¹ãƒˆã«è¹´ã‚Šé£›ã°ã•ã‚Œã‚‹å‡¦ç†
     /// </summary>
     public void DOKick(Vector3 vecKick, bool isSetSpeed)
     {
         var rb = GetComponent<Rigidbody2D>();
 
-        // —Í‚ğİ’è
+        // åŠ›ã‚’è¨­å®š
         Vector3 force = vecKick;
 
-        // d—Í‚ğİ’è‚·‚é
+        // é‡åŠ›ã‚’è¨­å®šã™ã‚‹
         rb.gravityScale = m_gravityScale;
 
         if (isSetSpeed)
         {
-            // ‰‘¬“x‚ğİ’è‚·‚é
+            // åˆé€Ÿåº¦ã‚’è¨­å®šã™ã‚‹
             rb.velocity = transform.forward * m_initialSpeed;
-            // —Í‚ğ‰Á‚¦‚é
+            // åŠ›ã‚’åŠ ãˆã‚‹
             rb.AddForce(force, ForceMode2D.Impulse);
         }
         else
         {
-            // —Í‚ğ‰Á‚¦‚é
+            // åŠ›ã‚’åŠ ãˆã‚‹
             rb.AddForce(force, ForceMode2D.Force);
         }
     }
 
     /// <summary>
-    /// ƒŠƒZƒbƒgˆ—
+    /// ãƒªã‚»ãƒƒãƒˆå‡¦ç†
     /// </summary>
     public void ResetSon()
     {
@@ -100,7 +100,7 @@ public class Son : MonoBehaviour
     }
 
     /// <summary>
-    /// ƒQƒXƒg‚É‚æ‚éƒŠƒZƒbƒgˆ—
+    /// ã‚²ã‚¹ãƒˆã«ã‚ˆã‚‹ãƒªã‚»ãƒƒãƒˆå‡¦ç†
     /// </summary>
     public void ResetSon(Vector3 startPos)
     {
@@ -109,7 +109,7 @@ public class Son : MonoBehaviour
     }
 
     /// <summary>
-    /// ƒƒ“ƒo•Ï”‰Šú‰»ˆ—
+    /// ãƒ¡ãƒ³ãƒå¤‰æ•°åˆæœŸåŒ–å‡¦ç†
     /// </summary>
     public void InitMemberVariable()
     {
@@ -117,10 +117,10 @@ public class Son : MonoBehaviour
         m_rb = GetComponent<Rigidbody2D>();
         m_offset = transform.position - m_player.transform.position;
 
-        // ƒŠƒZƒbƒg‚·‚é
+        // ãƒªã‚»ãƒƒãƒˆã™ã‚‹
         ResetSon();
 
-        // ‹ó‹C’ïR‚ğİ’è‚·‚é
+        // ç©ºæ°—æŠµæŠ—ã‚’è¨­å®šã™ã‚‹
         m_rb.drag = m_dragNum;
     }
 }

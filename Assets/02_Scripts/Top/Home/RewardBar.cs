@@ -5,12 +5,12 @@ using UnityEngine.UI;
 
 public class RewardBar : MonoBehaviour
 {
-    [SerializeField] Text m_textAchievedValue;            // ’B¬ğŒ’l
-    [SerializeField] Text m_textItemDescription;          // ƒAƒCƒeƒ€à–¾
-    [SerializeField] GameObject m_btnIconItem;            // ƒAƒCƒeƒ€‚ÌƒAƒCƒRƒ“ƒ{ƒ^ƒ“
-    [SerializeField] List<Sprite> m_texItemIcons;         // ƒAƒCƒeƒ€ƒAƒCƒRƒ“‚Ì‰æ‘œ
-    [SerializeField] GameObject m_textReceived;           // óæÏ‚İ‚©‚Ç‚¤‚©‚ÌƒeƒLƒXƒg
-    [SerializeField] GameObject m_btnReward;              // •ñVó‚¯æ‚èƒ{ƒ^ƒ“
+    [SerializeField] Text m_textAchievedValue;            // é”æˆæ¡ä»¶å€¤
+    [SerializeField] Text m_textItemDescription;          // ã‚¢ã‚¤ãƒ†ãƒ èª¬æ˜
+    [SerializeField] GameObject m_btnIconItem;            // ã‚¢ã‚¤ãƒ†ãƒ ã®ã‚¢ã‚¤ã‚³ãƒ³ãƒœã‚¿ãƒ³
+    [SerializeField] List<Sprite> m_texItemIcons;         // ã‚¢ã‚¤ãƒ†ãƒ ã‚¢ã‚¤ã‚³ãƒ³ã®ç”»åƒ
+    [SerializeField] GameObject m_textReceived;           // å—å–æ¸ˆã¿ã‹ã©ã†ã‹ã®ãƒ†ã‚­ã‚¹ãƒˆ
+    [SerializeField] GameObject m_btnReward;              // å ±é…¬å—ã‘å–ã‚Šãƒœã‚¿ãƒ³
     LoadingContainer m_loading;
     PanelItemDetails m_panelItemDetails;
     Sprite m_spriteItem;
@@ -19,31 +19,31 @@ public class RewardBar : MonoBehaviour
 
     public void UpdateReward(PanelItemDetails panelItemDetails, int achievementID, ShowUserItemResponse itemData, int achievedValue, int progressVal, bool isReceived)
     {
-        // ƒƒ“ƒo•Ï”æ“¾
+        // ãƒ¡ãƒ³ãƒå¤‰æ•°å–å¾—
         m_loading = GameObject.Find("LoadingContainer").GetComponent<LoadingContainer>();
         m_panelItemDetails = panelItemDetails;
         m_spriteItem = itemData.Type == 1 ? TopManager.TexIcons[itemData.Effect - 1] : m_texItemIcons[itemData.Type - 1];
         m_achievementID = achievementID;
         m_itemDescription = itemData.Type == 2 ? itemData.Name : itemData.Description;
 
-        // ƒpƒ‰ƒ[ƒ^İ’è
+        // ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿è¨­å®š
         m_textAchievedValue.text = achievedValue + "pt";
         m_textItemDescription.text = itemData.Description;
         m_btnIconItem.GetComponent<Image>().sprite = m_texItemIcons[itemData.Type - 1];
         m_btnIconItem.GetComponent<Button>().onClick.AddListener(() => {
             SEManager.Instance.PlayButtonSE();
-            panelItemDetails.SetPanelContent("ƒAƒCƒeƒ€Ú×", m_itemDescription, m_spriteItem); 
+            panelItemDetails.SetPanelContent("ã‚¢ã‚¤ãƒ†ãƒ è©³ç´°", m_itemDescription, m_spriteItem); 
         });
 
         if (!isReceived && achievedValue <= progressVal)
         {
-            // Œ©ó‚¯æ‚è••ó‚¯æ‚ê‚éê‡
+            // è¦‹å—ã‘å–ã‚Šï¼†ï¼†å—ã‘å–ã‚Œã‚‹å ´åˆ
             m_btnReward.SetActive(true);
             return;
         }
         else if (isReceived)
         {
-            // óæÏ‚İ‚Ìê‡
+            // å—å–æ¸ˆã¿ã®å ´åˆ
             m_textReceived.SetActive(true);
         }
 
@@ -54,7 +54,7 @@ public class RewardBar : MonoBehaviour
     {
         m_loading.ToggleLoadingUIVisibility(1);
 
-        // ƒAƒ`[ƒuƒƒ“ƒg•ñVó‚¯æ‚èˆ—
+        // ã‚¢ãƒãƒ¼ãƒ–ãƒ¡ãƒ³ãƒˆå ±é…¬å—ã‘å–ã‚Šå‡¦ç†
         StartCoroutine(NetworkManager.Instance.ReceiveRewardAchievement(
             m_achievementID,
             result =>
@@ -65,7 +65,7 @@ public class RewardBar : MonoBehaviour
                 m_btnReward.SetActive(false);
                 m_textReceived.SetActive(true);
                 transform.SetAsLastSibling();
-                m_panelItemDetails.SetPanelContent("ƒAƒCƒeƒ€Šl“¾", m_itemDescription, m_spriteItem);
+                m_panelItemDetails.SetPanelContent("ã‚¢ã‚¤ãƒ†ãƒ ç²å¾—", m_itemDescription, m_spriteItem);
             }));
     }
 }

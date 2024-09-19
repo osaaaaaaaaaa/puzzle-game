@@ -26,7 +26,7 @@ public class MailContent : MonoBehaviour
         m_container.SetActive(true);
         m_textTitle.text = title;
         m_textCreatedAt.text = createdAt;
-        m_textElapsedDay.text = elapsedDay + "“úŒã‚É©“®íœ";
+        m_textElapsedDay.text = elapsedDay + "æ—¥å¾Œã«è‡ªå‹•å‰Šé™¤";
         m_textMail.text = text;
         m_btnOK.SetActive(!isReceived);
     }
@@ -34,7 +34,7 @@ public class MailContent : MonoBehaviour
     public void OnUpdateUserMailButton()
     {
         m_loading.ToggleLoadingUIVisibility(1);
-        // óMƒ[ƒ‹ŠJ••ˆ—
+        // å—ä¿¡ãƒ¡ãƒ¼ãƒ«é–‹å°å‡¦ç†
         StartCoroutine(NetworkManager.Instance.UpdateUserMail(
             m_mailID,
             result =>
@@ -42,9 +42,9 @@ public class MailContent : MonoBehaviour
                 m_loading.ToggleLoadingUIVisibility(-1);
                 if (result == null || result.Length == 0) return;
 
-                // æ“¾ƒAƒCƒeƒ€•\¦
+                // å–å¾—ã‚¢ã‚¤ãƒ†ãƒ è¡¨ç¤º
                 m_selectMailButton.GetComponent<Image>().sprite = m_spriteReceivedMail;
-                m_itemDetails.SetPanelContent("ƒAƒCƒeƒ€Šl“¾", result[0].Description, m_spritePoint);
+                m_itemDetails.SetPanelContent("ã‚¢ã‚¤ãƒ†ãƒ ç²å¾—", result[0].Description, m_spritePoint);
                 m_btnOK.SetActive(false);
 
             }));
@@ -53,7 +53,7 @@ public class MailContent : MonoBehaviour
     public void OnDestroyButton()
     {
         m_loading.ToggleLoadingUIVisibility(1);
-        // óMƒ[ƒ‹íœˆ—
+        // å—ä¿¡ãƒ¡ãƒ¼ãƒ«å‰Šé™¤å‡¦ç†
         StartCoroutine(NetworkManager.Instance.DestroyUserMail(
             m_mailID,
             result =>

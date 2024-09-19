@@ -18,6 +18,6 @@ public class MoveCircle : MonoBehaviour
     {
         float sin = Mathf.Sin(Time.time * m_speed) * m_radius;
         float cos = Mathf.Cos(Time.time * m_speed) * m_radius;
-        transform.position = new Vector3(m_startPos.x + cos, m_startPos.y + sin, 0);   // keepPos.x * 0.5f‚Í’²®
+        transform.position = new Vector3(m_startPos.x + cos, m_startPos.y + sin, 0);   // keepPos.x * 0.5fã¯èª¿æ•´
     }
 }

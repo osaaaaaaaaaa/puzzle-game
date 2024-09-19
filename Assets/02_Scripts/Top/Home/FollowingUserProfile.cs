@@ -5,16 +5,16 @@ using UnityEngine.UI;
 
 public class FollowingUserProfile : MonoBehaviour
 {
-    [SerializeField] Text m_textUserName;                 // ƒ†[ƒU[–¼
-    [SerializeField] Text m_textAchievementTitle;         // Ì†–¼
-    [SerializeField] Text m_textStageID;                  // ƒXƒe[ƒWID
-    [SerializeField] Text m_textScore;                    // ƒXƒRƒA
-    [SerializeField] Image m_icon;                        // ƒAƒCƒRƒ“
-    [SerializeField] GameObject m_hertUI;                 // ‘ŠŒİƒtƒHƒ[,ƒtƒHƒƒ[‚ğ¦‚·UI
-    [SerializeField] GameObject m_actionButton;           // ƒtƒHƒ[ or ƒtƒHƒ[‰ğœ‚·‚éƒ{ƒ^ƒ“
+    [SerializeField] Text m_textUserName;                 // ãƒ¦ãƒ¼ã‚¶ãƒ¼å
+    [SerializeField] Text m_textAchievementTitle;         // ç§°å·å
+    [SerializeField] Text m_textStageID;                  // ã‚¹ãƒ†ãƒ¼ã‚¸ID
+    [SerializeField] Text m_textScore;                    // ã‚¹ã‚³ã‚¢
+    [SerializeField] Image m_icon;                        // ã‚¢ã‚¤ã‚³ãƒ³
+    [SerializeField] GameObject m_hertUI;                 // ç›¸äº’ãƒ•ã‚©ãƒ­ãƒ¼,ãƒ•ã‚©ãƒ­ãƒ¯ãƒ¼ã‚’ç¤ºã™UI
+    [SerializeField] GameObject m_actionButton;           // ãƒ•ã‚©ãƒ­ãƒ¼ or ãƒ•ã‚©ãƒ­ãƒ¼è§£é™¤ã™ã‚‹ãƒœã‚¿ãƒ³
 
     /// <summary>
-    /// ƒvƒƒtƒB[ƒ‹î•ñ‚ğXV‚·‚é
+    /// ãƒ—ãƒ­ãƒ•ã‚£ãƒ¼ãƒ«æƒ…å ±ã‚’æ›´æ–°ã™ã‚‹
     /// </summary>
     public void UpdateProfile(GameObject userController,int user_id,string name,string achievementTitle,int stageID,int score,Sprite icon,bool isAgreement)
     {

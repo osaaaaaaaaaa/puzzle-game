@@ -5,35 +5,35 @@ using DG.Tweening;
 
 public class Arrow : MonoBehaviour
 {
-    // n“_
+    // å§‹ç‚¹
     Vector3 startMousePos;
 
-    // n“_‚Æ‚Ì‹——£‚ÌÅ‘å’l
+    // å§‹ç‚¹ã¨ã®è·é›¢ã®æœ€å¤§å€¤
     const float disMax = 2.5f;
-    // ‰Šú’l
+    // åˆæœŸå€¤
     const float startSizeX = 4f;
     const float startSizeY = 1f;
 
-    // ƒvƒŒƒCƒ„[ƒIƒuƒWƒFƒNƒg
+    // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
     GameObject m_player;
-    // ‹O“¹—\‘ªü
+    // è»Œé“äºˆæ¸¬ç·š
     GameObject m_lineGuide;
 
-    #region ƒpƒ‰ƒ[ƒ^
-    public bool isKick;    // R‚é‚±‚Æ‚ª‰Â”\‚©‚Ç‚¤‚©
-    public float dis;      // R‚é‚Æ‚«‚Ì—Í‚Ì‘å‚«‚³
-    public Vector3 dir;    // R‚é‚Æ‚«‚Ì•ûŠp
+    #region ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿
+    public bool isKick;    // è¹´ã‚‹ã“ã¨ãŒå¯èƒ½ã‹ã©ã†ã‹
+    public float dis;      // è¹´ã‚‹ã¨ãã®åŠ›ã®å¤§ãã•
+    public Vector3 dir;    // è¹´ã‚‹ã¨ãã®æ–¹è§’
     #endregion
 
     private void Start()
     {
-        // ƒIƒuƒWƒFƒNƒg‚ğŒŸõ‚·‚é
+        // ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’æ¤œç´¢ã™ã‚‹
         m_lineGuide = GameObject.Find("LineController");
         m_player = GameObject.Find("Player");
 
-        // •`‰æoff
+        // æç”»off
         transform.gameObject.GetComponent<SpriteRenderer>().enabled = false;
-        // n“_‚ğİ’è
+        // å§‹ç‚¹ã‚’è¨­å®š
         startMousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         isKick = false;
     }
@@ -42,69 +42,69 @@ public class Arrow : MonoBehaviour
     {
         if(Input.GetMouseButtonUp(0))
         {
-            // –îˆó‚Ì‰Šú‰»ˆ—
+            // çŸ¢å°ã®åˆæœŸåŒ–å‡¦ç†
             transform.localScale = new Vector3(startSizeX, startSizeY, 0);
-            // •`‰æoff
+            // æç”»off
             transform.gameObject.GetComponent<SpriteRenderer>().enabled = false;
         }
         if (Input.GetMouseButton(0))
         {
-            // ƒ}ƒEƒX‚Ìƒ[ƒ‹ƒhÀ•W‚ğæ“¾‚·‚é
+            // ãƒã‚¦ã‚¹ã®ãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™ã‚’å–å¾—ã™ã‚‹
             Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
-            // n“_‚Æ‚Ì‹——£
+            // å§‹ç‚¹ã¨ã®è·é›¢
             dis = Vector2.Distance(startMousePos, mousePos);
 
-            // ˆø‚¢‚½‹——£‚ªˆê’èˆÈ‰º‚ÅR‚é‚±‚Æ‚ª‚Å‚«‚È‚¢ê‡
+            // å¼•ã„ãŸè·é›¢ãŒä¸€å®šä»¥ä¸‹ã§è¹´ã‚‹ã“ã¨ãŒã§ããªã„å ´åˆ
             if (dis < 0.4f)
             {
-                // •êe‚ÌƒAƒjƒ[ƒVƒ‡ƒ“‚ğÄ¶‚·‚é
-                m_player.GetComponent<PlayerAnimController>().PlayIdleAnim();  // ƒAƒuƒm[ƒ}ƒ‹ƒXƒLƒ“‚ÌIdleƒAƒjƒ
+                // æ¯è¦ªã®ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚’å†ç”Ÿã™ã‚‹
+                m_player.GetComponent<PlayerAnimController>().PlayIdleAnim();  // ã‚¢ãƒ–ãƒãƒ¼ãƒãƒ«ã‚¹ã‚­ãƒ³ã®Idleã‚¢ãƒ‹ãƒ¡
 
-                // •`‰æoff
+                // æç”»off
                 transform.gameObject.GetComponent<SpriteRenderer>().enabled = false;
-                // isKick‚ğfalse
+                // isKickã‚’false
                 isKick = false;
-                // ƒVƒ…ƒ~ƒŒ[ƒVƒ‡ƒ“‚Ì•`‰æOFF
+                // ã‚·ãƒ¥ãƒŸãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ã®æç”»OFF
                 m_lineGuide.GetComponent<SimulationController>().vecKick = Vector3.zero;
                 return;
             }
 
-            // R‚é‚±‚Æ‚ª‰Â”\‚È‹——£‚Ü‚Åˆø‚Á’£‚Á‚½ê‡(1“x‚µ‚©’†‚É“ü‚ç‚È‚¢)
+            // è¹´ã‚‹ã“ã¨ãŒå¯èƒ½ãªè·é›¢ã¾ã§å¼•ã£å¼µã£ãŸå ´åˆ(1åº¦ã—ã‹ä¸­ã«å…¥ã‚‰ãªã„)
             if(isKick == false)
             {
-                // •êe‚ÌƒAƒjƒ[ƒVƒ‡ƒ“‚ğÄ¶‚·‚é
-                m_player.GetComponent<PlayerAnimController>().PlayReadyAnim();  // R‚ép¨‚ÌƒAƒjƒ
+                // æ¯è¦ªã®ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚’å†ç”Ÿã™ã‚‹
+                m_player.GetComponent<PlayerAnimController>().PlayReadyAnim();  // è¹´ã‚‹å§¿å‹¢ã®ã‚¢ãƒ‹ãƒ¡
             }
 
-            // isKick‚ğtrue
+            // isKickã‚’true
             isKick = true;
 
-            // •`‰æon
+            // æç”»on
             transform.gameObject.GetComponent<SpriteRenderer>().enabled = true;
 
             //-------------------------------------
-            // ‹——£‚É‰‚¶‚Ä–îˆó‚Ì‘å‚«‚³‚ğ’²®‚·‚é
+            // è·é›¢ã«å¿œã˜ã¦çŸ¢å°ã®å¤§ãã•ã‚’èª¿æ•´ã™ã‚‹
             //-------------------------------------
 
-            // dis‚ÌÅ‘å’lAÅ¬’l‚ğ’´‚¦‚½ê‡
+            // disã®æœ€å¤§å€¤ã€æœ€å°å€¤ã‚’è¶…ãˆãŸå ´åˆ
             dis = dis > disMax ? disMax : dis;
             dis = dis < 0f ? 0f : dis;
 
             transform.localScale = new Vector3(startSizeX - dis, startSizeY + dis);
 
             //-------------------------------------
-            // –îˆó‚ğƒJ[ƒ\ƒ‹‚Ì‚ ‚é•ûŒü‚ÉŒü‚©‚¹‚é
+            // çŸ¢å°ã‚’ã‚«ãƒ¼ã‚½ãƒ«ã®ã‚ã‚‹æ–¹å‘ã«å‘ã‹ã›ã‚‹
             //-------------------------------------
 
-            // Œü‚«‚½‚¢•ûŒü‚ğŒvZ
+            // å‘ããŸã„æ–¹å‘ã‚’è¨ˆç®—
             dir = (startMousePos - mousePos);
 
-            // ‚±‚±‚ÅŒü‚«‚½‚¢•ûŒü‚É‰ñ“]
+            // ã“ã“ã§å‘ããŸã„æ–¹å‘ã«å›è»¢
             transform.rotation = Quaternion.FromToRotation(Vector3.up, new Vector3(dir.x, dir.y, 0f));
 
             //--------------------------------------------
-            // ‹O“¹—\‘ªü‚ğ•`‰æ‚·‚éƒpƒ‰ƒ[ƒ^‚ğİ’è‚·‚é
+            // è»Œé“äºˆæ¸¬ç·šã‚’æç”»ã™ã‚‹ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã‚’è¨­å®šã™ã‚‹
             //--------------------------------------------
             m_lineGuide.GetComponent<SimulationController>().enabled = true;
             m_lineGuide.GetComponent<SimulationController>().vecKick = dir.normalized * dis * m_player.GetComponent<Player>().m_mulPower;

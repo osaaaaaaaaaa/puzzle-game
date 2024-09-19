@@ -9,15 +9,15 @@ using System.Linq;
 
 public class NetworkManager : MonoBehaviour
 {
-    // ƒVƒ“ƒOƒ‹ƒgƒ“ ... ƒCƒ“ƒXƒ^ƒ“ƒX‚ğ•¡”‘¶İ‚³‚¹‚È‚¢AƒfƒUƒCƒ“ƒpƒ^[ƒ“
+    // ã‚·ãƒ³ã‚°ãƒ«ãƒˆãƒ³ ... ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã‚’è¤‡æ•°å­˜åœ¨ã•ã›ãªã„ã€ãƒ‡ã‚¶ã‚¤ãƒ³ãƒ‘ã‚¿ãƒ¼ãƒ³
 
-    // ƒCƒ“ƒXƒ^ƒ“ƒXì¬
+    // ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ä½œæˆ
     private static NetworkManager instance;
     public static NetworkManager Instance
     {
         get
         {
-            // GETƒvƒƒpƒeƒB‚ğŒÄ‚Î‚ê‚½‚Æ‚«‚ÉƒCƒ“ƒXƒ^ƒ“ƒX‚ğì¬‚·‚é(‰‰ñ‚Ì‚İ)
+            // GETãƒ—ãƒ­ãƒ‘ãƒ†ã‚£ã‚’å‘¼ã°ã‚ŒãŸã¨ãã«ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã‚’ä½œæˆã™ã‚‹(åˆå›ã®ã¿)
             if (instance == null)
             {
                 GameObject gameObj = new GameObject("NetworkManager");
@@ -28,11 +28,11 @@ public class NetworkManager : MonoBehaviour
         }
     }
 
-    #region APIÚ‘±î•ñ
+    #region APIæ¥ç¶šæƒ…å ±
     const string API_BASE_URL = "https://api-tikokukaihi.japaneast.cloudapp.azure.com/api/";
     #endregion
 
-    #region ƒ†[ƒU[î•ñ
+    #region ãƒ¦ãƒ¼ã‚¶ãƒ¼æƒ…å ±
     public bool IsDistressSignalTutrial { get; private set; } = false;
     public int UserID { get; private set; } = 0;
     public string UserName { get; private set; } = "";
@@ -44,27 +44,27 @@ public class NetworkManager : MonoBehaviour
     public int ItemCnt { get; private set; } = 0;
     #endregion
 
-    #region ƒXƒe[ƒWƒŠƒUƒ‹ƒgî•ñE‹~“ïM†î•ñ
+    #region ã‚¹ãƒ†ãƒ¼ã‚¸ãƒªã‚¶ãƒ«ãƒˆæƒ…å ±ãƒ»æ•‘é›£ä¿¡å·æƒ…å ±
     public List<ShowStageResultResponse> StageResults { get; private set; } = new List<ShowStageResultResponse>();
     public List<ShowDistressSignalResponse> dSignalList { get; private set; } = new List<ShowDistressSignalResponse>();
     #endregion
 
-    // ‹~“ïM†ƒVƒXƒeƒ€‚ğ‰ğ•ú‚·‚éƒAƒCƒeƒ€ID
+    // æ•‘é›£ä¿¡å·ã‚·ã‚¹ãƒ†ãƒ ã‚’è§£æ”¾ã™ã‚‹ã‚¢ã‚¤ãƒ†ãƒ ID
     const int c_DistressSignalEnableItemID = 35;
-    // ƒXƒe[ƒW‚Åg—p‚Å‚«‚éƒAƒCƒeƒ€ID
+    // ã‚¹ãƒ†ãƒ¼ã‚¸ã§ä½¿ç”¨ã§ãã‚‹ã‚¢ã‚¤ãƒ†ãƒ ID
     public int GolfClubItemID { get; private set; } = 34;
 
     /// <summary>
-    /// stringŒ^‚©‚çVector3Œ^‚É•ÏŠ·‚·‚é
+    /// stringå‹ã‹ã‚‰Vector3å‹ã«å¤‰æ›ã™ã‚‹
     /// </summary>
     public Vector3 StringToVector3(string strVector)
     {
-        // •s—v‚È()‚ğíœ
+        // ä¸è¦ãª()ã‚’å‰Šé™¤
         strVector = strVector.Replace("(", "").Replace(")", "");
-        // C‚Å•ªŠ„‚µ‚Äxyz‚ğæ“¾‚·‚é
+        // ï¼Œã§åˆ†å‰²ã—ã¦xyzã‚’å–å¾—ã™ã‚‹
         string[] strValues = strVector.Split(",");
 
-        // floatŒ^‚É•ÏŠ·‚µ‚ÄVector3‚ğì¬‚·‚é
+        // floatå‹ã«å¤‰æ›ã—ã¦Vector3ã‚’ä½œæˆã™ã‚‹
         if(float.TryParse(strValues[0], out float posX) 
             && float.TryParse(strValues[1], out float posY) 
             && float.TryParse(strValues[2], out float posZ))
@@ -76,7 +76,7 @@ public class NetworkManager : MonoBehaviour
     }
 
     /// <summary>
-    /// ‹~“ïM†‚Ìƒ`ƒ…[ƒgƒŠƒAƒ‹‚ğŒ©‚½‚±‚Æ‚ğ‹L˜^‚·‚é
+    /// æ•‘é›£ä¿¡å·ã®ãƒãƒ¥ãƒ¼ãƒˆãƒªã‚¢ãƒ«ã‚’è¦‹ãŸã“ã¨ã‚’è¨˜éŒ²ã™ã‚‹
     /// </summary>
     public void TutrialViewed()
     {
@@ -85,29 +85,29 @@ public class NetworkManager : MonoBehaviour
     }
 
     /// <summary>
-    /// ƒ†[ƒU[“o˜^ˆ—
+    /// ãƒ¦ãƒ¼ã‚¶ãƒ¼ç™»éŒ²å‡¦ç†
     /// </summary>
     public IEnumerator StoreUser(string name, Action<bool> result)
     {
-        // ƒT[ƒo[‚É‘—M‚·‚éƒIƒuƒWƒFƒNƒg‚ğì¬
+        // ã‚µãƒ¼ãƒãƒ¼ã«é€ä¿¡ã™ã‚‹ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ä½œæˆ
         StoreUserRequest requestData = new StoreUserRequest();
         requestData.Name = name;
-        // ƒT[ƒo[‚É‘—MƒIƒuƒWƒFƒNƒg‚ğJSON‚É•ÏŠ·
+        // ã‚µãƒ¼ãƒãƒ¼ã«é€ä¿¡ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’JSONã«å¤‰æ›
         string json = JsonConvert.SerializeObject(requestData);
-        // ‘—M
+        // é€ä¿¡
         UnityWebRequest request = UnityWebRequest.Post(API_BASE_URL + "users/store", json, "application/json");
 
-        // Œ‹‰Ê‚ğóM‚·‚é‚È‚Å‘Ò‹@
+        // çµæœã‚’å—ä¿¡ã™ã‚‹ãªã§å¾…æ©Ÿ
         yield return request.SendWebRequest();
         bool isSuccess = false;
 
         if (request.result == UnityWebRequest.Result.Success
             && request.responseCode == 200)
         {
-            // ’ÊM‚ª¬Œ÷‚µ‚½ê‡A•Ô‚Á‚Ä‚«‚½JSON‚ğƒIƒuƒWƒFƒNƒg‚É•ÏŠ·
+            // é€šä¿¡ãŒæˆåŠŸã—ãŸå ´åˆã€è¿”ã£ã¦ããŸJSONã‚’ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã«å¤‰æ›
             string resultJson = request.downloadHandler.text;
             StoreUserResponse response = JsonConvert.DeserializeObject<StoreUserResponse>(resultJson);
-            // ƒtƒ@ƒCƒ‹‚Éƒ†[ƒU[î•ñ‚ğ•Û‘¶‚·‚é
+            // ãƒ•ã‚¡ã‚¤ãƒ«ã«ãƒ¦ãƒ¼ã‚¶ãƒ¼æƒ…å ±ã‚’ä¿å­˜ã™ã‚‹
             this.UserName = name;
             this.UserID = response.UserID;
             this.IsDistressSignalTutrial = false;
@@ -115,12 +115,12 @@ public class NetworkManager : MonoBehaviour
             isSuccess = true;
         }
 
-        // ŒÄ‚Ño‚µŒ³‚Ìresultˆ—‚ğŒÄ‚Ño‚·
+        // å‘¼ã³å‡ºã—å…ƒã®resultå‡¦ç†ã‚’å‘¼ã³å‡ºã™
         result?.Invoke(isSuccess);
     }
 
     /// <summary>
-    /// ƒ†[ƒU[î•ñ‚ğƒ[ƒJƒ‹‚É•Û‘¶‚·‚é
+    /// ãƒ¦ãƒ¼ã‚¶ãƒ¼æƒ…å ±ã‚’ãƒ­ãƒ¼ã‚«ãƒ«ã«ä¿å­˜ã™ã‚‹
     /// </summary>
     void SaveUserData()
     {
@@ -129,19 +129,19 @@ public class NetworkManager : MonoBehaviour
         saveData.UserID = this.UserID;
         saveData.IsDistressSignalTutrial = this.IsDistressSignalTutrial;
         string json = JsonConvert.SerializeObject(saveData);
-        // Application.persistentDataPath‚ÍOS–ˆ‚Å•Û‘¶êŠ‚ªŒÅ’è‚³‚ê‚Ä‚¢‚é
+        // Application.persistentDataPathã¯OSæ¯ã§ä¿å­˜å ´æ‰€ãŒå›ºå®šã•ã‚Œã¦ã„ã‚‹
         var writer = new StreamWriter(Application.persistentDataPath + "/saveData.json");
         writer.Write(json);
-        writer.Flush();     // ‚·‚®‚É‘‚«o‚·‚æ‚¤–½—ß‚·‚é
+        writer.Flush();     // ã™ãã«æ›¸ãå‡ºã™ã‚ˆã†å‘½ä»¤ã™ã‚‹
         writer.Close();
     }
 
     /// <summary>
-    /// ƒ†[ƒU[î•ñ‚ğƒ[ƒJƒ‹‚©‚ç“Ç‚İ‚Ş
+    /// ãƒ¦ãƒ¼ã‚¶ãƒ¼æƒ…å ±ã‚’ãƒ­ãƒ¼ã‚«ãƒ«ã‹ã‚‰èª­ã¿è¾¼ã‚€
     /// </summary>
     public bool LoadUserData()
     {
-        // ƒtƒ@ƒCƒ‹‚Ì‘¶İƒ`ƒFƒbƒN
+        // ãƒ•ã‚¡ã‚¤ãƒ«ã®å­˜åœ¨ãƒã‚§ãƒƒã‚¯
         if (!File.Exists(Application.persistentDataPath + "/saveData.json")) return false;
 
         var reader = new StreamReader(Application.persistentDataPath + "/saveData.json");
@@ -155,20 +155,20 @@ public class NetworkManager : MonoBehaviour
     }
 
     /// <summary>
-    /// ƒ†[ƒU[î•ñæ“¾ˆ—
+    /// ãƒ¦ãƒ¼ã‚¶ãƒ¼æƒ…å ±å–å¾—å‡¦ç†
     /// </summary>
     public IEnumerator GetUserData(Action<ShowUserResponse> result)
     {
-        // ‘—M
+        // é€ä¿¡
         UnityWebRequest request = UnityWebRequest.Get(API_BASE_URL + "users/show?user_id=" + UserID);
 
-        // Œ‹‰Ê‚ğóM‚·‚é‚È‚Å‘Ò‹@
+        // çµæœã‚’å—ä¿¡ã™ã‚‹ãªã§å¾…æ©Ÿ
         yield return request.SendWebRequest();
 
         if (request.result == UnityWebRequest.Result.Success
             && request.responseCode == 200)
         {
-            // ’ÊM‚ª¬Œ÷‚µ‚½ê‡A•Ô‚Á‚Ä‚«‚½JSON‚ğƒIƒuƒWƒFƒNƒg‚É•ÏŠ·
+            // é€šä¿¡ãŒæˆåŠŸã—ãŸå ´åˆã€è¿”ã£ã¦ããŸJSONã‚’ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã«å¤‰æ›
             string resultJson = request.downloadHandler.text;
             ShowUserResponse response = JsonConvert.DeserializeObject<ShowUserResponse>(resultJson);
             this.TitleID = response.TitleID;
@@ -177,227 +177,227 @@ public class NetworkManager : MonoBehaviour
             this.TotalScore = response.TotalScore;
             this.IsDistressSignalEnabled = response.IsDistressSignalEnabled;
 
-            // ŒÄ‚Ño‚µŒ³‚Ìresultˆ—‚ğŒÄ‚Ño‚·
+            // å‘¼ã³å‡ºã—å…ƒã®resultå‡¦ç†ã‚’å‘¼ã³å‡ºã™
             result?.Invoke(response);
         }
         else
         {
-            // ŒÄ‚Ño‚µŒ³‚Ìresultˆ—‚ğŒÄ‚Ño‚·
+            // å‘¼ã³å‡ºã—å…ƒã®resultå‡¦ç†ã‚’å‘¼ã³å‡ºã™
             result?.Invoke(null);
         }
     }
 
     /// <summary>
-    /// ƒ†[ƒU[î•ñXVˆ—
+    /// ãƒ¦ãƒ¼ã‚¶ãƒ¼æƒ…å ±æ›´æ–°å‡¦ç†
     /// </summary>
     public IEnumerator UpdateUser(string name, int title_id, int stage_id, int icon_id, Action<ErrorResponse> result)
     {
-        // ƒT[ƒo[‚É‘—M‚·‚éƒIƒuƒWƒFƒNƒg‚ğì¬
+        // ã‚µãƒ¼ãƒãƒ¼ã«é€ä¿¡ã™ã‚‹ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ä½œæˆ
         UpdateUserData requestData = new UpdateUserData();
         requestData.UserID = UserID;
         requestData.Name = name;
         requestData.TitleID = title_id;
         requestData.StageID = stage_id;
         requestData.IconID = icon_id;
-        // ƒT[ƒo[‚É‘—MƒIƒuƒWƒFƒNƒg‚ğJSON‚É•ÏŠ·
+        // ã‚µãƒ¼ãƒãƒ¼ã«é€ä¿¡ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’JSONã«å¤‰æ›
         string json = JsonConvert.SerializeObject(requestData);
-        // ‘—M
+        // é€ä¿¡
         UnityWebRequest request = UnityWebRequest.Post(API_BASE_URL + "users/update", json, "application/json");
 
-        // Œ‹‰Ê‚ğóM‚·‚é‚Ü‚Å‘Ò‹@
+        // çµæœã‚’å—ä¿¡ã™ã‚‹ã¾ã§å¾…æ©Ÿ
         yield return request.SendWebRequest();
 
         if (request.result == UnityWebRequest.Result.Success
             && request.responseCode == 200)
         {
-            // ’ÊM‚ª¬Œ÷‚µ‚½ê‡Aƒtƒ@ƒCƒ‹‚Éƒ†[ƒU[î•ñ‚ğ•Û‘¶‚·‚é
+            // é€šä¿¡ãŒæˆåŠŸã—ãŸå ´åˆã€ãƒ•ã‚¡ã‚¤ãƒ«ã«ãƒ¦ãƒ¼ã‚¶ãƒ¼æƒ…å ±ã‚’ä¿å­˜ã™ã‚‹
             this.UserName = name;
             this.TitleID = title_id;
             this.StageID = stage_id;
             this.IconID = icon_id;
             SaveUserData();
 
-            // ŒÄ‚Ño‚µŒ³‚Ìresultˆ—‚ğŒÄ‚Ño‚·
+            // å‘¼ã³å‡ºã—å…ƒã®resultå‡¦ç†ã‚’å‘¼ã³å‡ºã™
             result?.Invoke(null);
         }
         else
         {
-            // ƒGƒ‰[•¶‚ğæ“¾‚·‚é
+            // ã‚¨ãƒ©ãƒ¼æ–‡ã‚’å–å¾—ã™ã‚‹
             string resultJson = request.downloadHandler.text;
             ErrorResponse response = JsonConvert.DeserializeObject<ErrorResponse>(resultJson);
 
-            // ŒÄ‚Ño‚µŒ³‚Ìresultˆ—‚ğŒÄ‚Ño‚·
+            // å‘¼ã³å‡ºã—å…ƒã®resultå‡¦ç†ã‚’å‘¼ã³å‡ºã™
             result?.Invoke(response);
         }
     }
 
     /// <summary>
-    /// ŠƒAƒCƒeƒ€XVˆ—
+    /// æ‰€æŒã‚¢ã‚¤ãƒ†ãƒ æ›´æ–°å‡¦ç†
     /// </summary>
     public IEnumerator UpdateUserItem(int itemID, int optionID, int allieAmount, Action<bool> result)
     {
-        // ƒT[ƒo[‚É‘—M‚·‚éƒIƒuƒWƒFƒNƒg‚ğì¬
+        // ã‚µãƒ¼ãƒãƒ¼ã«é€ä¿¡ã™ã‚‹ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ä½œæˆ
         UpdateUserItemRequest requestData = new UpdateUserItemRequest();
         requestData.UserID = UserID;
         requestData.ItemID = itemID;
         requestData.OptionID = optionID;
         requestData.AllieAmount = allieAmount;
-        // ƒT[ƒo[‚É‘—MƒIƒuƒWƒFƒNƒg‚ğJSON‚É•ÏŠ·
+        // ã‚µãƒ¼ãƒãƒ¼ã«é€ä¿¡ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’JSONã«å¤‰æ›
         string json = JsonConvert.SerializeObject(requestData);
-        // ‘—M
+        // é€ä¿¡
         UnityWebRequest request = UnityWebRequest.Post(API_BASE_URL + "users/item/update", json, "application/json");
 
-        // Œ‹‰Ê‚ğóM‚·‚é‚Ü‚Å‘Ò‹@
+        // çµæœã‚’å—ä¿¡ã™ã‚‹ã¾ã§å¾…æ©Ÿ
         yield return request.SendWebRequest();
         bool isSuccess = false;
 
         if (request.result == UnityWebRequest.Result.Success
             && request.responseCode == 200)
         {
-            if (itemID == this.GolfClubItemID) this.ItemCnt = this.ItemCnt + allieAmount < 0 ? 0 : this.ItemCnt + allieAmount; // ŠƒAƒCƒeƒ€”‚ğXV‚·‚é
+            if (itemID == this.GolfClubItemID) this.ItemCnt = this.ItemCnt + allieAmount < 0 ? 0 : this.ItemCnt + allieAmount; // æ‰€æŒã‚¢ã‚¤ãƒ†ãƒ æ•°ã‚’æ›´æ–°ã™ã‚‹
 
             isSuccess = true;
         }
 
-        // ŒÄ‚Ño‚µŒ³‚Ìresultˆ—‚ğŒÄ‚Ño‚·
+        // å‘¼ã³å‡ºã—å…ƒã®resultå‡¦ç†ã‚’å‘¼ã³å‡ºã™
         result?.Invoke(isSuccess);
     }
 
     /// <summary>
-    /// ŠƒAƒCƒeƒ€æ“¾ˆ—
+    /// æ‰€æŒã‚¢ã‚¤ãƒ†ãƒ å–å¾—å‡¦ç†
     /// </summary>
     public IEnumerator GetUserItem(int type, Action<ShowUserItemResponse[]> result)
     {
-        // ‘—M
+        // é€ä¿¡
         UnityWebRequest request = UnityWebRequest.Get(API_BASE_URL + "users/item/show?user_id=" + UserID + "&type=" + type);
 
-        // Œ‹‰Ê‚ğóM‚·‚é‚È‚Å‘Ò‹@
+        // çµæœã‚’å—ä¿¡ã™ã‚‹ãªã§å¾…æ©Ÿ
         yield return request.SendWebRequest();
 
         if (request.result == UnityWebRequest.Result.Success
             && request.responseCode == 200)
         {
-            // ’ÊM‚ª¬Œ÷‚µ‚½ê‡A•Ô‚Á‚Ä‚«‚½JSON‚ğƒIƒuƒWƒFƒNƒg‚É•ÏŠ·
+            // é€šä¿¡ãŒæˆåŠŸã—ãŸå ´åˆã€è¿”ã£ã¦ããŸJSONã‚’ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã«å¤‰æ›
             string resultJson = request.downloadHandler.text;
             ShowUserItemResponse[] response = JsonConvert.DeserializeObject<ShowUserItemResponse[]>(resultJson);
 
             if (type == 3 && response.Length != 0) this.ItemCnt = response[0].Amount;
 
-            // ŒÄ‚Ño‚µŒ³‚Ìresultˆ—‚ğŒÄ‚Ño‚·
+            // å‘¼ã³å‡ºã—å…ƒã®resultå‡¦ç†ã‚’å‘¼ã³å‡ºã™
             result?.Invoke(response);
         }
         else
         {
-            // ŒÄ‚Ño‚µŒ³‚Ìresultˆ—‚ğŒÄ‚Ño‚·
+            // å‘¼ã³å‡ºã—å…ƒã®resultå‡¦ç†ã‚’å‘¼ã³å‡ºã™
             result?.Invoke(null);
         }
     }
 
     /// <summary>
-    /// ƒtƒHƒ[ƒŠƒXƒgæ“¾ˆ—
+    /// ãƒ•ã‚©ãƒ­ãƒ¼ãƒªã‚¹ãƒˆå–å¾—å‡¦ç†
     /// </summary>
     public IEnumerator GetFollowList(Action<ShowUserFollowResponse[]> result)
     {
-        // ‘—M
+        // é€ä¿¡
         UnityWebRequest request = UnityWebRequest.Get(API_BASE_URL + "users/follow/show?user_id=" + UserID);
 
-        // Œ‹‰Ê‚ğóM‚·‚é‚Ü‚Å‘Ò‹@
+        // çµæœã‚’å—ä¿¡ã™ã‚‹ã¾ã§å¾…æ©Ÿ
         yield return request.SendWebRequest();
 
         if (request.result == UnityWebRequest.Result.Success
             && request.responseCode == 200)
         {
-            // ’ÊM‚ª¬Œ÷‚µ‚½ê‡A•Ô‚Á‚Ä‚«‚½JSON‚ğƒIƒuƒWƒFƒNƒg‚É•ÏŠ·
+            // é€šä¿¡ãŒæˆåŠŸã—ãŸå ´åˆã€è¿”ã£ã¦ããŸJSONã‚’ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã«å¤‰æ›
             string resultJson = request.downloadHandler.text;
             ShowUserFollowResponse[] response = JsonConvert.DeserializeObject<ShowUserFollowResponse[]>(resultJson);
 
-            // ŒÄ‚Ño‚µŒ³‚Ìresultˆ—‚ğŒÄ‚Ño‚·
+            // å‘¼ã³å‡ºã—å…ƒã®resultå‡¦ç†ã‚’å‘¼ã³å‡ºã™
             result?.Invoke(response);
         }
         else
         {
-            // ŒÄ‚Ño‚µŒ³‚Ìresultˆ—‚ğŒÄ‚Ño‚·
+            // å‘¼ã³å‡ºã—å…ƒã®resultå‡¦ç†ã‚’å‘¼ã³å‡ºã™
             result?.Invoke(null);
         }
     }
 
     /// <summary>
-    /// ‚¨‚·‚·‚ß‚Ìƒ†[ƒU[ƒŠƒXƒgæ“¾ˆ—
+    /// ãŠã™ã™ã‚ã®ãƒ¦ãƒ¼ã‚¶ãƒ¼ãƒªã‚¹ãƒˆå–å¾—å‡¦ç†
     /// </summary>
     public IEnumerator GetRecommendedUserList(Action<ShowUserRecommendedResponse[]> result)
     {
-        // ‘—M
+        // é€ä¿¡
         UnityWebRequest request = UnityWebRequest.Get(API_BASE_URL + "users/recommended/show?user_id=" + UserID);
 
-        // Œ‹‰Ê‚ğóM‚·‚é‚Ü‚Å‘Ò‹@
+        // çµæœã‚’å—ä¿¡ã™ã‚‹ã¾ã§å¾…æ©Ÿ
         yield return request.SendWebRequest();
 
         if (request.result == UnityWebRequest.Result.Success
             && request.responseCode == 200)
         {
-            // ’ÊM‚ª¬Œ÷‚µ‚½ê‡A•Ô‚Á‚Ä‚«‚½JSON‚ğƒIƒuƒWƒFƒNƒg‚É•ÏŠ·
+            // é€šä¿¡ãŒæˆåŠŸã—ãŸå ´åˆã€è¿”ã£ã¦ããŸJSONã‚’ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã«å¤‰æ›
             string resultJson = request.downloadHandler.text;
             ShowUserRecommendedResponse[] response = JsonConvert.DeserializeObject<ShowUserRecommendedResponse[]>(resultJson);
 
-            // ŒÄ‚Ño‚µŒ³‚Ìresultˆ—‚ğŒÄ‚Ño‚·
+            // å‘¼ã³å‡ºã—å…ƒã®resultå‡¦ç†ã‚’å‘¼ã³å‡ºã™
             result?.Invoke(response);
         }
         else
         {
-            // ŒÄ‚Ño‚µŒ³‚Ìresultˆ—‚ğŒÄ‚Ño‚·
+            // å‘¼ã³å‡ºã—å…ƒã®resultå‡¦ç†ã‚’å‘¼ã³å‡ºã™
             result?.Invoke(null);
         }
     }
 
     /// <summary>
-    /// ƒtƒHƒ[“o˜^ˆ—
+    /// ãƒ•ã‚©ãƒ­ãƒ¼ç™»éŒ²å‡¦ç†
     /// </summary>
     public IEnumerator StoreUserFollow(int following_user_id, Action<ErrorResponse> result)
     {
-        // ƒT[ƒo[‚É‘—M‚·‚éƒIƒuƒWƒFƒNƒg‚ğì¬
+        // ã‚µãƒ¼ãƒãƒ¼ã«é€ä¿¡ã™ã‚‹ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ä½œæˆ
         UserFollowRequest requestData = new UserFollowRequest();
         requestData.UserID = UserID;
         requestData.FollowingUserID = following_user_id;
-        // ƒT[ƒo[‚É‘—MƒIƒuƒWƒFƒNƒg‚ğJSON‚É•ÏŠ·
+        // ã‚µãƒ¼ãƒãƒ¼ã«é€ä¿¡ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’JSONã«å¤‰æ›
         string json = JsonConvert.SerializeObject(requestData);
-        // ‘—M
+        // é€ä¿¡
         UnityWebRequest request = UnityWebRequest.Post(API_BASE_URL + "users/follow/store", json, "application/json");
 
-        // Œ‹‰Ê‚ğóM‚·‚é‚Ü‚Å‘Ò‹@
+        // çµæœã‚’å—ä¿¡ã™ã‚‹ã¾ã§å¾…æ©Ÿ
         yield return request.SendWebRequest();
 
         if (request.result == UnityWebRequest.Result.Success
             && request.responseCode == 200)
         {
-            // ŒÄ‚Ño‚µŒ³‚Ìresultˆ—‚ğŒÄ‚Ño‚·
+            // å‘¼ã³å‡ºã—å…ƒã®resultå‡¦ç†ã‚’å‘¼ã³å‡ºã™
             result?.Invoke(null);
         }
         else
         {
-            // ƒGƒ‰[•¶‚ğæ“¾‚·‚é
+            // ã‚¨ãƒ©ãƒ¼æ–‡ã‚’å–å¾—ã™ã‚‹
             string resultJson = request.downloadHandler.text;
             ErrorResponse response = JsonConvert.DeserializeObject<ErrorResponse>(resultJson);
 
-            // ŒÄ‚Ño‚µŒ³‚Ìresultˆ—‚ğŒÄ‚Ño‚·
+            // å‘¼ã³å‡ºã—å…ƒã®resultå‡¦ç†ã‚’å‘¼ã³å‡ºã™
             result?.Invoke(response);
         }
     }
 
     /// <summary>
-    /// ƒtƒHƒ[‰ğœˆ—
+    /// ãƒ•ã‚©ãƒ­ãƒ¼è§£é™¤å‡¦ç†
     /// </summary>
     public IEnumerator DestroyUserFollow(int following_user_id, Action<bool> result)
     {
-        // ƒT[ƒo[‚É‘—M‚·‚éƒIƒuƒWƒFƒNƒg‚ğì¬
+        // ã‚µãƒ¼ãƒãƒ¼ã«é€ä¿¡ã™ã‚‹ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ä½œæˆ
         UserFollowRequest requestData = new UserFollowRequest();
         requestData.UserID = UserID;
         requestData.FollowingUserID = following_user_id;
-        // ƒT[ƒo[‚É‘—MƒIƒuƒWƒFƒNƒg‚ğJSON‚É•ÏŠ·
+        // ã‚µãƒ¼ãƒãƒ¼ã«é€ä¿¡ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’JSONã«å¤‰æ›
         string json = JsonConvert.SerializeObject(requestData);
-        // ‘—M
+        // é€ä¿¡
         UnityWebRequest request = UnityWebRequest.Post(API_BASE_URL + "users/follow/destroy", json, "application/json");
 
-        // Œ‹‰Ê‚ğóM‚·‚é‚Ü‚Å‘Ò‹@
+        // çµæœã‚’å—ä¿¡ã™ã‚‹ã¾ã§å¾…æ©Ÿ
         yield return request.SendWebRequest();
         bool isSuccess = false;
 
@@ -407,46 +407,46 @@ public class NetworkManager : MonoBehaviour
             isSuccess = true;
         }
 
-        // ŒÄ‚Ño‚µŒ³‚Ìresultˆ—‚ğŒÄ‚Ño‚·
+        // å‘¼ã³å‡ºã—å…ƒã®resultå‡¦ç†ã‚’å‘¼ã³å‡ºã™
         result?.Invoke(isSuccess);
     }
 
     /// <summary>
-    /// ƒXƒe[ƒWƒŠƒUƒ‹ƒg‚Ìæ“¾ˆ—
+    /// ã‚¹ãƒ†ãƒ¼ã‚¸ãƒªã‚¶ãƒ«ãƒˆã®å–å¾—å‡¦ç†
     /// </summary>
     public IEnumerator GetStageResults(Action<ShowStageResultResponse[]> result)
     {
-        // ‘—M
+        // é€ä¿¡
         UnityWebRequest request = UnityWebRequest.Get(API_BASE_URL + "users/stage/result/show?user_id=" + UserID);
 
-        // Œ‹‰Ê‚ğóM‚·‚é‚Ü‚Å‘Ò‹@
+        // çµæœã‚’å—ä¿¡ã™ã‚‹ã¾ã§å¾…æ©Ÿ
         yield return request.SendWebRequest();
 
         if (request.result == UnityWebRequest.Result.Success
             && request.responseCode == 200)
         {
-            Debug.Log("¬Œ÷");
-            // ’ÊM‚ª¬Œ÷‚µ‚½ê‡A•Ô‚Á‚Ä‚«‚½JSON‚ğƒIƒuƒWƒFƒNƒg‚É•ÏŠ·
+            Debug.Log("æˆåŠŸ");
+            // é€šä¿¡ãŒæˆåŠŸã—ãŸå ´åˆã€è¿”ã£ã¦ããŸJSONã‚’ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã«å¤‰æ›
             string resultJson = request.downloadHandler.text;
             ShowStageResultResponse[] response = JsonConvert.DeserializeObject<ShowStageResultResponse[]>(resultJson);
             this.StageResults = new (response);
 
-            // ŒÄ‚Ño‚µŒ³‚Ìresultˆ—‚ğŒÄ‚Ño‚·
+            // å‘¼ã³å‡ºã—å…ƒã®resultå‡¦ç†ã‚’å‘¼ã³å‡ºã™
             result?.Invoke(response);
         }
         else
         {
-            // ŒÄ‚Ño‚µŒ³‚Ìresultˆ—‚ğŒÄ‚Ño‚·
+            // å‘¼ã³å‡ºã—å…ƒã®resultå‡¦ç†ã‚’å‘¼ã³å‡ºã™
             result?.Invoke(null);
         }
     }
 
     /// <summary>
-    /// ƒXƒe[ƒWƒNƒŠƒAˆ—
+    /// ã‚¹ãƒ†ãƒ¼ã‚¸ã‚¯ãƒªã‚¢å‡¦ç†
     /// </summary>
     public IEnumerator UpdateStageClear(bool isUpdateUserStageID, ShowStageResultResponse clearData , Action<UpdateStageClearRequest> result)
     {
-        // ƒT[ƒo[‚É‘—M‚·‚éƒIƒuƒWƒFƒNƒg‚ğì¬
+        // ã‚µãƒ¼ãƒãƒ¼ã«é€ä¿¡ã™ã‚‹ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ä½œæˆ
         UpdateStageClearRequest requestData = new UpdateStageClearRequest();
         requestData.UserID = this.UserID;
         requestData.StageID = clearData.StageID;
@@ -454,145 +454,145 @@ public class NetworkManager : MonoBehaviour
         requestData.IsMedal2 = clearData.IsMedal2;
         requestData.Time = clearData.Time;
         requestData.Score = clearData.Score;
-        // ƒT[ƒo[‚É‘—MƒIƒuƒWƒFƒNƒg‚ğJSON‚É•ÏŠ·
+        // ã‚µãƒ¼ãƒãƒ¼ã«é€ä¿¡ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’JSONã«å¤‰æ›
         string json = JsonConvert.SerializeObject(requestData);
-        // ‘—M
+        // é€ä¿¡
         UnityWebRequest request = UnityWebRequest.Post(API_BASE_URL + "users/stage/clear/update", json, "application/json");
 
-        // Œ‹‰Ê‚ğóM‚·‚é‚Ü‚Å‘Ò‹@
+        // çµæœã‚’å—ä¿¡ã™ã‚‹ã¾ã§å¾…æ©Ÿ
         yield return request.SendWebRequest();
 
         if (request.result == UnityWebRequest.Result.Success
             && request.responseCode == 200)
         {
-            // ’ÊM‚ª¬Œ÷‚µ‚½ê‡A•Ô‚Á‚Ä‚«‚½JSON‚ğƒIƒuƒWƒFƒNƒg‚É•ÏŠ·
+            // é€šä¿¡ãŒæˆåŠŸã—ãŸå ´åˆã€è¿”ã£ã¦ããŸJSONã‚’ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã«å¤‰æ›
             string resultJson = request.downloadHandler.text;
             ShowStageResultResponse response = JsonConvert.DeserializeObject<ShowStageResultResponse>(resultJson);
 
             if(this.StageResults.Count < clearData.StageID)
             {
-                // ƒf[ƒ^‚ª‘¶İ‚µ‚È‚¢ê‡‚Í’Ç‰Á
+                // ãƒ‡ãƒ¼ã‚¿ãŒå­˜åœ¨ã—ãªã„å ´åˆã¯è¿½åŠ 
                 this.StageResults.Add(response);
             }
             else
             {
-                // ƒf[ƒ^‚ª‘¶İ‚·‚éê‡‚ÍXV
+                // ãƒ‡ãƒ¼ã‚¿ãŒå­˜åœ¨ã™ã‚‹å ´åˆã¯æ›´æ–°
                 this.StageResults[clearData.StageID - 1] = response;
             }
 
-            // ƒ†[ƒU[‚ªƒXƒe[ƒW‚ğ‰ƒNƒŠƒA‚µ‚½ê‡
+            // ãƒ¦ãƒ¼ã‚¶ãƒ¼ãŒã‚¹ãƒ†ãƒ¼ã‚¸ã‚’åˆã‚¯ãƒªã‚¢ã—ãŸå ´åˆ
             if (isUpdateUserStageID) this.StageID++;
 
-            // ŒÄ‚Ño‚µŒ³‚Ìresultˆ—‚ğŒÄ‚Ño‚·
+            // å‘¼ã³å‡ºã—å…ƒã®resultå‡¦ç†ã‚’å‘¼ã³å‡ºã™
             result?.Invoke(null);
         }
         else
         {
-            // ŒÄ‚Ño‚µŒ³‚Ìresultˆ—‚ğŒÄ‚Ño‚·
+            // å‘¼ã³å‡ºã—å…ƒã®resultå‡¦ç†ã‚’å‘¼ã³å‡ºã™
             result?.Invoke(null);
         }
     }
 
     /// <summary>
-    /// ƒ‰ƒ“ƒLƒ“ƒOæ“¾ˆ—
+    /// ãƒ©ãƒ³ã‚­ãƒ³ã‚°å–å¾—å‡¦ç†
     /// </summary>
     public IEnumerator GetRankingList(Action<ShowRankingResponse[]> result)
     {
-        // ‘—M
+        // é€ä¿¡
         UnityWebRequest request = UnityWebRequest.Get(API_BASE_URL + "users/ranking/show?user_id=" + UserID);
 
-        // Œ‹‰Ê‚ğóM‚·‚é‚Ü‚Å‘Ò‹@
+        // çµæœã‚’å—ä¿¡ã™ã‚‹ã¾ã§å¾…æ©Ÿ
         yield return request.SendWebRequest();
 
         if (request.result == UnityWebRequest.Result.Success
             && request.responseCode == 200)
         {
-            // ’ÊM‚ª¬Œ÷‚µ‚½ê‡A•Ô‚Á‚Ä‚«‚½JSON‚ğƒIƒuƒWƒFƒNƒg‚É•ÏŠ·
+            // é€šä¿¡ãŒæˆåŠŸã—ãŸå ´åˆã€è¿”ã£ã¦ããŸJSONã‚’ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã«å¤‰æ›
             string resultJson = request.downloadHandler.text;
             ShowRankingResponse[] response = JsonConvert.DeserializeObject<ShowRankingResponse[]>(resultJson);
 
-            // ŒÄ‚Ño‚µŒ³‚Ìresultˆ—‚ğŒÄ‚Ño‚·
+            // å‘¼ã³å‡ºã—å…ƒã®resultå‡¦ç†ã‚’å‘¼ã³å‡ºã™
             result?.Invoke(response);
         }
         else
         {
-            // ŒÄ‚Ño‚µŒ³‚Ìresultˆ—‚ğŒÄ‚Ño‚·
+            // å‘¼ã³å‡ºã—å…ƒã®resultå‡¦ç†ã‚’å‘¼ã³å‡ºã™
             result?.Invoke(null);
         }
     }
 
     /// <summary>
-    /// ƒtƒHƒ[“à‚Å‚Ìƒ‰ƒ“ƒLƒ“ƒOæ“¾ˆ—
+    /// ãƒ•ã‚©ãƒ­ãƒ¼å†…ã§ã®ãƒ©ãƒ³ã‚­ãƒ³ã‚°å–å¾—å‡¦ç†
     /// </summary>
     public IEnumerator GetFollowRankingList(Action<ShowUserProfileResponse[]> result)
     {
-        // ‘—M
+        // é€ä¿¡
         UnityWebRequest request = UnityWebRequest.Get(API_BASE_URL + "users/follow/ranking/show?user_id=" + UserID);
 
-        // Œ‹‰Ê‚ğóM‚·‚é‚Ü‚Å‘Ò‹@
+        // çµæœã‚’å—ä¿¡ã™ã‚‹ã¾ã§å¾…æ©Ÿ
         yield return request.SendWebRequest();
 
         if (request.result == UnityWebRequest.Result.Success
             && request.responseCode == 200)
         {
-            // ’ÊM‚ª¬Œ÷‚µ‚½ê‡A•Ô‚Á‚Ä‚«‚½JSON‚ğƒIƒuƒWƒFƒNƒg‚É•ÏŠ·
+            // é€šä¿¡ãŒæˆåŠŸã—ãŸå ´åˆã€è¿”ã£ã¦ããŸJSONã‚’ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã«å¤‰æ›
             string resultJson = request.downloadHandler.text;
             ShowUserProfileResponse[] response = JsonConvert.DeserializeObject<ShowUserProfileResponse[]>(resultJson);
 
-            // ŒÄ‚Ño‚µŒ³‚Ìresultˆ—‚ğŒÄ‚Ño‚·
+            // å‘¼ã³å‡ºã—å…ƒã®resultå‡¦ç†ã‚’å‘¼ã³å‡ºã™
             result?.Invoke(response);
         }
         else
         {
-            // ŒÄ‚Ño‚µŒ³‚Ìresultˆ—‚ğŒÄ‚Ño‚·
+            // å‘¼ã³å‡ºã—å…ƒã®resultå‡¦ç†ã‚’å‘¼ã³å‡ºã™
             result?.Invoke(null);
         }
     }
 
     /// <summary>
-    /// ƒAƒ`[ƒuƒƒ“ƒgˆê——æ“¾ˆ—
+    /// ã‚¢ãƒãƒ¼ãƒ–ãƒ¡ãƒ³ãƒˆä¸€è¦§å–å¾—å‡¦ç†
     /// </summary>
     public IEnumerator GetAchievementList(Action<ShowAchievementResponse[]> result)
     {
-        // ‘—M
+        // é€ä¿¡
         UnityWebRequest request = UnityWebRequest.Get(API_BASE_URL + "achievements?user_id=" + UserID);
 
-        // Œ‹‰Ê‚ğóM‚·‚é‚Ü‚Å‘Ò‹@
+        // çµæœã‚’å—ä¿¡ã™ã‚‹ã¾ã§å¾…æ©Ÿ
         yield return request.SendWebRequest();
 
         if (request.result == UnityWebRequest.Result.Success
             && request.responseCode == 200)
         {
-            // ’ÊM‚ª¬Œ÷‚µ‚½ê‡A•Ô‚Á‚Ä‚«‚½JSON‚ğƒIƒuƒWƒFƒNƒg‚É•ÏŠ·
+            // é€šä¿¡ãŒæˆåŠŸã—ãŸå ´åˆã€è¿”ã£ã¦ããŸJSONã‚’ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã«å¤‰æ›
             string resultJson = request.downloadHandler.text;
             ShowAchievementResponse[] response = JsonConvert.DeserializeObject<ShowAchievementResponse[]>(resultJson);
 
-            // ŒÄ‚Ño‚µŒ³‚Ìresultˆ—‚ğŒÄ‚Ño‚·
+            // å‘¼ã³å‡ºã—å…ƒã®resultå‡¦ç†ã‚’å‘¼ã³å‡ºã™
             result?.Invoke(response);
         }
         else
         {
-            // ŒÄ‚Ño‚µŒ³‚Ìresultˆ—‚ğŒÄ‚Ño‚·
+            // å‘¼ã³å‡ºã—å…ƒã®resultå‡¦ç†ã‚’å‘¼ã³å‡ºã™
             result?.Invoke(null);
         }
     }
 
     /// <summary>
-    /// ƒAƒ`[ƒuƒƒ“ƒg’B¬ó‹µXVˆ—
+    /// ã‚¢ãƒãƒ¼ãƒ–ãƒ¡ãƒ³ãƒˆé”æˆçŠ¶æ³æ›´æ–°å‡¦ç†
     /// </summary>
     public IEnumerator UpdateUserAchievement(int type,int allieVal, Action<bool> result)
     {
-        // ƒT[ƒo[‚É‘—M‚·‚éƒIƒuƒWƒFƒNƒg‚ğì¬
+        // ã‚µãƒ¼ãƒãƒ¼ã«é€ä¿¡ã™ã‚‹ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ä½œæˆ
         UpdateUserAchievementRequest requestData = new UpdateUserAchievementRequest();
         requestData.UserID = UserID;
         requestData.Type = type;
         requestData.AllieVal = allieVal;
-        // ƒT[ƒo[‚É‘—MƒIƒuƒWƒFƒNƒg‚ğJSON‚É•ÏŠ·
+        // ã‚µãƒ¼ãƒãƒ¼ã«é€ä¿¡ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’JSONã«å¤‰æ›
         string json = JsonConvert.SerializeObject(requestData);
-        // ‘—M
+        // é€ä¿¡
         UnityWebRequest request = UnityWebRequest.Post(API_BASE_URL + "users/achievements/update", json, "application/json");
 
-        // Œ‹‰Ê‚ğóM‚·‚é‚Ü‚Å‘Ò‹@
+        // çµæœã‚’å—ä¿¡ã™ã‚‹ã¾ã§å¾…æ©Ÿ
         yield return request.SendWebRequest();
 
         bool isSuccess = false;
@@ -605,31 +605,31 @@ public class NetworkManager : MonoBehaviour
     }
 
     /// <summary>
-    /// ƒAƒ`[ƒuƒƒ“ƒg•ñVó‚¯æ‚èˆ—
+    /// ã‚¢ãƒãƒ¼ãƒ–ãƒ¡ãƒ³ãƒˆå ±é…¬å—ã‘å–ã‚Šå‡¦ç†
     /// </summary>
     public IEnumerator ReceiveRewardAchievement(int achievement_id, Action<bool> result)
     {
-        // ƒT[ƒo[‚É‘—M‚·‚éƒIƒuƒWƒFƒNƒg‚ğì¬
+        // ã‚µãƒ¼ãƒãƒ¼ã«é€ä¿¡ã™ã‚‹ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ä½œæˆ
         ReceiveRewardAchievementRequest requestData = new ReceiveRewardAchievementRequest();
         requestData.UserID = UserID;
         requestData.AchievementID = achievement_id;
-        // ƒT[ƒo[‚É‘—MƒIƒuƒWƒFƒNƒg‚ğJSON‚É•ÏŠ·
+        // ã‚µãƒ¼ãƒãƒ¼ã«é€ä¿¡ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’JSONã«å¤‰æ›
         string json = JsonConvert.SerializeObject(requestData);
-        // ‘—M
+        // é€ä¿¡
         UnityWebRequest request = UnityWebRequest.Post(API_BASE_URL + "users/achievements/receive", json, "application/json");
 
-        // Œ‹‰Ê‚ğóM‚·‚é‚Ü‚Å‘Ò‹@
+        // çµæœã‚’å—ä¿¡ã™ã‚‹ã¾ã§å¾…æ©Ÿ
         yield return request.SendWebRequest();
 
         bool isSuccess = false;
         if (request.result == UnityWebRequest.Result.Success
             && request.responseCode == 200)
         {
-            // ’ÊM‚ª¬Œ÷‚µ‚½ê‡A•Ô‚Á‚Ä‚«‚½JSON‚ğƒIƒuƒWƒFƒNƒg‚É•ÏŠ·
+            // é€šä¿¡ãŒæˆåŠŸã—ãŸå ´åˆã€è¿”ã£ã¦ããŸJSONã‚’ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã«å¤‰æ›
             string resultJson = request.downloadHandler.text;
             ShowUserItemResponse response = JsonConvert.DeserializeObject<ShowUserItemResponse>(resultJson);
-            if (response.ItemID == c_DistressSignalEnableItemID) this.IsDistressSignalEnabled = true;    // ‹~“ïM†ƒVƒXƒeƒ€‚ğŠJ•ú
-            if (response.ItemID == this.GolfClubItemID) this.ItemCnt = this.ItemCnt + response.Amount < 0 ? 0 : this.ItemCnt + response.Amount; // ŠƒAƒCƒeƒ€”‚ğXV‚·‚é
+            if (response.ItemID == c_DistressSignalEnableItemID) this.IsDistressSignalEnabled = true;    // æ•‘é›£ä¿¡å·ã‚·ã‚¹ãƒ†ãƒ ã‚’é–‹æ”¾
+            if (response.ItemID == this.GolfClubItemID) this.ItemCnt = this.ItemCnt + response.Amount < 0 ? 0 : this.ItemCnt + response.Amount; // æ‰€æŒã‚¢ã‚¤ãƒ†ãƒ æ•°ã‚’æ›´æ–°ã™ã‚‹
 
             isSuccess = true;
         }
@@ -637,64 +637,64 @@ public class NetworkManager : MonoBehaviour
     }
 
     /// <summary>
-    /// óMƒ[ƒ‹ˆê——æ“¾ˆ—
+    /// å—ä¿¡ãƒ¡ãƒ¼ãƒ«ä¸€è¦§å–å¾—å‡¦ç†
     /// </summary>
     public IEnumerator GetUserMailList(Action<ShowUserMailResponse[]> result)
     {
-        // ‘—M
+        // é€ä¿¡
         UnityWebRequest request = UnityWebRequest.Get(API_BASE_URL + "users/mail/show?user_id=" + UserID);
 
-        // Œ‹‰Ê‚ğóM‚·‚é‚Ü‚Å‘Ò‹@
+        // çµæœã‚’å—ä¿¡ã™ã‚‹ã¾ã§å¾…æ©Ÿ
         yield return request.SendWebRequest();
 
         if (request.result == UnityWebRequest.Result.Success
             && request.responseCode == 200)
         {
-            // ’ÊM‚ª¬Œ÷‚µ‚½ê‡A•Ô‚Á‚Ä‚«‚½JSON‚ğƒIƒuƒWƒFƒNƒg‚É•ÏŠ·
+            // é€šä¿¡ãŒæˆåŠŸã—ãŸå ´åˆã€è¿”ã£ã¦ããŸJSONã‚’ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã«å¤‰æ›
             string resultJson = request.downloadHandler.text;
             ShowUserMailResponse[] response = JsonConvert.DeserializeObject<ShowUserMailResponse[]>(resultJson);
 
-            // ŒÄ‚Ño‚µŒ³‚Ìresultˆ—‚ğŒÄ‚Ño‚·
+            // å‘¼ã³å‡ºã—å…ƒã®resultå‡¦ç†ã‚’å‘¼ã³å‡ºã™
             result?.Invoke(response);
         }
         else
         {
-            // ŒÄ‚Ño‚µŒ³‚Ìresultˆ—‚ğŒÄ‚Ño‚·
+            // å‘¼ã³å‡ºã—å…ƒã®resultå‡¦ç†ã‚’å‘¼ã³å‡ºã™
             result?.Invoke(null);
         }
     }
 
     /// <summary>
-    /// óMƒ[ƒ‹ŠJ••ˆ—
+    /// å—ä¿¡ãƒ¡ãƒ¼ãƒ«é–‹å°å‡¦ç†
     /// </summary>
     public IEnumerator UpdateUserMail(int userMailID, Action<ShowUserItemResponse[]> result)
     {
-        // ƒT[ƒo[‚É‘—M‚·‚éƒIƒuƒWƒFƒNƒg‚ğì¬
+        // ã‚µãƒ¼ãƒãƒ¼ã«é€ä¿¡ã™ã‚‹ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ä½œæˆ
         UpdateUserMailRequest requestData = new UpdateUserMailRequest();
         requestData.UserID = UserID;
         requestData.UserMailID = userMailID;
-        // ƒT[ƒo[‚É‘—MƒIƒuƒWƒFƒNƒg‚ğJSON‚É•ÏŠ·
+        // ã‚µãƒ¼ãƒãƒ¼ã«é€ä¿¡ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’JSONã«å¤‰æ›
         string json = JsonConvert.SerializeObject(requestData);
-        // ‘—M
+        // é€ä¿¡
         UnityWebRequest request = UnityWebRequest.Post(API_BASE_URL + "users/mail/update", json, "application/json");
 
-        // Œ‹‰Ê‚ğóM‚·‚é‚Ü‚Å‘Ò‹@
+        // çµæœã‚’å—ä¿¡ã™ã‚‹ã¾ã§å¾…æ©Ÿ
         yield return request.SendWebRequest();
 
         if (request.result == UnityWebRequest.Result.Success
             && request.responseCode == 200)
         {
-            // ’ÊM‚ª¬Œ÷‚µ‚½ê‡A•Ô‚Á‚Ä‚«‚½JSON‚ğƒIƒuƒWƒFƒNƒg‚É•ÏŠ·
+            // é€šä¿¡ãŒæˆåŠŸã—ãŸå ´åˆã€è¿”ã£ã¦ããŸJSONã‚’ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã«å¤‰æ›
             string resultJson = request.downloadHandler.text;
             ShowUserItemResponse[] response = JsonConvert.DeserializeObject<ShowUserItemResponse[]>(resultJson);
 
             for (int i = 0; i < response.Length; i++)
             {
-                if (response[i].ItemID == c_DistressSignalEnableItemID) this.IsDistressSignalEnabled = true;    // ‹~“ïM†ƒVƒXƒeƒ€‚ğŠJ•ú
-                if (response[i].ItemID == this.GolfClubItemID) this.ItemCnt = this.ItemCnt + response[i].Amount < 0 ? 0 : this.ItemCnt + response[i].Amount; // ŠƒAƒCƒeƒ€”‚ğXV‚·‚é
+                if (response[i].ItemID == c_DistressSignalEnableItemID) this.IsDistressSignalEnabled = true;    // æ•‘é›£ä¿¡å·ã‚·ã‚¹ãƒ†ãƒ ã‚’é–‹æ”¾
+                if (response[i].ItemID == this.GolfClubItemID) this.ItemCnt = this.ItemCnt + response[i].Amount < 0 ? 0 : this.ItemCnt + response[i].Amount; // æ‰€æŒã‚¢ã‚¤ãƒ†ãƒ æ•°ã‚’æ›´æ–°ã™ã‚‹
             }
 
-            // ŒÄ‚Ño‚µŒ³‚Ìresultˆ—‚ğŒÄ‚Ño‚·
+            // å‘¼ã³å‡ºã—å…ƒã®resultå‡¦ç†ã‚’å‘¼ã³å‡ºã™
             result?.Invoke(response);
         }
         else
@@ -704,20 +704,20 @@ public class NetworkManager : MonoBehaviour
     }
 
     /// <summary>
-    /// óMƒ[ƒ‹íœˆ—
+    /// å—ä¿¡ãƒ¡ãƒ¼ãƒ«å‰Šé™¤å‡¦ç†
     /// </summary>
     public IEnumerator DestroyUserMail(int userMailID, Action<bool> result)
     {
-        // ƒT[ƒo[‚É‘—M‚·‚éƒIƒuƒWƒFƒNƒg‚ğì¬
+        // ã‚µãƒ¼ãƒãƒ¼ã«é€ä¿¡ã™ã‚‹ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ä½œæˆ
         UpdateUserMailRequest requestData = new UpdateUserMailRequest();
         requestData.UserID = UserID;
         requestData.UserMailID = userMailID;
-        // ƒT[ƒo[‚É‘—MƒIƒuƒWƒFƒNƒg‚ğJSON‚É•ÏŠ·
+        // ã‚µãƒ¼ãƒãƒ¼ã«é€ä¿¡ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’JSONã«å¤‰æ›
         string json = JsonConvert.SerializeObject(requestData);
-        // ‘—M
+        // é€ä¿¡
         UnityWebRequest request = UnityWebRequest.Post(API_BASE_URL + "users/mail/destroy", json, "application/json");
 
-        // Œ‹‰Ê‚ğóM‚·‚é‚Ü‚Å‘Ò‹@
+        // çµæœã‚’å—ä¿¡ã™ã‚‹ã¾ã§å¾…æ©Ÿ
         yield return request.SendWebRequest();
         bool isSuccess = false;
 
@@ -727,60 +727,60 @@ public class NetworkManager : MonoBehaviour
             isSuccess = true;
         }
 
-        // ŒÄ‚Ño‚µŒ³‚Ìresultˆ—‚ğŒÄ‚Ño‚·
+        // å‘¼ã³å‡ºã—å…ƒã®resultå‡¦ç†ã‚’å‘¼ã³å‡ºã™
         result?.Invoke(isSuccess);
     }
 
     /// <summary>
-    /// ©•ª‚ª•åW’†(–¢ƒNƒŠƒA)‚Ì‹~“ïM†æ“¾ˆ—
+    /// è‡ªåˆ†ãŒå‹Ÿé›†ä¸­(æœªã‚¯ãƒªã‚¢)ã®æ•‘é›£ä¿¡å·å–å¾—å‡¦ç†
     /// </summary>
     public IEnumerator GetDistressSignalList(Action<ShowDistressSignalResponse[]> result)
     {
-        // ‘—M
+        // é€ä¿¡
         UnityWebRequest request = UnityWebRequest.Get(API_BASE_URL + "distress_signals/index?user_id=" + UserID);
 
-        // Œ‹‰Ê‚ğóM‚·‚é‚Ü‚Å‘Ò‹@
+        // çµæœã‚’å—ä¿¡ã™ã‚‹ã¾ã§å¾…æ©Ÿ
         yield return request.SendWebRequest();
 
         if (request.result == UnityWebRequest.Result.Success
             && request.responseCode == 200)
         {
-            // ’ÊM‚ª¬Œ÷‚µ‚½ê‡A•Ô‚Á‚Ä‚«‚½JSON‚ğƒIƒuƒWƒFƒNƒg‚É•ÏŠ·
+            // é€šä¿¡ãŒæˆåŠŸã—ãŸå ´åˆã€è¿”ã£ã¦ããŸJSONã‚’ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã«å¤‰æ›
             string resultJson = request.downloadHandler.text;
             ShowDistressSignalResponse[] response = JsonConvert.DeserializeObject<ShowDistressSignalResponse[]>(resultJson);
             dSignalList = new (response);
 
-            // ŒÄ‚Ño‚µŒ³‚Ìresultˆ—‚ğŒÄ‚Ño‚·
+            // å‘¼ã³å‡ºã—å…ƒã®resultå‡¦ç†ã‚’å‘¼ã³å‡ºã™
             result?.Invoke(response);
         }
         else
         {
-            // ŒÄ‚Ño‚µŒ³‚Ìresultˆ—‚ğŒÄ‚Ño‚·
+            // å‘¼ã³å‡ºã—å…ƒã®resultå‡¦ç†ã‚’å‘¼ã³å‡ºã™
             result?.Invoke(null);
         }
     }
 
     /// <summary>
-    /// ‹~“ïM†“o˜^ˆ—
+    /// æ•‘é›£ä¿¡å·ç™»éŒ²å‡¦ç†
     /// </summary>
     public IEnumerator StoreDistressSignal(int stage_id, Action<ShowDistressSignalResponse> result, Action<string> error)
     {
-        // ƒT[ƒo[‚É‘—M‚·‚éƒIƒuƒWƒFƒNƒg‚ğì¬
+        // ã‚µãƒ¼ãƒãƒ¼ã«é€ä¿¡ã™ã‚‹ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ä½œæˆ
         StoreDistressSignalRequest requestData = new StoreDistressSignalRequest();
         requestData.UserID = UserID;
         requestData.StageID = stage_id;
-        // ƒT[ƒo[‚É‘—MƒIƒuƒWƒFƒNƒg‚ğJSON‚É•ÏŠ·
+        // ã‚µãƒ¼ãƒãƒ¼ã«é€ä¿¡ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’JSONã«å¤‰æ›
         string json = JsonConvert.SerializeObject(requestData);
-        // ‘—M
+        // é€ä¿¡
         UnityWebRequest request = UnityWebRequest.Post(API_BASE_URL + "distress_signals/store", json, "application/json");
 
-        // Œ‹‰Ê‚ğóM‚·‚é‚Ü‚Å‘Ò‹@
+        // çµæœã‚’å—ä¿¡ã™ã‚‹ã¾ã§å¾…æ©Ÿ
         yield return request.SendWebRequest();
 
         if (request.result == UnityWebRequest.Result.Success
             && request.responseCode == 200)
         {
-            // ’ÊM‚ª¬Œ÷‚µ‚½ê‡A•Ô‚Á‚Ä‚«‚½JSON‚ğƒIƒuƒWƒFƒNƒg‚É•ÏŠ·
+            // é€šä¿¡ãŒæˆåŠŸã—ãŸå ´åˆã€è¿”ã£ã¦ããŸJSONã‚’ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã«å¤‰æ›
             string resultJson = request.downloadHandler.text;
             ShowDistressSignalResponse response = JsonConvert.DeserializeObject<ShowDistressSignalResponse>(resultJson);
             dSignalList.Add(response);
@@ -788,7 +788,7 @@ public class NetworkManager : MonoBehaviour
         }
         else if (request.responseCode == 400)
         {
-            // •Ô‚Á‚Ä‚«‚½JSON‚ğƒIƒuƒWƒFƒNƒg‚É•ÏŠ·
+            // è¿”ã£ã¦ããŸJSONã‚’ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã«å¤‰æ›
             string resultJson = request.downloadHandler.text;
             ErrorResponse response = JsonConvert.DeserializeObject<ErrorResponse>(resultJson);
 
@@ -796,27 +796,27 @@ public class NetworkManager : MonoBehaviour
         }
         else
         {
-            error?.Invoke("’ÊMƒGƒ‰[‚ª”­¶‚µ‚Ü‚µ‚½");
+            error?.Invoke("é€šä¿¡ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã—ã¾ã—ãŸ");
         }
     }
 
     /// <summary>
-    /// ƒQƒXƒg“o˜^i‹~“ïM†Q‰ÁjE”z’uî•ñXVˆ—
+    /// ã‚²ã‚¹ãƒˆç™»éŒ²ï¼ˆæ•‘é›£ä¿¡å·å‚åŠ ï¼‰ãƒ»é…ç½®æƒ…å ±æ›´æ–°å‡¦ç†
     /// </summary>
     public IEnumerator UpdateSignalGuest(int signalID,string pos, string vec, Action<string> result)
     {
-        // ƒT[ƒo[‚É‘—M‚·‚éƒIƒuƒWƒFƒNƒg‚ğì¬
+        // ã‚µãƒ¼ãƒãƒ¼ã«é€ä¿¡ã™ã‚‹ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ä½œæˆ
         UpdateSignalGuestRequest requestData = new UpdateSignalGuestRequest();
         requestData.SignalID = signalID;
         requestData.UserID = UserID;
         requestData.Pos = pos;
         requestData.Vector = vec;
-        // ƒT[ƒo[‚É‘—MƒIƒuƒWƒFƒNƒg‚ğJSON‚É•ÏŠ·
+        // ã‚µãƒ¼ãƒãƒ¼ã«é€ä¿¡ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’JSONã«å¤‰æ›
         string json = JsonConvert.SerializeObject(requestData);
-        // ‘—M
+        // é€ä¿¡
         UnityWebRequest request = UnityWebRequest.Post(API_BASE_URL + "distress_signals/guest/update", json, "application/json");
 
-        // Œ‹‰Ê‚ğóM‚·‚é‚Ü‚Å‘Ò‹@
+        // çµæœã‚’å—ä¿¡ã™ã‚‹ã¾ã§å¾…æ©Ÿ
         yield return request.SendWebRequest();
 
         if (request.result == UnityWebRequest.Result.Success
@@ -826,7 +826,7 @@ public class NetworkManager : MonoBehaviour
         }
         else if (request.responseCode == 400)
         {
-            // •Ô‚Á‚Ä‚«‚½JSON‚ğƒIƒuƒWƒFƒNƒg‚É•ÏŠ·
+            // è¿”ã£ã¦ããŸJSONã‚’ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã«å¤‰æ›
             string resultJson = request.downloadHandler.text;
             ErrorResponse response = JsonConvert.DeserializeObject<ErrorResponse>(resultJson);
 
@@ -834,24 +834,24 @@ public class NetworkManager : MonoBehaviour
         }
         else
         {
-            result?.Invoke("’ÊMƒGƒ‰[‚ª”­¶‚µ‚Ü‚µ‚½");
+            result?.Invoke("é€šä¿¡ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã—ã¾ã—ãŸ");
         }
     }
 
     /// <summary>
-    /// •åW’†or•åW‚µ‚½‹~“ïM†‚Ìíœˆ—
+    /// å‹Ÿé›†ä¸­orå‹Ÿé›†ã—ãŸæ•‘é›£ä¿¡å·ã®å‰Šé™¤å‡¦ç†
     /// </summary>
     public IEnumerator DestroyDistressSignal(int signalID, Action<bool> result)
     {
-        // ƒT[ƒo[‚É‘—M‚·‚éƒIƒuƒWƒFƒNƒg‚ğì¬
+        // ã‚µãƒ¼ãƒãƒ¼ã«é€ä¿¡ã™ã‚‹ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ä½œæˆ
         DistressSignalGuestRequest requestData = new DistressSignalGuestRequest();
         requestData.SignalID = signalID;
-        // ƒT[ƒo[‚É‘—MƒIƒuƒWƒFƒNƒg‚ğJSON‚É•ÏŠ·
+        // ã‚µãƒ¼ãƒãƒ¼ã«é€ä¿¡ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’JSONã«å¤‰æ›
         string json = JsonConvert.SerializeObject(requestData);
-        // ‘—M
+        // é€ä¿¡
         UnityWebRequest request = UnityWebRequest.Post(API_BASE_URL + "distress_signals/destroy", json, "application/json");
 
-        // Œ‹‰Ê‚ğóM‚·‚é‚Ü‚Å‘Ò‹@
+        // çµæœã‚’å—ä¿¡ã™ã‚‹ã¾ã§å¾…æ©Ÿ
         yield return request.SendWebRequest();
         bool isSuccess = false;
 
@@ -860,30 +860,30 @@ public class NetworkManager : MonoBehaviour
         {
             isSuccess = true;
 
-            // ©•ª‚ª•åW’†‚Ì‹~“ïM†ƒŠƒXƒg‚©‚çíœ‚µ‚½‚¢—v‘f‚ğŒŸõ‚µ‚Äíœ‚·‚é
+            // è‡ªåˆ†ãŒå‹Ÿé›†ä¸­ã®æ•‘é›£ä¿¡å·ãƒªã‚¹ãƒˆã‹ã‚‰å‰Šé™¤ã—ãŸã„è¦ç´ ã‚’æ¤œç´¢ã—ã¦å‰Šé™¤ã™ã‚‹
             ShowDistressSignalResponse dSignal = dSignalList.FirstOrDefault(item => item.SignalID == signalID);
             if (dSignal != null) dSignalList.Remove(dSignal);
         }
 
-        // ŒÄ‚Ño‚µŒ³‚Ìresultˆ—‚ğŒÄ‚Ño‚·
+        // å‘¼ã³å‡ºã—å…ƒã®resultå‡¦ç†ã‚’å‘¼ã³å‡ºã™
         result?.Invoke(isSuccess);
     }
 
     /// <summary>
-    /// ƒQƒXƒgíœˆ—
+    /// ã‚²ã‚¹ãƒˆå‰Šé™¤å‡¦ç†
     /// </summary>
     public IEnumerator DestroySignalGuest(int signalID, int userID, Action<bool> result)
     {
-        // ƒT[ƒo[‚É‘—M‚·‚éƒIƒuƒWƒFƒNƒg‚ğì¬
+        // ã‚µãƒ¼ãƒãƒ¼ã«é€ä¿¡ã™ã‚‹ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ä½œæˆ
         DistressSignalGuestRequest requestData = new DistressSignalGuestRequest();
         requestData.SignalID = signalID;
         requestData.UserID = userID;
-        // ƒT[ƒo[‚É‘—MƒIƒuƒWƒFƒNƒg‚ğJSON‚É•ÏŠ·
+        // ã‚µãƒ¼ãƒãƒ¼ã«é€ä¿¡ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’JSONã«å¤‰æ›
         string json = JsonConvert.SerializeObject(requestData);
-        // ‘—M
+        // é€ä¿¡
         UnityWebRequest request = UnityWebRequest.Post(API_BASE_URL + "distress_signals/guest/destroy", json, "application/json");
 
-        // Œ‹‰Ê‚ğóM‚·‚é‚Ü‚Å‘Ò‹@
+        // çµæœã‚’å—ä¿¡ã™ã‚‹ã¾ã§å¾…æ©Ÿ
         yield return request.SendWebRequest();
         bool isSuccess = false;
 
@@ -893,86 +893,86 @@ public class NetworkManager : MonoBehaviour
             isSuccess = true;
         }
 
-        // ŒÄ‚Ño‚µŒ³‚Ìresultˆ—‚ğŒÄ‚Ño‚·
+        // å‘¼ã³å‡ºã—å…ƒã®resultå‡¦ç†ã‚’å‘¼ã³å‡ºã™
         result?.Invoke(isSuccess);
     }
 
     /// <summary>
-    /// ‹~“ïM†‚ÉQ‰Á‚µ‚Ä‚¢‚éƒ†[ƒU[‚ÌƒvƒƒtƒB[ƒ‹æ“¾
+    /// æ•‘é›£ä¿¡å·ã«å‚åŠ ã—ã¦ã„ã‚‹ãƒ¦ãƒ¼ã‚¶ãƒ¼ã®ãƒ—ãƒ­ãƒ•ã‚£ãƒ¼ãƒ«å–å¾—
     /// </summary>
     public IEnumerator GetSignalUserProfile(int signalID,Action<ShowUserProfileResponse[]> result)
     {
-        // ‘—M
+        // é€ä¿¡
         UnityWebRequest request = UnityWebRequest.Get(API_BASE_URL + "distress_signals/user/show?d_signal_id="+ signalID + "&user_id="+ UserID);
 
-        // Œ‹‰Ê‚ğóM‚·‚é‚Ü‚Å‘Ò‹@
+        // çµæœã‚’å—ä¿¡ã™ã‚‹ã¾ã§å¾…æ©Ÿ
         yield return request.SendWebRequest();
 
         if (request.result == UnityWebRequest.Result.Success
             && request.responseCode == 200)
         {
-            // ’ÊM‚ª¬Œ÷‚µ‚½ê‡A•Ô‚Á‚Ä‚«‚½JSON‚ğƒIƒuƒWƒFƒNƒg‚É•ÏŠ·
+            // é€šä¿¡ãŒæˆåŠŸã—ãŸå ´åˆã€è¿”ã£ã¦ããŸJSONã‚’ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã«å¤‰æ›
             string resultJson = request.downloadHandler.text;
             ShowUserProfileResponse[] response = JsonConvert.DeserializeObject<ShowUserProfileResponse[]>(resultJson);
 
-            // ŒÄ‚Ño‚µŒ³‚Ìresultˆ—‚ğŒÄ‚Ño‚·
+            // å‘¼ã³å‡ºã—å…ƒã®resultå‡¦ç†ã‚’å‘¼ã³å‡ºã™
             result?.Invoke(response);
         }
         else
         {
-            // ŒÄ‚Ño‚µŒ³‚Ìresultˆ—‚ğŒÄ‚Ño‚·
+            // å‘¼ã³å‡ºã—å…ƒã®resultå‡¦ç†ã‚’å‘¼ã³å‡ºã™
             result?.Invoke(null);
         }
     }
 
     /// <summary>
-    /// ‹~“ïM†‚ÉQ‰Á‚µ‚Ä‚¢‚éƒQƒXƒg‚Ì”z’uî•ñ‚ğæ“¾‚·‚é
+    /// æ•‘é›£ä¿¡å·ã«å‚åŠ ã—ã¦ã„ã‚‹ã‚²ã‚¹ãƒˆã®é…ç½®æƒ…å ±ã‚’å–å¾—ã™ã‚‹
     /// </summary>
     public IEnumerator GetSignalGuest(int signalID, Action<ShowSignalGuestResponse[]> result)
     {
-        // ‘—M
+        // é€ä¿¡
         UnityWebRequest request = UnityWebRequest.Get(API_BASE_URL + "distress_signals/guest/show?d_signal_id=" + signalID);
 
-        // Œ‹‰Ê‚ğóM‚·‚é‚Ü‚Å‘Ò‹@
+        // çµæœã‚’å—ä¿¡ã™ã‚‹ã¾ã§å¾…æ©Ÿ
         yield return request.SendWebRequest();
 
         if (request.result == UnityWebRequest.Result.Success
             && request.responseCode == 200)
         {
-            // ’ÊM‚ª¬Œ÷‚µ‚½ê‡A•Ô‚Á‚Ä‚«‚½JSON‚ğƒIƒuƒWƒFƒNƒg‚É•ÏŠ·
+            // é€šä¿¡ãŒæˆåŠŸã—ãŸå ´åˆã€è¿”ã£ã¦ããŸJSONã‚’ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã«å¤‰æ›
             string resultJson = request.downloadHandler.text;
             ShowSignalGuestResponse[] response = JsonConvert.DeserializeObject<ShowSignalGuestResponse[]>(resultJson);
 
-            // ŒÄ‚Ño‚µŒ³‚Ìresultˆ—‚ğŒÄ‚Ño‚·
+            // å‘¼ã³å‡ºã—å…ƒã®resultå‡¦ç†ã‚’å‘¼ã³å‡ºã™
             result?.Invoke(response);
         }
         else
         {
-            // ŒÄ‚Ño‚µŒ³‚Ìresultˆ—‚ğŒÄ‚Ño‚·
+            // å‘¼ã³å‡ºã—å…ƒã®resultå‡¦ç†ã‚’å‘¼ã³å‡ºã™
             result?.Invoke(null);
         }
     }
 
     /// <summary>
-    /// ‹~“ïM†ƒNƒŠƒAˆ—
+    /// æ•‘é›£ä¿¡å·ã‚¯ãƒªã‚¢å‡¦ç†
     /// </summary>
     public IEnumerator UpdateDistressSignal(int signalID,Action<bool> result)
     {
-        // ƒT[ƒo[‚É‘—M‚·‚éƒIƒuƒWƒFƒNƒg‚ğì¬
+        // ã‚µãƒ¼ãƒãƒ¼ã«é€ä¿¡ã™ã‚‹ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ä½œæˆ
         UpdateDistressSignal requestData = new UpdateDistressSignal();
         requestData.SignalID = signalID;
-        // ƒT[ƒo[‚É‘—MƒIƒuƒWƒFƒNƒg‚ğJSON‚É•ÏŠ·
+        // ã‚µãƒ¼ãƒãƒ¼ã«é€ä¿¡ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’JSONã«å¤‰æ›
         string json = JsonConvert.SerializeObject(requestData);
-        // ‘—M
+        // é€ä¿¡
         UnityWebRequest request = UnityWebRequest.Post(API_BASE_URL + "distress_signals/update", json, "application/json");
 
-        // Œ‹‰Ê‚ğóM‚·‚é‚Ü‚Å‘Ò‹@
+        // çµæœã‚’å—ä¿¡ã™ã‚‹ã¾ã§å¾…æ©Ÿ
         yield return request.SendWebRequest();
 
         if (request.result == UnityWebRequest.Result.Success
             && request.responseCode == 200)
         {
-            // ğŒ‚É‡‚¤‹~“ïM†‚ğæ“¾‚·‚é
+            // æ¡ä»¶ã«åˆã†æ•‘é›£ä¿¡å·ã‚’å–å¾—ã™ã‚‹
             var dSignal = dSignalList.FirstOrDefault(item => item.SignalID == signalID);
             dSignalList.Remove(dSignal);
 
@@ -981,58 +981,58 @@ public class NetworkManager : MonoBehaviour
                 Debug.Log("ID:" + test.SignalID + ",Stage:" + test.StageID);
             }
 
-            // ŒÄ‚Ño‚µŒ³‚Ìresultˆ—‚ğŒÄ‚Ño‚·
+            // å‘¼ã³å‡ºã—å…ƒã®resultå‡¦ç†ã‚’å‘¼ã³å‡ºã™
             result?.Invoke(true);
         }
         else
         {
-            // ŒÄ‚Ño‚µŒ³‚Ìresultˆ—‚ğŒÄ‚Ño‚·
+            // å‘¼ã³å‡ºã—å…ƒã®resultå‡¦ç†ã‚’å‘¼ã³å‡ºã™
             result?.Invoke(false);
         }
     }
 
     /// <summary>
-    /// ƒŠƒvƒŒƒCî•ñæ“¾ˆ—
+    /// ãƒªãƒ—ãƒ¬ã‚¤æƒ…å ±å–å¾—å‡¦ç†
     /// </summary>
     public IEnumerator GetReplayData(int signalID,Action<List<ReplayData>> result)
     {
-        // ‘—M
+        // é€ä¿¡
         UnityWebRequest request = UnityWebRequest.Get(API_BASE_URL + "distress_signals/replay/show?d_signal_id=" + signalID);
 
-        // Œ‹‰Ê‚ğóM‚·‚é‚Ü‚Å‘Ò‹@
+        // çµæœã‚’å—ä¿¡ã™ã‚‹ã¾ã§å¾…æ©Ÿ
         yield return request.SendWebRequest();
 
         if (request.result == UnityWebRequest.Result.Success
             && request.responseCode == 200)
         {
-            // ’ÊM‚ª¬Œ÷‚µ‚½ê‡A•Ô‚Á‚Ä‚«‚½JSON‚ğƒIƒuƒWƒFƒNƒg‚É•ÏŠ·
+            // é€šä¿¡ãŒæˆåŠŸã—ãŸå ´åˆã€è¿”ã£ã¦ããŸJSONã‚’ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã«å¤‰æ›
             string resultJson = request.downloadHandler.text;
             UpdateReplayData response = JsonConvert.DeserializeObject<UpdateReplayData>(resultJson);
             List<ReplayData> replayDatas = new(response.ReplayDatas);
 
-            // ŒÄ‚Ño‚µŒ³‚Ìresultˆ—‚ğŒÄ‚Ño‚·
+            // å‘¼ã³å‡ºã—å…ƒã®resultå‡¦ç†ã‚’å‘¼ã³å‡ºã™
             result?.Invoke(replayDatas);
         }
         else
         {
-            // ŒÄ‚Ño‚µŒ³‚Ìresultˆ—‚ğŒÄ‚Ño‚·
+            // å‘¼ã³å‡ºã—å…ƒã®resultå‡¦ç†ã‚’å‘¼ã³å‡ºã™
             result?.Invoke(null);
         }
     }
 
     /// <summary>
-    /// ƒŠƒvƒŒƒCî•ñXVˆ—
+    /// ãƒªãƒ—ãƒ¬ã‚¤æƒ…å ±æ›´æ–°å‡¦ç†
     /// </summary>
     public IEnumerator UpdateReplayData(int signalID, List<ReplayData> replayDatas, Action<bool> result)
     {
-        // ƒT[ƒo[‚É‘—M‚·‚éƒIƒuƒWƒFƒNƒg‚ğì¬
+        // ã‚µãƒ¼ãƒãƒ¼ã«é€ä¿¡ã™ã‚‹ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ä½œæˆ
         UpdateReplayData requestData = new UpdateReplayData() { SignalID = signalID, ReplayDatas = replayDatas };
-        // ƒT[ƒo[‚É‘—MƒIƒuƒWƒFƒNƒg‚ğJSON‚É•ÏŠ·
+        // ã‚µãƒ¼ãƒãƒ¼ã«é€ä¿¡ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’JSONã«å¤‰æ›
         string json = JsonConvert.SerializeObject(requestData);
-        // ‘—M
+        // é€ä¿¡
         UnityWebRequest request = UnityWebRequest.Post(API_BASE_URL + "distress_signals/replay/update", json, "application/json");
 
-        // Œ‹‰Ê‚ğóM‚·‚é‚Ü‚Å‘Ò‹@
+        // çµæœã‚’å—ä¿¡ã™ã‚‹ã¾ã§å¾…æ©Ÿ
         yield return request.SendWebRequest();
 
         bool isSuccess = false;
@@ -1046,148 +1046,148 @@ public class NetworkManager : MonoBehaviour
     }
 
     /// <summary>
-    /// ‹~“ïM†‚ÌƒƒO(ƒzƒXƒg)æ“¾ˆ—
+    /// æ•‘é›£ä¿¡å·ã®ãƒ­ã‚°(ãƒ›ã‚¹ãƒˆ)å–å¾—å‡¦ç†
     /// </summary>
     public IEnumerator GetSignalHostLogList(Action<ShowHostLogResponse[]> result)
     {
-        // ‘—M
+        // é€ä¿¡
         UnityWebRequest request = UnityWebRequest.Get(API_BASE_URL + "distress_signals/host_log?user_id=" + UserID);
 
-        // Œ‹‰Ê‚ğóM‚·‚é‚Ü‚Å‘Ò‹@
+        // çµæœã‚’å—ä¿¡ã™ã‚‹ã¾ã§å¾…æ©Ÿ
         yield return request.SendWebRequest();
 
         if (request.result == UnityWebRequest.Result.Success
             && request.responseCode == 200)
         {
-            // ’ÊM‚ª¬Œ÷‚µ‚½ê‡A•Ô‚Á‚Ä‚«‚½JSON‚ğƒIƒuƒWƒFƒNƒg‚É•ÏŠ·
+            // é€šä¿¡ãŒæˆåŠŸã—ãŸå ´åˆã€è¿”ã£ã¦ããŸJSONã‚’ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã«å¤‰æ›
             string resultJson = request.downloadHandler.text;
             ShowHostLogResponse[] response = JsonConvert.DeserializeObject<ShowHostLogResponse[]>(resultJson);
 
-            // ŒÄ‚Ño‚µŒ³‚Ìresultˆ—‚ğŒÄ‚Ño‚·
+            // å‘¼ã³å‡ºã—å…ƒã®resultå‡¦ç†ã‚’å‘¼ã³å‡ºã™
             result?.Invoke(response);
         }
         else
         {
-            // ŒÄ‚Ño‚µŒ³‚Ìresultˆ—‚ğŒÄ‚Ño‚·
+            // å‘¼ã³å‡ºã—å…ƒã®resultå‡¦ç†ã‚’å‘¼ã³å‡ºã™
             result?.Invoke(null);
         }
     }
 
     /// <summary>
-    /// ‹~“ïM†‚ÌƒƒO(ƒQƒXƒg)æ“¾ˆ—
+    /// æ•‘é›£ä¿¡å·ã®ãƒ­ã‚°(ã‚²ã‚¹ãƒˆ)å–å¾—å‡¦ç†
     /// </summary>
     public IEnumerator GetSignalGuestLogList(Action<ShowGuestLogResponse[]> result)
     {
-        // ‘—M
+        // é€ä¿¡
         UnityWebRequest request = UnityWebRequest.Get(API_BASE_URL + "distress_signals/guest_log?user_id=" + UserID);
 
-        // Œ‹‰Ê‚ğóM‚·‚é‚Ü‚Å‘Ò‹@
+        // çµæœã‚’å—ä¿¡ã™ã‚‹ã¾ã§å¾…æ©Ÿ
         yield return request.SendWebRequest();
 
         if (request.result == UnityWebRequest.Result.Success
             && request.responseCode == 200)
         {
-            // ’ÊM‚ª¬Œ÷‚µ‚½ê‡A•Ô‚Á‚Ä‚«‚½JSON‚ğƒIƒuƒWƒFƒNƒg‚É•ÏŠ·
+            // é€šä¿¡ãŒæˆåŠŸã—ãŸå ´åˆã€è¿”ã£ã¦ããŸJSONã‚’ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã«å¤‰æ›
             string resultJson = request.downloadHandler.text;
             ShowGuestLogResponse[] response = JsonConvert.DeserializeObject<ShowGuestLogResponse[]>(resultJson);
 
-            // ŒÄ‚Ño‚µŒ³‚Ìresultˆ—‚ğŒÄ‚Ño‚·
+            // å‘¼ã³å‡ºã—å…ƒã®resultå‡¦ç†ã‚’å‘¼ã³å‡ºã™
             result?.Invoke(response);
         }
         else
         {
-            // ŒÄ‚Ño‚µŒ³‚Ìresultˆ—‚ğŒÄ‚Ño‚·
+            // å‘¼ã³å‡ºã—å…ƒã®resultå‡¦ç†ã‚’å‘¼ã³å‡ºã™
             result?.Invoke(null);
         }
     }
 
     /// <summary>
-    /// ƒ‰ƒ“ƒ_ƒ€‚É‹~“ïM†æ“¾ˆ—
+    /// ãƒ©ãƒ³ãƒ€ãƒ ã«æ•‘é›£ä¿¡å·å–å¾—å‡¦ç†
     /// </summary>
     public IEnumerator GetRndSignalList(Action<ShowRndSignalResponse[]> result)
     {
-        // ‘—M
+        // é€ä¿¡
         UnityWebRequest request = UnityWebRequest.Get(API_BASE_URL + "distress_signals/show?user_id=" + UserID);
 
-        // Œ‹‰Ê‚ğóM‚·‚é‚Ü‚Å‘Ò‹@
+        // çµæœã‚’å—ä¿¡ã™ã‚‹ã¾ã§å¾…æ©Ÿ
         yield return request.SendWebRequest();
 
         if (request.result == UnityWebRequest.Result.Success
             && request.responseCode == 200)
         {
-            // ’ÊM‚ª¬Œ÷‚µ‚½ê‡A•Ô‚Á‚Ä‚«‚½JSON‚ğƒIƒuƒWƒFƒNƒg‚É•ÏŠ·
+            // é€šä¿¡ãŒæˆåŠŸã—ãŸå ´åˆã€è¿”ã£ã¦ããŸJSONã‚’ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã«å¤‰æ›
             string resultJson = request.downloadHandler.text;
             ShowRndSignalResponse[] response = JsonConvert.DeserializeObject<ShowRndSignalResponse[]>(resultJson);
 
-            // ŒÄ‚Ño‚µŒ³‚Ìresultˆ—‚ğŒÄ‚Ño‚·
+            // å‘¼ã³å‡ºã—å…ƒã®resultå‡¦ç†ã‚’å‘¼ã³å‡ºã™
             result?.Invoke(response);
         }
         else
         {
-            // ŒÄ‚Ño‚µŒ³‚Ìresultˆ—‚ğŒÄ‚Ño‚·
+            // å‘¼ã³å‡ºã—å…ƒã®resultå‡¦ç†ã‚’å‘¼ã³å‡ºã™
             result?.Invoke(null);
         }
     }
 
     /// <summary>
-    /// ƒQƒXƒg‚Ì•ñVó‚¯æ‚èˆ—
+    /// ã‚²ã‚¹ãƒˆã®å ±é…¬å—ã‘å–ã‚Šå‡¦ç†
     /// </summary>
     public IEnumerator UpdateSignalGuestReward(int signalID, Action<ShowUserItemResponse> result)
     {
-        // ƒT[ƒo[‚É‘—M‚·‚éƒIƒuƒWƒFƒNƒg‚ğì¬
+        // ã‚µãƒ¼ãƒãƒ¼ã«é€ä¿¡ã™ã‚‹ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ä½œæˆ
         DistressSignalGuestRequest requestData = new DistressSignalGuestRequest();
         requestData.SignalID = signalID;
         requestData.UserID = this.UserID;
 
-        // ƒT[ƒo[‚É‘—MƒIƒuƒWƒFƒNƒg‚ğJSON‚É•ÏŠ·
+        // ã‚µãƒ¼ãƒãƒ¼ã«é€ä¿¡ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’JSONã«å¤‰æ›
         string json = JsonConvert.SerializeObject(requestData);
-        // ‘—M
+        // é€ä¿¡
         UnityWebRequest request = UnityWebRequest.Post(API_BASE_URL + "distress_signals/reward/update", json, "application/json");
 
-        // Œ‹‰Ê‚ğóM‚·‚é‚È‚Å‘Ò‹@
+        // çµæœã‚’å—ä¿¡ã™ã‚‹ãªã§å¾…æ©Ÿ
         yield return request.SendWebRequest();
 
         if (request.result == UnityWebRequest.Result.Success
             && request.responseCode == 200)
         {
-            // ’ÊM‚ª¬Œ÷‚µ‚½ê‡A•Ô‚Á‚Ä‚«‚½JSON‚ğƒIƒuƒWƒFƒNƒg‚É•ÏŠ·
+            // é€šä¿¡ãŒæˆåŠŸã—ãŸå ´åˆã€è¿”ã£ã¦ããŸJSONã‚’ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã«å¤‰æ›
             string resultJson = request.downloadHandler.text;
             ShowUserItemResponse response = JsonConvert.DeserializeObject<ShowUserItemResponse>(resultJson);
 
-            // ŒÄ‚Ño‚µŒ³‚Ìresultˆ—‚ğŒÄ‚Ño‚·
+            // å‘¼ã³å‡ºã—å…ƒã®resultå‡¦ç†ã‚’å‘¼ã³å‡ºã™
             result?.Invoke(response);
         }
         else
         {
-            // ŒÄ‚Ño‚µŒ³‚Ìresultˆ—‚ğŒÄ‚Ño‚·
+            // å‘¼ã³å‡ºã—å…ƒã®resultå‡¦ç†ã‚’å‘¼ã³å‡ºã™
             result?.Invoke(null);
         }
     }
 
     /// <summary>
-    /// ’è”æ“¾ˆ—
+    /// å®šæ•°å–å¾—å‡¦ç†
     /// </summary>
     public IEnumerator GetConstant(int type,Action<ShowConstantResponse> result)
     {
-        // ‘—M
+        // é€ä¿¡
         UnityWebRequest request = UnityWebRequest.Get(API_BASE_URL + "constant?type=" + type);
 
-        // Œ‹‰Ê‚ğóM‚·‚é‚È‚Å‘Ò‹@
+        // çµæœã‚’å—ä¿¡ã™ã‚‹ãªã§å¾…æ©Ÿ
         yield return request.SendWebRequest();
 
         if (request.result == UnityWebRequest.Result.Success
             && request.responseCode == 200)
         {
-            // ’ÊM‚ª¬Œ÷‚µ‚½ê‡A•Ô‚Á‚Ä‚«‚½JSON‚ğƒIƒuƒWƒFƒNƒg‚É•ÏŠ·
+            // é€šä¿¡ãŒæˆåŠŸã—ãŸå ´åˆã€è¿”ã£ã¦ããŸJSONã‚’ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã«å¤‰æ›
             string resultJson = request.downloadHandler.text;
             ShowConstantResponse response = JsonConvert.DeserializeObject<ShowConstantResponse>(resultJson);
 
-            // ŒÄ‚Ño‚µŒ³‚Ìresultˆ—‚ğŒÄ‚Ño‚·
+            // å‘¼ã³å‡ºã—å…ƒã®resultå‡¦ç†ã‚’å‘¼ã³å‡ºã™
             result?.Invoke(response);
         }
         else
         {
-            // ŒÄ‚Ño‚µŒ³‚Ìresultˆ—‚ğŒÄ‚Ño‚·
+            // å‘¼ã³å‡ºã—å…ƒã®resultå‡¦ç†ã‚’å‘¼ã³å‡ºã™
             result?.Invoke(null);
         }
     }

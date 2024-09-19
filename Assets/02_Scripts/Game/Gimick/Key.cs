@@ -6,7 +6,7 @@ using DG.Tweening;
 public class Key : MonoBehaviour
 {
     UiController m_uiController;
-    [SerializeField] bool isMove = true;   // “®‚­‚©‚Ç‚¤‚©
+    [SerializeField] bool isMove = true;   // å‹•ãã‹ã©ã†ã‹
 
     // Start is called before the first frame update
     void Start()
@@ -26,7 +26,7 @@ public class Key : MonoBehaviour
 
         if (collision.gameObject.layer == 6 || collision.gameObject.layer == 10 || collision.gameObject.layer == 11)
         {
-            // Œ®‚ğ’Ç‰Á‚µA©g‚ğ”jŠü‚·‚é
+            // éµã‚’è¿½åŠ ã—ã€è‡ªèº«ã‚’ç ´æ£„ã™ã‚‹
             m_uiController.UpdateKeyUI(1);
             Destroy(this.transform.gameObject);
         }

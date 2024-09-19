@@ -5,8 +5,8 @@ using DG.Tweening;
 
 public class Move : MonoBehaviour
 {
-    [SerializeField] Vector2 m_endPos;  // ˆÚ“®æ
-    [SerializeField] float m_endTime;   // ‰½•b‚©‚¯‚ÄˆÚ“®‚·‚é‚©
+    [SerializeField] Vector2 m_endPos;  // ç§»å‹•å…ˆ
+    [SerializeField] float m_endTime;   // ä½•ç§’ã‹ã‘ã¦ç§»å‹•ã™ã‚‹ã‹
 
     // Start is called before the first frame update
     void Start()

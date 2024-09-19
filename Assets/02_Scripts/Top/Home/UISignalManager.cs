@@ -9,61 +9,61 @@ public class UISignalManager : MonoBehaviour
     [SerializeField] GameObject m_textEmpty;
     [SerializeField] LoadingContainer m_loading;
 
-    #region ‹~“ïM†
-    [SerializeField] GameObject m_uiPanelError;              // ’ÊMƒGƒ‰[‚Ìƒpƒlƒ‹
-    [SerializeField] Text m_textError;                       // ’ÊMƒGƒ‰[‚ÌƒeƒLƒXƒg
-    [SerializeField] GameObject m_uiPanelConfirmation;       // íœŠm”Fƒpƒlƒ‹
-    [SerializeField] Text m_textConfirmation;                // íœŠm”F‚ÌƒeƒLƒXƒg
-    [SerializeField] Button m_buttonConfirmation;            // íœŠm”F‚ÌYESƒ{ƒ^ƒ“
-    [SerializeField] List<Sprite> m_texTabs;                 // ƒ^ƒu‚Ì‰æ‘œ [1:ƒAƒNƒeƒBƒu‚È‰æ‘œ,0:”ñƒAƒNƒeƒBƒu‚È‰æ‘œ]
-    [SerializeField] GameObject m_tabLog;                    // ƒƒO‚ğ•\¦‚·‚éƒ^ƒu
-    [SerializeField] GameObject m_logMenuBtnParent;          // ƒƒjƒ…[ƒ{ƒ^ƒ“‚ÌeƒIƒuƒWƒFƒNƒg
-    [SerializeField] GameObject m_logScloleView;             // ƒƒO‚ğ•\¦‚·‚éƒrƒ…[
-    [SerializeField] GameObject m_barHostLogPrefab;          // ƒzƒXƒg‚ÌƒƒOƒo[
-    [SerializeField] GameObject m_barGuestLogPrefab;         // ƒQƒXƒg‚ÌƒƒOƒo[
-    [SerializeField] GameObject m_tabRecruiting;             // ‹~“ïM†‚Ì•åWƒŠƒXƒg‚ğ•\¦‚·‚éƒ^ƒu
-    [SerializeField] GameObject m_signalScloleView;          // ‹~“ïM†‚Ì•åW‚ğ•\¦‚·‚éƒrƒ…[
-    [SerializeField] GameObject m_signalPrefab;              // ‹~“ïM†‚Ì•åW‚ÌƒvƒŒƒtƒ@ƒu
-    [SerializeField] Text m_textDataCnt;                     // æ“¾‚µ‚½ƒf[ƒ^”‚ÌƒeƒLƒXƒg
+    #region æ•‘é›£ä¿¡å·
+    [SerializeField] GameObject m_uiPanelError;              // é€šä¿¡ã‚¨ãƒ©ãƒ¼æ™‚ã®ãƒ‘ãƒãƒ«
+    [SerializeField] Text m_textError;                       // é€šä¿¡ã‚¨ãƒ©ãƒ¼æ™‚ã®ãƒ†ã‚­ã‚¹ãƒˆ
+    [SerializeField] GameObject m_uiPanelConfirmation;       // å‰Šé™¤ç¢ºèªãƒ‘ãƒãƒ«
+    [SerializeField] Text m_textConfirmation;                // å‰Šé™¤ç¢ºèªã®ãƒ†ã‚­ã‚¹ãƒˆ
+    [SerializeField] Button m_buttonConfirmation;            // å‰Šé™¤ç¢ºèªã®YESãƒœã‚¿ãƒ³
+    [SerializeField] List<Sprite> m_texTabs;                 // ã‚¿ãƒ–ã®ç”»åƒ [1:ã‚¢ã‚¯ãƒ†ã‚£ãƒ–ãªç”»åƒ,0:éã‚¢ã‚¯ãƒ†ã‚£ãƒ–ãªç”»åƒ]
+    [SerializeField] GameObject m_tabLog;                    // ãƒ­ã‚°ã‚’è¡¨ç¤ºã™ã‚‹ã‚¿ãƒ–
+    [SerializeField] GameObject m_logMenuBtnParent;          // ãƒ¡ãƒ‹ãƒ¥ãƒ¼ãƒœã‚¿ãƒ³ã®è¦ªã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
+    [SerializeField] GameObject m_logScloleView;             // ãƒ­ã‚°ã‚’è¡¨ç¤ºã™ã‚‹ãƒ“ãƒ¥ãƒ¼
+    [SerializeField] GameObject m_barHostLogPrefab;          // ãƒ›ã‚¹ãƒˆã®ãƒ­ã‚°ãƒãƒ¼
+    [SerializeField] GameObject m_barGuestLogPrefab;         // ã‚²ã‚¹ãƒˆã®ãƒ­ã‚°ãƒãƒ¼
+    [SerializeField] GameObject m_tabRecruiting;             // æ•‘é›£ä¿¡å·ã®å‹Ÿé›†ãƒªã‚¹ãƒˆã‚’è¡¨ç¤ºã™ã‚‹ã‚¿ãƒ–
+    [SerializeField] GameObject m_signalScloleView;          // æ•‘é›£ä¿¡å·ã®å‹Ÿé›†ã‚’è¡¨ç¤ºã™ã‚‹ãƒ“ãƒ¥ãƒ¼
+    [SerializeField] GameObject m_signalPrefab;              // æ•‘é›£ä¿¡å·ã®å‹Ÿé›†ã®ãƒ—ãƒ¬ãƒ•ã‚¡ãƒ–
+    [SerializeField] Text m_textDataCnt;                     // å–å¾—ã—ãŸãƒ‡ãƒ¼ã‚¿æ•°ã®ãƒ†ã‚­ã‚¹ãƒˆ
     #endregion
 
-    #region ƒEƒBƒ“ƒhƒE
+    #region ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦
     [SerializeField] GameObject m_windowDistressSignal;
     [SerializeField] GameObject m_windowTutrial;
     #endregion
 
-    #region ƒ`ƒ…[ƒgƒŠƒAƒ‹
+    #region ãƒãƒ¥ãƒ¼ãƒˆãƒªã‚¢ãƒ«
     [SerializeField] GameObject m_menuTutorial;
     [SerializeField] List<GameObject> m_panelTutrials;
     #endregion
 
-    [SerializeField] GameObject m_uiRewardUnclaimed;    // –¢ó‚¯æ‚è‚ÌƒQƒXƒg•ñV‚ª‚ ‚é‚©‚Ç‚¤‚©‚ÌUI
+    [SerializeField] GameObject m_uiRewardUnclaimed;    // æœªå—ã‘å–ã‚Šã®ã‚²ã‚¹ãƒˆå ±é…¬ãŒã‚ã‚‹ã‹ã©ã†ã‹ã®UI
 
     /// <summary>
-    /// ƒEƒBƒ“ƒhƒE‚Ì•\¦ƒ‚[ƒh
+    /// ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã®è¡¨ç¤ºãƒ¢ãƒ¼ãƒ‰
     /// </summary>
     enum SHOW_WINDOW_MODE
     {
-        DISTRESS_SIGNAL = 0,       // ‹~“ïM†‚ÌƒEƒCƒ“ƒhƒE
-        TUTORIAL,                  // ƒ`ƒ…[ƒgƒŠƒAƒ‹‚ÌƒEƒCƒ“ƒhƒE
+        DISTRESS_SIGNAL = 0,       // æ•‘é›£ä¿¡å·ã®ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦
+        TUTORIAL,                  // ãƒãƒ¥ãƒ¼ãƒˆãƒªã‚¢ãƒ«ã®ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦
     }
 
     /// <summary>
-    /// ‹~“ïM†‚Ì•\¦ƒ‚[ƒh
+    /// æ•‘é›£ä¿¡å·ã®è¡¨ç¤ºãƒ¢ãƒ¼ãƒ‰
     /// </summary>
     enum SIGNAL_LIST_MODE
     {
-        LOG_MENU = 0,       // ƒƒO‚ğ•\¦‚·‚é‘I‘ğƒƒjƒ…[
-        RECRUITING,         // •åWˆê——
+        LOG_MENU = 0,       // ãƒ­ã‚°ã‚’è¡¨ç¤ºã™ã‚‹é¸æŠãƒ¡ãƒ‹ãƒ¥ãƒ¼
+        RECRUITING,         // å‹Ÿé›†ä¸€è¦§
     }
 
     /// <summary>
-    /// ƒƒO‚Ì•\¦ƒ‚[ƒh
+    /// ãƒ­ã‚°ã®è¡¨ç¤ºãƒ¢ãƒ¼ãƒ‰
     /// </summary>
     enum SIGNAL_LOG_LIST_MODE
     {
-        LOG_HOST = 0,       // ƒzƒXƒg‚Ì‚Æ‚«‚ÌƒƒOˆê——
-        LOG_GUEST,          // ƒQƒXƒg‚Ì‚Æ‚«‚ÌƒƒOˆê——
+        LOG_HOST = 0,       // ãƒ›ã‚¹ãƒˆã®ã¨ãã®ãƒ­ã‚°ä¸€è¦§
+        LOG_GUEST,          // ã‚²ã‚¹ãƒˆã®ã¨ãã®ãƒ­ã‚°ä¸€è¦§
     }
 
     private void OnEnable()
@@ -73,11 +73,11 @@ public class UISignalManager : MonoBehaviour
     }
 
     /// <summary>
-    /// –¢ó‚¯æ‚è‚Ì•ñV‚ª‚ ‚é‚©‚Ç‚¤‚©ƒ`ƒFƒbƒN
+    /// æœªå—ã‘å–ã‚Šã®å ±é…¬ãŒã‚ã‚‹ã‹ã©ã†ã‹ãƒã‚§ãƒƒã‚¯
     /// </summary>
     public void CheckRewardUnclaimed()
     {
-        // ó‚¯æ‚è‰Â”\‚ÈƒQƒXƒg•ñV‚ª‚ ‚é‚©‚Ç‚¤‚©
+        // å—ã‘å–ã‚Šå¯èƒ½ãªã‚²ã‚¹ãƒˆå ±é…¬ãŒã‚ã‚‹ã‹ã©ã†ã‹
         StartCoroutine(NetworkManager.Instance.GetSignalGuestLogList(
             result =>
             {
@@ -112,16 +112,16 @@ public class UISignalManager : MonoBehaviour
     }
 
     /// <summary>
-    /// ƒƒO‚ğXV‚·‚é
+    /// ãƒ­ã‚°ã‚’æ›´æ–°ã™ã‚‹
     /// </summary>
     void UpdateSignalLogUI(SIGNAL_LOG_LIST_MODE mode)
     {
         m_loading.ToggleLoadingUIVisibility(1);
 
-        // ƒƒOƒvƒŒƒtƒ@ƒu‚ÌŠi”[æ‚ğæ“¾‚·‚é
+        // ãƒ­ã‚°ãƒ—ãƒ¬ãƒ•ã‚¡ãƒ–ã®æ ¼ç´å…ˆã‚’å–å¾—ã™ã‚‹
         GameObject contentLog = m_logScloleView.transform.GetChild(0).transform.GetChild(0).gameObject;
 
-        // Œ»İA‘¶İ‚·‚éŒÃ‚¢ƒƒO‚ğ‘S‚Äíœ‚·‚é
+        // ç¾åœ¨ã€å­˜åœ¨ã™ã‚‹å¤ã„ãƒ­ã‚°ã‚’å…¨ã¦å‰Šé™¤ã™ã‚‹
         foreach (Transform oldProfile in contentLog.transform)
         {
             Destroy(oldProfile.gameObject);
@@ -130,20 +130,20 @@ public class UISignalManager : MonoBehaviour
         switch (mode)
         {
             case SIGNAL_LOG_LIST_MODE.LOG_HOST:
-                // ƒzƒXƒg‚ÌƒƒOæ“¾ˆ—
+                // ãƒ›ã‚¹ãƒˆã®ãƒ­ã‚°å–å¾—å‡¦ç†
                 StartCoroutine(NetworkManager.Instance.GetSignalHostLogList(
                     result =>
                     {
                         m_loading.ToggleLoadingUIVisibility(-1);
 
-                        ToggleTextEmpty("•åW‚µ‚½—š—ğ‚ªŒ©‚Â‚©‚è‚Ü‚¹‚ñ‚Å‚µ‚½B", result == null);
+                        ToggleTextEmpty("å‹Ÿé›†ã—ãŸå±¥æ­´ãŒè¦‹ã¤ã‹ã‚Šã¾ã›ã‚“ã§ã—ãŸã€‚", result == null);
                         m_textDataCnt.text = result == null ? "0/10" : result.Length + "/10";
 
                         if (result == null) return;
 
                         foreach (ShowHostLogResponse log in result)
                         {
-                            // ƒƒO‚ğ¶¬‚·‚é
+                            // ãƒ­ã‚°ã‚’ç”Ÿæˆã™ã‚‹
                             GameObject logHost = Instantiate(m_barHostLogPrefab, contentLog.transform);
                             logHost.GetComponent<SignalHostLogBar>().UpdateLog(
                                 this,log.SignalID, log.CreateDay, log.StageID, log.GuestCnt, log.IsStageClear);
@@ -151,20 +151,20 @@ public class UISignalManager : MonoBehaviour
                     }));
                 break;
             case SIGNAL_LOG_LIST_MODE.LOG_GUEST:
-                // ƒQƒXƒg‚ÌƒƒOæ“¾ˆ—
+                // ã‚²ã‚¹ãƒˆã®ãƒ­ã‚°å–å¾—å‡¦ç†
                 StartCoroutine(NetworkManager.Instance.GetSignalGuestLogList(
                     result =>
                     {
                         m_loading.ToggleLoadingUIVisibility(-1);
 
-                        ToggleTextEmpty("Q‰Á‚µ‚½—š—ğ‚ªŒ©‚Â‚©‚è‚Ü‚¹‚ñ‚Å‚µ‚½B", result == null); 
+                        ToggleTextEmpty("å‚åŠ ã—ãŸå±¥æ­´ãŒè¦‹ã¤ã‹ã‚Šã¾ã›ã‚“ã§ã—ãŸã€‚", result == null); 
                         m_textDataCnt.text = result == null ? "0/10" : result.Length + "/10";
 
                         if (result == null) return;
 
                         foreach (ShowGuestLogResponse log in result)
                         {
-                            // ƒƒO‚ğ¶¬‚·‚é
+                            // ãƒ­ã‚°ã‚’ç”Ÿæˆã™ã‚‹
                             GameObject logHost = Instantiate(m_barGuestLogPrefab, contentLog.transform);
                             logHost.GetComponent<SignalGuestLogBar>().UpdateLogBar(this,log.SignalID, log.ElapsedDay,
                                 TopManager.TexIcons[log.IconID - 1], log.IsAgreement, log.HostName, log.StageID, log.GuestCnt, log.IsStageClear, log.IsRewarded);
@@ -175,36 +175,36 @@ public class UISignalManager : MonoBehaviour
     }
 
     /// <summary>
-    /// ‹~“ïM†‚Ì•åWƒŠƒXƒg‚ğXV‚·‚é
+    /// æ•‘é›£ä¿¡å·ã®å‹Ÿé›†ãƒªã‚¹ãƒˆã‚’æ›´æ–°ã™ã‚‹
     /// </summary>
     void UpdateSignalListUI()
     {
         m_loading.ToggleLoadingUIVisibility(1);
 
-        // •å‹~“ïM†‚ÌƒvƒŒƒtƒ@ƒu‚ÌŠi”[æ‚ğæ“¾‚·‚é
+        // å‹Ÿæ•‘é›£ä¿¡å·ã®ãƒ—ãƒ¬ãƒ•ã‚¡ãƒ–ã®æ ¼ç´å…ˆã‚’å–å¾—ã™ã‚‹
         GameObject content = m_signalScloleView.transform.GetChild(0).transform.GetChild(0).gameObject;
 
-        // Œ»İA‘¶İ‚·‚éŒÃ‚¢‹~“ïM†‚ğ‘S‚Äíœ‚·‚é
+        // ç¾åœ¨ã€å­˜åœ¨ã™ã‚‹å¤ã„æ•‘é›£ä¿¡å·ã‚’å…¨ã¦å‰Šé™¤ã™ã‚‹
         foreach (Transform oldProfile in content.transform)
         {
             Destroy(oldProfile.gameObject);
         }
 
-        // ƒ‰ƒ“ƒ_ƒ€‚É‹~“ïM†æ“¾ˆ—
+        // ãƒ©ãƒ³ãƒ€ãƒ ã«æ•‘é›£ä¿¡å·å–å¾—å‡¦ç†
         StartCoroutine(NetworkManager.Instance.GetRndSignalList(
             result =>
             {
                 m_loading.ToggleLoadingUIVisibility(-1);
 
-                ToggleTextEmpty("•åW‚ªŒ©‚Â‚©‚è‚Ü‚¹‚ñ‚Å‚µ‚½B", result == null || result.Length == 0);
+                ToggleTextEmpty("å‹Ÿé›†ãŒè¦‹ã¤ã‹ã‚Šã¾ã›ã‚“ã§ã—ãŸã€‚", result == null || result.Length == 0);
                 m_textDataCnt.text = result == null ? "0/10" : result.Length + "/10";
 
                 if (result == null) return;
 
-                // æ“¾‚µ‚½î•ñ‚ğŒ³‚ÉŠe‹~“ïM†‚ğì¬‚·‚é
+                // å–å¾—ã—ãŸæƒ…å ±ã‚’å…ƒã«å„æ•‘é›£ä¿¡å·ã‚’ä½œæˆã™ã‚‹
                 foreach (ShowRndSignalResponse signal in result)
                 {
-                    // ‹~“ïM†‚ğ¶¬‚·‚é
+                    // æ•‘é›£ä¿¡å·ã‚’ç”Ÿæˆã™ã‚‹
                     GameObject signalBar = Instantiate(m_signalPrefab, content.transform);
                     signalBar.GetComponent<SignalBar>().UpdateSignalBar(this, signal.SignalID, signal.ElapsedDay,
                         TopManager.TexIcons[signal.IconID - 1], signal.IsAgreement, signal.HostName, signal.StageID, signal.GuestCnt);
@@ -213,9 +213,9 @@ public class UISignalManager : MonoBehaviour
     }
 
     /// <summary>
-    /// ‹~“ïM†‚Ì“à—e‚ğØ‚è‘Ö‚¦‚é
+    /// æ•‘é›£ä¿¡å·ã®å†…å®¹ã‚’åˆ‡ã‚Šæ›¿ãˆã‚‹
     /// </summary>
-    /// <param name="mode">SIGNAL_LIST_MODEQÆ</param>
+    /// <param name="mode">SIGNAL_LIST_MODEå‚ç…§</param>
     public void OnSignalTabButton(int mode)
     {
         ToggleTextEmpty("", false);
@@ -227,24 +227,24 @@ public class UISignalManager : MonoBehaviour
         m_windowTutrial.SetActive(false);
         switch (mode)
         {
-            case 0: // ƒƒO‚Ì‘I‘ğƒƒjƒ…[‚ğ•\¦
+            case 0: // ãƒ­ã‚°ã®é¸æŠãƒ¡ãƒ‹ãƒ¥ãƒ¼ã‚’è¡¨ç¤º
                 m_logMenuBtnParent.SetActive(true);
                 m_tabLog.GetComponent<Image>().sprite = m_texTabs[1];
                 m_tabRecruiting.GetComponent<Image>().sprite = m_texTabs[0];
                 break;
-            case 1: // ‹~“ïM†‚Ì•åWƒŠƒXƒg‚ğ•\¦
+            case 1: // æ•‘é›£ä¿¡å·ã®å‹Ÿé›†ãƒªã‚¹ãƒˆã‚’è¡¨ç¤º
                 m_signalScloleView.SetActive(true);
                 m_tabLog.GetComponent<Image>().sprite = m_texTabs[0];
                 m_tabRecruiting.GetComponent<Image>().sprite = m_texTabs[1];
 
-                // •åWˆê——‚ğæ“¾
+                // å‹Ÿé›†ä¸€è¦§ã‚’å–å¾—
                 UpdateSignalListUI();
                 break;
         }
     }
 
     /// <summary>
-    /// ƒƒO‚Ì“à—e‚ğØ‚è‘Ö‚¦‚é
+    /// ãƒ­ã‚°ã®å†…å®¹ã‚’åˆ‡ã‚Šæ›¿ãˆã‚‹
     /// </summary>
     /// <param name="mode">SIGNAL_LIST_MODE</param>
     public void OnSelectMenuLogButton(int mode)
@@ -256,17 +256,17 @@ public class UISignalManager : MonoBehaviour
         m_windowTutrial.SetActive(false);
         switch (mode)
         {
-            case 0: // ƒƒO‚Ì‘I‘ğƒƒjƒ…[‚ğ•\¦
+            case 0: // ãƒ­ã‚°ã®é¸æŠãƒ¡ãƒ‹ãƒ¥ãƒ¼ã‚’è¡¨ç¤º
                 UpdateSignalLogUI(SIGNAL_LOG_LIST_MODE.LOG_HOST);
                 break;
-            case 1: // ‹~“ïM†‚Ì•åWƒŠƒXƒg‚ğ•\¦
+            case 1: // æ•‘é›£ä¿¡å·ã®å‹Ÿé›†ãƒªã‚¹ãƒˆã‚’è¡¨ç¤º
                 UpdateSignalLogUI(SIGNAL_LOG_LIST_MODE.LOG_GUEST);
                 break;
         }
     }
 
     /// <summary>
-    /// ƒEƒBƒ“ƒhƒE‚ğØ‚è‘Ö‚¦‚é
+    /// ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚’åˆ‡ã‚Šæ›¿ãˆã‚‹
     /// </summary>
     /// <param name="mode">SHOW_WINDOW_MODE</param>
     public void ToggleWindowVisibility(int mode)
@@ -275,12 +275,12 @@ public class UISignalManager : MonoBehaviour
         m_textDataCnt.text = "";
         switch (mode)
         {
-            case 0: // ‹~“ïM†‚ÌƒEƒCƒ“ƒhƒE•\¦
+            case 0: // æ•‘é›£ä¿¡å·ã®ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦è¡¨ç¤º
                 m_windowTutrial.SetActive(false);
                 m_windowDistressSignal.SetActive(true);
                 OnSignalTabButton(0);
                 break;
-            case 1: // ƒ`ƒ…[ƒgƒŠƒAƒ‹‚ÌƒEƒCƒ“ƒhƒE•\¦
+            case 1: // ãƒãƒ¥ãƒ¼ãƒˆãƒªã‚¢ãƒ«ã®ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦è¡¨ç¤º
                 m_windowDistressSignal.SetActive(false);
                 m_windowTutrial.SetActive(true);
                 break;
@@ -288,14 +288,14 @@ public class UISignalManager : MonoBehaviour
     }
 
     /// <summary>
-    /// ƒ`ƒ…[ƒgƒŠƒAƒ‹ƒpƒlƒ‹‚ğ•\¦E”ñ•\¦‚É‚·‚é
+    /// ãƒãƒ¥ãƒ¼ãƒˆãƒªã‚¢ãƒ«ãƒ‘ãƒãƒ«ã‚’è¡¨ç¤ºãƒ»éè¡¨ç¤ºã«ã™ã‚‹
     /// </summary>
-    /// <param name="panelID">m_panelTutrials‚ÌƒCƒ“ƒfƒbƒNƒX”Ô†+1</param>
+    /// <param name="panelID">m_panelTutrialsã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ç•ªå·+1</param>
     public void TogglePanelTutorialVisibility(int panelID)
     {
         m_menuTutorial.SetActive(panelID == 0);
 
-        // ID‚É0w’è‚Å‘S‚Ä”ñ•\¦‚É‚·‚é
+        // IDã«0æŒ‡å®šã§å…¨ã¦éè¡¨ç¤ºã«ã™ã‚‹
         for (int i = 0; i < m_panelTutrials.Count; i++)
         {
             bool isMyID = i + 1 == panelID;
@@ -304,7 +304,7 @@ public class UISignalManager : MonoBehaviour
     }
 
     /// <summary>
-    /// ƒ`ƒ…[ƒgƒŠƒAƒ‹‚Ìƒpƒlƒ‹‚ğ•Â‚¶‚éƒ{ƒ^ƒ“
+    /// ãƒãƒ¥ãƒ¼ãƒˆãƒªã‚¢ãƒ«ã®ãƒ‘ãƒãƒ«ã‚’é–‰ã˜ã‚‹ãƒœã‚¿ãƒ³
     /// </summary>
     public void OnClosePanelTutrialButton()
     {
@@ -323,7 +323,7 @@ public class UISignalManager : MonoBehaviour
         m_uiPanelConfirmation.SetActive(true);
         m_textConfirmation.text = text;
 
-        // ƒƒO‚ÌíœƒCƒxƒ“ƒg‚ğYesƒ{ƒ^ƒ“‚Éİ’è‚·‚é
+        // ãƒ­ã‚°ã®å‰Šé™¤ã‚¤ãƒ™ãƒ³ãƒˆã‚’Yesãƒœã‚¿ãƒ³ã«è¨­å®šã™ã‚‹
         m_buttonConfirmation.onClick.RemoveAllListeners();
         m_buttonConfirmation.onClick.AddListener(() => logBar.OnDestroyButton());
         m_buttonConfirmation.onClick.AddListener(() => HidePanelConfirmation());
@@ -334,7 +334,7 @@ public class UISignalManager : MonoBehaviour
         m_uiPanelConfirmation.SetActive(true);
         m_textConfirmation.text = text;
 
-        // ƒƒO‚ÌíœƒCƒxƒ“ƒg‚ğYesƒ{ƒ^ƒ“‚Éİ’è‚·‚é
+        // ãƒ­ã‚°ã®å‰Šé™¤ã‚¤ãƒ™ãƒ³ãƒˆã‚’Yesãƒœã‚¿ãƒ³ã«è¨­å®šã™ã‚‹
         m_buttonConfirmation.onClick.RemoveAllListeners();
         m_buttonConfirmation.onClick.AddListener(() => logBar.OnDestroyButton());
         m_buttonConfirmation.onClick.AddListener(() => HidePanelConfirmation());

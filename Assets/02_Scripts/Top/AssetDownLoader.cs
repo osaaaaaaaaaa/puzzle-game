@@ -11,7 +11,7 @@ public class AssetDownLoader : MonoBehaviour
     [SerializeField] GameObject m_loadingSlider;
 
     /// <summary>
-    /// XV‰Â”\ƒtƒ@ƒCƒ‹‚ª‚ ‚é‚©Šm”F
+    /// æ›´æ–°å¯èƒ½ãƒ•ã‚¡ã‚¤ãƒ«ãŒã‚ã‚‹ã‹ç¢ºèª
     /// </summary>
     /// <returns></returns>
     public IEnumerator checkCatalog()
@@ -23,42 +23,42 @@ public class AssetDownLoader : MonoBehaviour
         Addressables.Release(checkHandle);
         if(updates.Count >= 1)
         {
-            // XV‚ª‚ ‚éê‡‚Íƒ[ƒhˆ—
+            // æ›´æ–°ãŒã‚ã‚‹å ´åˆã¯ãƒ­ãƒ¼ãƒ‰å‡¦ç†
             StartCoroutine(Loading());
         }
         else
         {
-            // XV‚ª‚È‚¢ê‡‚Íƒ†[ƒU[“o˜^ˆ—
+            // æ›´æ–°ãŒãªã„å ´åˆã¯ãƒ¦ãƒ¼ã‚¶ãƒ¼ç™»éŒ²å‡¦ç†
             m_topManager.StoreUser();
         }
     }
 
     /// <summary>
-    /// “Ç‚İ‚İˆ—
+    /// èª­ã¿è¾¼ã¿å‡¦ç†
     /// </summary>
     /// <returns></returns>
     public IEnumerator Loading()
     {
         m_loadingSlider.SetActive(true);
 
-        // ƒJƒ^ƒƒOXVˆ—
+        // ã‚«ã‚¿ãƒ­ã‚°æ›´æ–°å‡¦ç†
         var handle = Addressables.UpdateCatalogs();
         yield return handle;
 
-        // bundleƒ_ƒEƒ“ƒ[ƒhÀs
-        AsyncOperationHandle downloadHandle = Addressables.DownloadDependenciesAsync("default", false); // ƒ‰ƒxƒ‹w’è
-        // ƒ_ƒEƒ“ƒ[ƒhŠ®—¹‚·‚é‚Ü‚ÅƒXƒ‰ƒCƒ_[‚ğXV‚·‚é
+        // bundleãƒ€ã‚¦ãƒ³ãƒ­ãƒ¼ãƒ‰å®Ÿè¡Œ
+        AsyncOperationHandle downloadHandle = Addressables.DownloadDependenciesAsync("default", false); // ãƒ©ãƒ™ãƒ«æŒ‡å®š
+        // ãƒ€ã‚¦ãƒ³ãƒ­ãƒ¼ãƒ‰å®Œäº†ã™ã‚‹ã¾ã§ã‚¹ãƒ©ã‚¤ãƒ€ãƒ¼ã‚’æ›´æ–°ã™ã‚‹
         while (downloadHandle.Status == AsyncOperationStatus.None)
         {
-            m_loadingSlider.GetComponent<Slider>().value = downloadHandle.GetDownloadStatus().Percent * 100;   // ƒXƒ‰ƒCƒ_[ŒÀŠE’l‚ª0~1‚É‚È‚Á‚Ä‚¢‚é
-            yield return null;  // 1ƒtƒŒ[ƒ€‘Ò‹@
+            m_loadingSlider.GetComponent<Slider>().value = downloadHandle.GetDownloadStatus().Percent * 100;   // ã‚¹ãƒ©ã‚¤ãƒ€ãƒ¼é™ç•Œå€¤ãŒ0~1ã«ãªã£ã¦ã„ã‚‹
+            yield return null;  // 1ãƒ•ãƒ¬ãƒ¼ãƒ å¾…æ©Ÿ
         }
         m_loadingSlider.GetComponent<Slider>().value = 100;
         Addressables.Release(downloadHandle);
 
         m_loadingSlider.SetActive(false);
 
-        // ƒ†[ƒU[“o˜^ˆ—
+        // ãƒ¦ãƒ¼ã‚¶ãƒ¼ç™»éŒ²å‡¦ç†
         m_topManager.StoreUser();
     }
 }

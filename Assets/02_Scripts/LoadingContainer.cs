@@ -14,7 +14,7 @@ public class LoadingContainer : MonoBehaviour
     }
 
     /// <summary>
-    /// ローディングUIの表示・非表示処理
+    /// 繝ｭ繝ｼ繝�繧｣繝ｳ繧ｰUI縺ｮ陦ｨ遉ｺ繝ｻ髱櫁｡ｨ遉ｺ蜃ｦ逅�
     /// </summary>
     public void ToggleLoadingUIVisibility(int allie)
     {

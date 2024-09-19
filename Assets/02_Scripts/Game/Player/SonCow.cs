@@ -6,20 +6,20 @@ public class SonCow : MonoBehaviour
 {
     [SerializeField] GameObject m_son;
     [SerializeField] GameObject m_son_cow;
-    [SerializeField] LayerMask m_obstacleLayer1;     // áŠQ•¨‚ÌƒŒƒCƒ„[ƒ^ƒO
-    [SerializeField] LayerMask m_obstacleLayer2;     // áŠQ•¨‚ÌƒŒƒCƒ„[ƒ^ƒO
+    [SerializeField] LayerMask m_obstacleLayer1;     // éšœå®³ç‰©ã®ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚¿ã‚°
+    [SerializeField] LayerMask m_obstacleLayer2;     // éšœå®³ç‰©ã®ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚¿ã‚°
     Rigidbody2D m_rb;
     Animator m_animator;
     public float m_speed = 1f;
     public int m_direction = 1;
     float m_JumpPower = 150f;
-    Vector2 m_jumpDir = new Vector2(0,1);  // ƒWƒƒƒ“ƒv‚·‚é•ûŒü
-    bool m_isBeKicked;  // R‚è”ò‚Î‚³‚ê‚½‚©‚Ç‚¤‚©
-    bool m_isJump;      // ƒWƒƒƒ“ƒv‚µ‚½‚©‚Ç‚¤‚©
+    Vector2 m_jumpDir = new Vector2(0,1);  // ã‚¸ãƒ£ãƒ³ãƒ—ã™ã‚‹æ–¹å‘
+    bool m_isBeKicked;  // è¹´ã‚Šé£›ã°ã•ã‚ŒãŸã‹ã©ã†ã‹
+    bool m_isJump;      // ã‚¸ãƒ£ãƒ³ãƒ—ã—ãŸã‹ã©ã†ã‹
     GameObject m_player;
     GameManager m_gameManager;
 
-    #region Ray‚Ìn“_‚ÆI“_
+    #region Rayã®å§‹ç‚¹ã¨çµ‚ç‚¹
     float m_lineWallStart = 0.7f;
     float m_lineWallEnd = 0.7f;
     float m_lineWallSpace1 = 1f;
@@ -29,11 +29,11 @@ public class SonCow : MonoBehaviour
     Vector3 m_lineBotomEnd = new Vector3(0.52f, -0.2f, 0f);
     #endregion
 
-    #region R‚è”ò‚Î‚·‚Æ‚«‚É•K—v‚Èƒpƒ‰ƒ[ƒ^
-    public Vector3 m_offset { get; private set; }      // •êe‚Æ‚ÌƒIƒtƒZƒbƒg
-    // ‰‘¬“x
+    #region è¹´ã‚Šé£›ã°ã™ã¨ãã«å¿…è¦ãªãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿
+    public Vector3 m_offset { get; private set; }      // æ¯è¦ªã¨ã®ã‚ªãƒ•ã‚»ãƒƒãƒˆ
+    // åˆé€Ÿåº¦
     float m_initialSpeed = 50f;
-    // d—ÊƒXƒP[ƒ‹
+    // é‡é‡ã‚¹ã‚±ãƒ¼ãƒ«
     float m_gravityScale = 10f;
     #endregion
 
@@ -46,44 +46,44 @@ public class SonCow : MonoBehaviour
 
     private void Update()
     {
-        // R‚è”ò‚Î‚µ‚½Œã‚Éƒ^ƒbƒv‚µ‚½ê‡
+        // è¹´ã‚Šé£›ã°ã—ãŸå¾Œã«ã‚¿ãƒƒãƒ—ã—ãŸå ´åˆ
         if (m_isBeKicked && Input.GetMouseButtonDown(0) && !m_gameManager.GetComponent<GameManager>().m_isPause && transform.tag != "Ghost")
         {
             SeparateSon();
         }
 
-        // Œü‚«‚ğXV
+        // å‘ãã‚’æ›´æ–°
         transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x) * m_direction, transform.localScale.y, transform.localScale.z);
     }
 
     private void FixedUpdate()
     {
-        // ƒvƒŒƒCƒ„[‚ª‚Ü‚¾R‚è”ò‚Î‚µ‚Ä‚¢‚È‚¢ê‡
+        // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãŒã¾ã è¹´ã‚Šé£›ã°ã—ã¦ã„ãªã„å ´åˆ
         if (!m_isBeKicked)
         {
             m_animator.SetBool("IsGround", false);
             return;
         }
 
-        // ƒAƒjƒ[ƒVƒ‡ƒ“ƒpƒ‰ƒ[ƒ^XV
+        // ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿æ›´æ–°
         m_animator.SetBool("IsGround", IsGround());
 
-        // ‘«‚ª’…‚¢‚Ä‚¢‚é‚©‚Ç‚¤‚©
+        // è¶³ãŒç€ã„ã¦ã„ã‚‹ã‹ã©ã†ã‹
         if (!IsGround()) return;
 
-        // •Ç‚ÉÕ“Ë‚µ‚½ê‡
+        // å£ã«è¡çªã—ãŸå ´åˆ
         if (IsWall())
         {
-            m_direction *= -1;  // ˆÚ“®•ûŒü‚ğ”½“]‚³‚¹‚é
+            m_direction *= -1;  // ç§»å‹•æ–¹å‘ã‚’åè»¢ã•ã›ã‚‹
             m_rb.velocity = Vector3.zero;
         }
 
-        // ˆÚ“®ˆ—
+        // ç§»å‹•å‡¦ç†
         if(!m_gameManager.m_isPause) m_rb.velocity = new Vector2(m_speed * m_direction, m_rb.velocity.y);
     }
 
     /// <summary>
-    /// ”»’è‚Ìæ‚É•Ç‚ª‚ ‚é‚©‚Ç‚¤‚©
+    /// åˆ¤å®šã®å…ˆã«å£ãŒã‚ã‚‹ã‹ã©ã†ã‹
     /// </summary>
     /// <returns></returns>
     private bool IsWall()
@@ -91,14 +91,14 @@ public class SonCow : MonoBehaviour
         Vector3 startVec1 = Vector3.zero, endVec1 = Vector3.zero;
         Vector3 startVec2 = Vector3.zero, endVec2 = Vector3.zero;
 
-        startVec1 = transform.position + transform.right * m_lineWallSpace1 * transform.localScale.x + transform.up * m_lineWallStart;    // n“_
-        endVec1 = startVec1 + transform.up * transform.localScale.y * m_lineWallEnd;    // I“_
+        startVec1 = transform.position + transform.right * m_lineWallSpace1 * transform.localScale.x + transform.up * m_lineWallStart;    // å§‹ç‚¹
+        endVec1 = startVec1 + transform.up * transform.localScale.y * m_lineWallEnd;    // çµ‚ç‚¹
 
-        startVec2 = transform.position + transform.right * m_lineWallSpace2 * transform.localScale.x + transform.up * m_lineWallStart;    // n“_
-        endVec2 = startVec2 + transform.up * transform.localScale.y * m_lineWallEnd;    // I“_
+        startVec2 = transform.position + transform.right * m_lineWallSpace2 * transform.localScale.x + transform.up * m_lineWallStart;    // å§‹ç‚¹
+        endVec2 = startVec2 + transform.up * transform.localScale.y * m_lineWallEnd;    // çµ‚ç‚¹
 
-        Debug.DrawLine(startVec1, endVec1, Color.red);   // •`Ê‚·‚é
-        Debug.DrawLine(startVec2, endVec2, Color.red);   // •`Ê‚·‚é
+        Debug.DrawLine(startVec1, endVec1, Color.red);   // æå†™ã™ã‚‹
+        Debug.DrawLine(startVec2, endVec2, Color.red);   // æå†™ã™ã‚‹
 
         return Physics2D.Linecast(startVec1, endVec1, m_obstacleLayer1) 
             || Physics2D.Linecast(startVec2, endVec2, m_obstacleLayer1)
@@ -107,17 +107,17 @@ public class SonCow : MonoBehaviour
     }
 
     /// <summary>
-    /// ’n–Ê‚É’…‚¢‚Ä‚¢‚é
+    /// åœ°é¢ã«ç€ã„ã¦ã„ã‚‹
     /// </summary>
     /// <returns></returns>
     public bool IsGround()
     {
-        // ‘«Œ³‚É‚Q‚Â‚Ìn“_‚ÆI“_‚ğì¬‚·‚é
-        Vector3 leftStartPosition = transform.position + new Vector3(m_lineBotomStart1.x * m_direction, m_lineBotomStart1.y, m_lineBotomStart1.z);     // ¶‘¤‚Ìn“_
-        Vector3 rightStartPosition = transform.position + new Vector3(m_lineBotomStart2.x * m_direction, m_lineBotomStart2.y, m_lineBotomStart2.z);    // ‰E‘¤‚Ìn“_
-        Vector3 endPosition = transform.position - new Vector3(m_lineBotomEnd.x * m_direction, m_lineBotomEnd.y, m_lineBotomEnd.z);             // I“_(‰º)
+        // è¶³å…ƒã«ï¼’ã¤ã®å§‹ç‚¹ã¨çµ‚ç‚¹ã‚’ä½œæˆã™ã‚‹
+        Vector3 leftStartPosition = transform.position + new Vector3(m_lineBotomStart1.x * m_direction, m_lineBotomStart1.y, m_lineBotomStart1.z);     // å·¦å´ã®å§‹ç‚¹
+        Vector3 rightStartPosition = transform.position + new Vector3(m_lineBotomStart2.x * m_direction, m_lineBotomStart2.y, m_lineBotomStart2.z);    // å³å´ã®å§‹ç‚¹
+        Vector3 endPosition = transform.position - new Vector3(m_lineBotomEnd.x * m_direction, m_lineBotomEnd.y, m_lineBotomEnd.z);             // çµ‚ç‚¹(ä¸‹)
 
-        // •`Ê‚·‚é
+        // æå†™ã™ã‚‹
         Debug.DrawLine(leftStartPosition, endPosition, Color.red);
         Debug.DrawLine(rightStartPosition, endPosition, Color.red);
 
@@ -128,7 +128,7 @@ public class SonCow : MonoBehaviour
     }
 
     /// <summary>
-    /// ‹‚ÌÀ•W‚Ìƒpƒ‰ƒ[ƒ^İ’è
+    /// ç‰›ã®åº§æ¨™ã®ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿è¨­å®š
     /// </summary>
     public void SetCowParam(int direction,Vector3 pos)
     {
@@ -139,20 +139,20 @@ public class SonCow : MonoBehaviour
     }
 
     /// <summary>
-    /// ‘§q‚Æ•ª—£‚·‚é
+    /// æ¯å­ã¨åˆ†é›¢ã™ã‚‹
     /// </summary>
     void SeparateSon()
     {
-        // ‹‚Éæ‚Á‚½‘§q‚ª”ñƒAƒNƒeƒBƒu‚Ìê‡ || ƒ|[ƒY’†‚Ìê‡
+        // ç‰›ã«ä¹—ã£ãŸæ¯å­ãŒéã‚¢ã‚¯ãƒ†ã‚£ãƒ–ã®å ´åˆ || ãƒãƒ¼ã‚ºä¸­ã®å ´åˆ
         if (!m_son_cow.activeSelf || m_isJump || m_gameManager.m_isPause) return;
 
         m_son.transform.position = m_son_cow.transform.position;
 
-        // ‘§q‚Ì•\¦E”ñ•\¦
+        // æ¯å­ã®è¡¨ç¤ºãƒ»éè¡¨ç¤º
         m_son_cow.SetActive(false);
         m_son.SetActive(true);
 
-        // ‘§q‚ğ”ò‚Î‚·ˆ—
+        // æ¯å­ã‚’é£›ã°ã™å‡¦ç†
         float addJumpX = m_rb.velocity.x;
         float addJumpY = m_rb.velocity.y > 0 ? m_rb.velocity.y : 0f;
         m_son.GetComponent<Son>().DOKick(new Vector3(m_jumpDir.x + addJumpX, m_jumpDir.y + addJumpY, 0f),m_JumpPower,false);
@@ -160,52 +160,52 @@ public class SonCow : MonoBehaviour
     }
 
     /// <summary>
-    /// R‚è”ò‚Î‚³‚ê‚éˆ—
+    /// è¹´ã‚Šé£›ã°ã•ã‚Œã‚‹å‡¦ç†
     /// </summary>
-    /// <param name="dir">•ûŠp</param>
-    /// <param name="power">ƒpƒ[</param>
+    /// <param name="dir">æ–¹è§’</param>
+    /// <param name="power">ãƒ‘ãƒ¯ãƒ¼</param>
     public void DOKick(Vector3 dir, float power)
     {
         var rb = GetComponent<Rigidbody2D>();
 
-        // d—Í‚ğİ’è‚·‚é
+        // é‡åŠ›ã‚’è¨­å®šã™ã‚‹
         rb.gravityScale = m_gravityScale;
-        // ‘¬“x‚ğİ’è‚·‚é
+        // é€Ÿåº¦ã‚’è¨­å®šã™ã‚‹
         rb.velocity = transform.forward * m_initialSpeed;
 
-        Vector3 force = new Vector3(dir.x * power, dir.y * power);  // —Í‚ğİ’è
-        rb.AddForce(force, ForceMode2D.Impulse);  // —Í‚ğ‰Á‚¦‚é
+        Vector3 force = new Vector3(dir.x * power, dir.y * power);  // åŠ›ã‚’è¨­å®š
+        rb.AddForce(force, ForceMode2D.Impulse);  // åŠ›ã‚’åŠ ãˆã‚‹
 
         m_isBeKicked = true;
     }
 
     /// <summary>
-    /// ƒQƒXƒg‚ÉR‚è”ò‚Î‚³‚ê‚éˆ—
+    /// ã‚²ã‚¹ãƒˆã«è¹´ã‚Šé£›ã°ã•ã‚Œã‚‹å‡¦ç†
     /// </summary>
     public void DOKick(Vector3 vecKick)
     {
         var rb = GetComponent<Rigidbody2D>();
 
-        // d—Í‚ğİ’è‚·‚é
+        // é‡åŠ›ã‚’è¨­å®šã™ã‚‹
         rb.gravityScale = m_gravityScale;
-        // ‘¬“x‚ğİ’è‚·‚é
+        // é€Ÿåº¦ã‚’è¨­å®šã™ã‚‹
         rb.velocity = transform.forward * m_initialSpeed;
 
-        Vector3 force = vecKick;  // —Í‚ğİ’è
-        rb.AddForce(force, ForceMode2D.Impulse);  // —Í‚ğ‰Á‚¦‚é
+        Vector3 force = vecKick;  // åŠ›ã‚’è¨­å®š
+        rb.AddForce(force, ForceMode2D.Impulse);  // åŠ›ã‚’åŠ ãˆã‚‹
 
         m_isBeKicked = true;
     }
 
     /// <summary>
-    /// ƒŠƒZƒbƒg
+    /// ãƒªã‚»ãƒƒãƒˆ
     /// </summary>
     public void ResetSonCow()
     {
         m_isBeKicked = false;
         m_isJump = false;
 
-        // Œü‚«‚ğƒŠƒZƒbƒg‚·‚é
+        // å‘ãã‚’ãƒªã‚»ãƒƒãƒˆã™ã‚‹
         m_direction = 1;
 
         m_son_cow.SetActive(true);
@@ -215,14 +215,14 @@ public class SonCow : MonoBehaviour
     }
 
     /// <summary>
-    /// ƒQƒXƒg‚É‚æ‚éƒŠƒZƒbƒgˆ—
+    /// ã‚²ã‚¹ãƒˆã«ã‚ˆã‚‹ãƒªã‚»ãƒƒãƒˆå‡¦ç†
     /// </summary>
     public void ResetSonCow(Vector3 startPos)
     {
         m_isBeKicked = false;
         m_isJump = false;
 
-        // Œü‚«‚ğƒŠƒZƒbƒg‚·‚é
+        // å‘ãã‚’ãƒªã‚»ãƒƒãƒˆã™ã‚‹
         m_direction = 1;
 
         m_son_cow.SetActive(true);
@@ -232,7 +232,7 @@ public class SonCow : MonoBehaviour
     }
 
     /// <summary>
-    /// ’†SÀ•W‚ğæ“¾‚·‚é
+    /// ä¸­å¿ƒåº§æ¨™ã‚’å–å¾—ã™ã‚‹
     /// </summary>
     /// <returns></returns>
     public Vector3 GetPivotPos()
@@ -242,7 +242,7 @@ public class SonCow : MonoBehaviour
     }
 
     /// <summary>
-    /// ƒƒ“ƒo•Ï”‰Šú‰»ˆ—
+    /// ãƒ¡ãƒ³ãƒå¤‰æ•°åˆæœŸåŒ–å‡¦ç†
     /// </summary>
     public void InitMemberVariable()
     {

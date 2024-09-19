@@ -5,19 +5,19 @@ using UnityEngine.UI;
 
 public class RankingUserProfile : MonoBehaviour
 {
-    [SerializeField] Text m_textUserName;                 // ƒ†[ƒU[–¼
-    [SerializeField] Text m_textAchievementTitle;         // Ì†–¼
-    [SerializeField] Text m_textStageID;                  // ƒXƒe[ƒWID
-    [SerializeField] Text m_textScore;                    // ƒXƒRƒA
-    [SerializeField] Image m_icon;                        // ƒAƒCƒRƒ“
-    [SerializeField] GameObject m_hertUI;                 // ‘ŠŒİƒtƒHƒ[,ƒtƒHƒƒ[‚ğ¦‚·UI
-    [SerializeField] Text m_textRank;                     // ‡ˆÊ
-    [SerializeField] Image m_imgRank;                     // ‡ˆÊ
-    [SerializeField] List<Sprite> texRanks;               // 1~3ˆÊ‚Ì‰æ‘œ
-    [SerializeField] Sprite m_texMyBG;                    // ©g‚ª‚í‚©‚é‚æ‚¤‚É‚·‚é‰æ‘œ
+    [SerializeField] Text m_textUserName;                 // ãƒ¦ãƒ¼ã‚¶ãƒ¼å
+    [SerializeField] Text m_textAchievementTitle;         // ç§°å·å
+    [SerializeField] Text m_textStageID;                  // ã‚¹ãƒ†ãƒ¼ã‚¸ID
+    [SerializeField] Text m_textScore;                    // ã‚¹ã‚³ã‚¢
+    [SerializeField] Image m_icon;                        // ã‚¢ã‚¤ã‚³ãƒ³
+    [SerializeField] GameObject m_hertUI;                 // ç›¸äº’ãƒ•ã‚©ãƒ­ãƒ¼,ãƒ•ã‚©ãƒ­ãƒ¯ãƒ¼ã‚’ç¤ºã™UI
+    [SerializeField] Text m_textRank;                     // é †ä½
+    [SerializeField] Image m_imgRank;                     // é †ä½
+    [SerializeField] List<Sprite> texRanks;               // 1~3ä½ã®ç”»åƒ
+    [SerializeField] Sprite m_texMyBG;                    // è‡ªèº«ãŒã‚ã‹ã‚‹ã‚ˆã†ã«ã™ã‚‹ç”»åƒ
 
     /// <summary>
-    /// ƒvƒƒtƒB[ƒ‹î•ñ‚ğXV‚·‚é
+    /// ãƒ—ãƒ­ãƒ•ã‚£ãƒ¼ãƒ«æƒ…å ±ã‚’æ›´æ–°ã™ã‚‹
     /// </summary>
     public void UpdateProfile(int rank,bool isMyProfile,string name,string achievementTitle,int stageID,int score,Sprite icon,bool isAgreement)
     {

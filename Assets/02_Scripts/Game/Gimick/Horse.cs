@@ -11,24 +11,24 @@ public class Horse : MonoBehaviour
     [SerializeField] AudioClip m_horseSE;
     #endregion
 
-    // ƒvƒŒƒCƒ„[‚ÌƒVƒ…ƒ~ƒŒ[ƒVƒ‡ƒ“ƒRƒ“ƒgƒ[ƒ‰[
+    // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ã‚·ãƒ¥ãƒŸãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©ãƒ¼
     [SerializeField] SimulationController m_playerSimulationController;
 
-    // ƒvƒŒƒCƒ„[
+    // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼
     Player m_player;
-    // ‘§q‚ÌƒRƒ“ƒgƒ[ƒ‰[
+    // æ¯å­ã®ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©ãƒ¼
     SonController m_sonController;
 
-    // R‚è”ò‚Î‚µ‚½‚©‚Ç‚¤‚©
+    // è¹´ã‚Šé£›ã°ã—ãŸã‹ã©ã†ã‹
     public bool m_isKicked;
-    // R‚é‚Æ‚«‚ÌƒxƒNƒgƒ‹
+    // è¹´ã‚‹ã¨ãã®ãƒ™ã‚¯ãƒˆãƒ«
     Vector3 VectorKick = Vector3.zero;
-    // ‘§q‚Æ‚ÌƒIƒtƒZƒbƒg
+    // æ¯å­ã¨ã®ã‚ªãƒ•ã‚»ãƒƒãƒˆ
     Vector3 m_offset;
 
     private void Start()
     {
-        // ƒpƒ‰ƒ[ƒ^İ’è
+        // ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿è¨­å®š
         m_isKicked = false;
         m_audioSouse = GetComponent<AudioSource>();
         m_player = GameObject.Find("Player").GetComponent<Player>();
@@ -47,13 +47,13 @@ public class Horse : MonoBehaviour
 
         if (VectorKick.x <= 0) 
         {
-            // ‰EŒü‚«‚Ìê‡
+            // å³å‘ãã®å ´åˆ
             m_offset = new Vector3(-2.46f, 1.27f, 0f);
             transform.localScale = new Vector3(1f, 0.8f, 1f);
         }
         if (VectorKick.x >= 0)
         {
-            // ¶Œü‚«‚Ìê‡
+            // å·¦å‘ãã®å ´åˆ
             m_offset = new Vector3(2.46f, 1.27f, 0f);
             transform.localScale = new Vector3(-1f, 0.8f, 1f);
         }
@@ -65,11 +65,11 @@ public class Horse : MonoBehaviour
         if (m_isKicked) return;
         if (collision.gameObject.layer == 6 || collision.gameObject.layer == 11)
         {
-            // ‘§q‚ÌƒŒƒCƒ„[‚©A‘§q‚Éæ‚ç‚ê‚Ä‚é‹‚Ìê‡
+            // æ¯å­ã®ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‹ã€æ¯å­ã«ä¹—ã‚‰ã‚Œã¦ã‚‹ç‰›ã®å ´åˆ
             GameObject son = collision.gameObject;
             if (collision.gameObject.name == "son_run")
             {
-                // ‘–‚Á‚Ä‚¢‚éó‘Ô‚©‚çŒ³‚ÌƒeƒNƒXƒ`ƒƒ‚É–ß‚·
+                // èµ°ã£ã¦ã„ã‚‹çŠ¶æ…‹ã‹ã‚‰å…ƒã®ãƒ†ã‚¯ã‚¹ãƒãƒ£ã«æˆ»ã™
                 m_sonController.ChangeDefaultTexture();
                 son = m_sonController.Son;
             }
@@ -80,17 +80,17 @@ public class Horse : MonoBehaviour
     }
 
     /// <summary>
-    /// R‚è”ò‚Î‚·ˆ—
+    /// è¹´ã‚Šé£›ã°ã™å‡¦ç†
     /// </summary>
     void DOKick(GameObject son)
     {
-        // R‚è”ò‚Î‚·ƒAƒjƒ[ƒVƒ‡ƒ“‚ğÄ¶‚·‚é
-        GetComponent<Animator>().Play("KickAnim");  // R‚éƒAƒjƒ
+        // è¹´ã‚Šé£›ã°ã™ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚’å†ç”Ÿã™ã‚‹
+        GetComponent<Animator>().Play("KickAnim");  // è¹´ã‚‹ã‚¢ãƒ‹ãƒ¡
 
-        // ƒvƒŒƒCƒ„[‚ªR‚é‚Æ‚«‚ÌƒxƒNƒgƒ‹‚ğæ“¾(ƒAƒCƒeƒ€‚È‚µ‚Ì‹­‚³)
+        // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãŒè¹´ã‚‹ã¨ãã®ãƒ™ã‚¯ãƒˆãƒ«ã‚’å–å¾—(ã‚¢ã‚¤ãƒ†ãƒ ãªã—ã®å¼·ã•)
         VectorKick = (VectorKick / m_player.m_mulPower) * 50f;
 
-        // ‘§q‚ğR‚è”ò‚Î‚·ˆ—
+        // æ¯å­ã‚’è¹´ã‚Šé£›ã°ã™å‡¦ç†
         if (son.GetComponent<Son>())
         {
             son.GetComponent<Son>().ResetSon(transform.position);
@@ -110,14 +110,14 @@ public class Horse : MonoBehaviour
     }
 
     /// <summary>
-    /// ó‘Ô‚ğƒŠƒZƒbƒg‚·‚é
+    /// çŠ¶æ…‹ã‚’ãƒªã‚»ãƒƒãƒˆã™ã‚‹
     /// </summary>
     void ResetParam()
     {
-        // Ä“xR‚é‚±‚Æ‚ª‚Å‚«‚é‚æ‚¤‚É‚·‚é
+        // å†åº¦è¹´ã‚‹ã“ã¨ãŒã§ãã‚‹ã‚ˆã†ã«ã™ã‚‹
         m_isKicked = false;
 
-        // IdleƒAƒjƒ[ƒVƒ‡ƒ“‚ğÄ¶‚·‚é
+        // Idleã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚’å†ç”Ÿã™ã‚‹
         GetComponent<Animator>().Play("IdleAnimanim");
     }
 }

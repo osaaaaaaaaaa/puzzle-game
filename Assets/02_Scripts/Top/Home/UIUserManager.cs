@@ -9,76 +9,76 @@ public class UIUserManager : MonoBehaviour
     [SerializeField] GameObject m_textEmpty;
     [SerializeField] LoadingContainer m_loading;
 
-    #region ƒ†[ƒU[î•ñ
+    #region ãƒ¦ãƒ¼ã‚¶ãƒ¼æƒ…å ±
     [SerializeField] StageButtonController m_stageButtonController;
-    [SerializeField] Text m_textUserName;                 // ƒ†[ƒU[–¼
-    [SerializeField] InputField m_inputUserName;          // ƒ†[ƒU[–¼“ü—Í—“
-    [SerializeField] List<Text> m_textAchievementTitle;   // Ì†–¼
-    [SerializeField] Text m_textStageID;                  // ƒXƒe[ƒWID
-    [SerializeField] Text m_textScore;                    // ƒXƒe[ƒWID
-    [SerializeField] List<Image> m_icons;                 // ƒAƒCƒRƒ“
+    [SerializeField] Text m_textUserName;                 // ãƒ¦ãƒ¼ã‚¶ãƒ¼å
+    [SerializeField] InputField m_inputUserName;          // ãƒ¦ãƒ¼ã‚¶ãƒ¼åå…¥åŠ›æ¬„
+    [SerializeField] List<Text> m_textAchievementTitle;   // ç§°å·å
+    [SerializeField] Text m_textStageID;                  // ã‚¹ãƒ†ãƒ¼ã‚¸ID
+    [SerializeField] Text m_textScore;                    // ã‚¹ãƒ†ãƒ¼ã‚¸ID
+    [SerializeField] List<Image> m_icons;                 // ã‚¢ã‚¤ã‚³ãƒ³
     #endregion
 
-    #region •ÒWƒ‚[ƒh‚Åg—p‚·‚éƒIƒuƒWƒFƒNƒg
-    [SerializeField] List<Sprite> m_texTabs;    // ƒ^ƒu‚Ì‰æ‘œ [1:ƒAƒNƒeƒBƒu‚È‰æ‘œ,0:”ñƒAƒNƒeƒBƒu‚È‰æ‘œ]
-    #region ƒvƒƒtƒB[ƒ‹
-    [SerializeField] GameObject m_editProfileWindow;        // ƒvƒƒtƒB[ƒ‹‚Ì•ÒWƒEƒBƒ“ƒhƒE
+    #region ç·¨é›†ãƒ¢ãƒ¼ãƒ‰ã§ä½¿ç”¨ã™ã‚‹ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
+    [SerializeField] List<Sprite> m_texTabs;    // ã‚¿ãƒ–ã®ç”»åƒ [1:ã‚¢ã‚¯ãƒ†ã‚£ãƒ–ãªç”»åƒ,0:éã‚¢ã‚¯ãƒ†ã‚£ãƒ–ãªç”»åƒ]
+    #region ãƒ—ãƒ­ãƒ•ã‚£ãƒ¼ãƒ«
+    [SerializeField] GameObject m_editProfileWindow;        // ãƒ—ãƒ­ãƒ•ã‚£ãƒ¼ãƒ«ã®ç·¨é›†ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦
     [SerializeField] Text m_errorTextProfile;
     #endregion
-    #region ƒAƒCƒRƒ“
-    [SerializeField] GameObject m_editIconWindow;           // ƒAƒCƒRƒ“—p‚Ì•ÒWƒEƒBƒ“ƒhƒE
-    [SerializeField] GameObject m_iconListParent;           // ƒAƒCƒRƒ“ƒ{ƒ^ƒ“‚ÌŠi”[æ
-    [SerializeField] GameObject m_selectIconButtonPrefab;   // ƒAƒCƒRƒ“ƒ{ƒ^ƒ“‚ÌƒvƒŒƒtƒ@ƒu
+    #region ã‚¢ã‚¤ã‚³ãƒ³
+    [SerializeField] GameObject m_editIconWindow;           // ã‚¢ã‚¤ã‚³ãƒ³ç”¨ã®ç·¨é›†ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦
+    [SerializeField] GameObject m_iconListParent;           // ã‚¢ã‚¤ã‚³ãƒ³ãƒœã‚¿ãƒ³ã®æ ¼ç´å…ˆ
+    [SerializeField] GameObject m_selectIconButtonPrefab;   // ã‚¢ã‚¤ã‚³ãƒ³ãƒœã‚¿ãƒ³ã®ãƒ—ãƒ¬ãƒ•ã‚¡ãƒ–
     #endregion
-    #region Ì†
-    [SerializeField] GameObject m_editTitleWindow;           // Ì†—p‚Ì•ÒWƒEƒBƒ“ƒhƒE
-    [SerializeField] GameObject m_contentTitle;              // Ì†ƒ{ƒ^ƒ“‚ÌŠi”[æ
-    [SerializeField] GameObject m_selectTitleButtonPrefab;   // Ì†ƒ{ƒ^ƒ“‚ÌƒvƒŒƒtƒ@ƒu
+    #region ç§°å·
+    [SerializeField] GameObject m_editTitleWindow;           // ç§°å·ç”¨ã®ç·¨é›†ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦
+    [SerializeField] GameObject m_contentTitle;              // ç§°å·ãƒœã‚¿ãƒ³ã®æ ¼ç´å…ˆ
+    [SerializeField] GameObject m_selectTitleButtonPrefab;   // ç§°å·ãƒœã‚¿ãƒ³ã®ãƒ—ãƒ¬ãƒ•ã‚¡ãƒ–
     #endregion
-    #region ƒtƒHƒ[ƒŠƒXƒg
-    [SerializeField] GameObject m_followUserScrollView;         // ƒtƒHƒ[ƒŠƒXƒg
-    [SerializeField] GameObject m_recommendedUserScrollView;    // ‚¨‚·‚·‚ß‚Ìƒ†[ƒU[ƒŠƒXƒg
-    [SerializeField] GameObject m_tabFollow;                    // ƒtƒHƒ[ƒŠƒXƒg‚ğ•\¦‚·‚éƒ^ƒu
-    [SerializeField] GameObject m_tabCandidate;                 // ‚¨‚·‚·‚ß‚Ìƒ†[ƒU[ƒŠƒXƒg‚ğ•\¦‚·‚éƒ^ƒu
-    [SerializeField] GameObject m_profileFollowPrefab;          // ƒtƒHƒ[‚µ‚Ä‚¢‚éƒ†[ƒU[‚ÌƒvƒƒtƒB[ƒ‹ƒvƒŒƒtƒ@ƒu
-    [SerializeField] GameObject m_profileRecommendedPrefab;     // ‚¨‚·‚·‚ß‚Ìƒ†[ƒU[‚ÌƒvƒƒtƒB[ƒ‹ƒvƒŒƒtƒ@ƒu
-    [SerializeField] Text m_followMaxCnt;                       // ƒtƒHƒ[Å‘ål”‚ÌƒeƒLƒXƒg
-    [SerializeField] Text m_followCntText;                      // ƒtƒHƒ[‚µ‚Ä‚¢‚él”‚ğ¦‚·ƒeƒLƒXƒg
+    #region ãƒ•ã‚©ãƒ­ãƒ¼ãƒªã‚¹ãƒˆ
+    [SerializeField] GameObject m_followUserScrollView;         // ãƒ•ã‚©ãƒ­ãƒ¼ãƒªã‚¹ãƒˆ
+    [SerializeField] GameObject m_recommendedUserScrollView;    // ãŠã™ã™ã‚ã®ãƒ¦ãƒ¼ã‚¶ãƒ¼ãƒªã‚¹ãƒˆ
+    [SerializeField] GameObject m_tabFollow;                    // ãƒ•ã‚©ãƒ­ãƒ¼ãƒªã‚¹ãƒˆã‚’è¡¨ç¤ºã™ã‚‹ã‚¿ãƒ–
+    [SerializeField] GameObject m_tabCandidate;                 // ãŠã™ã™ã‚ã®ãƒ¦ãƒ¼ã‚¶ãƒ¼ãƒªã‚¹ãƒˆã‚’è¡¨ç¤ºã™ã‚‹ã‚¿ãƒ–
+    [SerializeField] GameObject m_profileFollowPrefab;          // ãƒ•ã‚©ãƒ­ãƒ¼ã—ã¦ã„ã‚‹ãƒ¦ãƒ¼ã‚¶ãƒ¼ã®ãƒ—ãƒ­ãƒ•ã‚£ãƒ¼ãƒ«ãƒ—ãƒ¬ãƒ•ã‚¡ãƒ–
+    [SerializeField] GameObject m_profileRecommendedPrefab;     // ãŠã™ã™ã‚ã®ãƒ¦ãƒ¼ã‚¶ãƒ¼ã®ãƒ—ãƒ­ãƒ•ã‚£ãƒ¼ãƒ«ãƒ—ãƒ¬ãƒ•ã‚¡ãƒ–
+    [SerializeField] Text m_followMaxCnt;                       // ãƒ•ã‚©ãƒ­ãƒ¼æœ€å¤§äººæ•°ã®ãƒ†ã‚­ã‚¹ãƒˆ
+    [SerializeField] Text m_followCntText;                      // ãƒ•ã‚©ãƒ­ãƒ¼ã—ã¦ã„ã‚‹äººæ•°ã‚’ç¤ºã™ãƒ†ã‚­ã‚¹ãƒˆ
     [SerializeField] Text m_errorTextFollow;
     #endregion
-    #region ƒ‰ƒ“ƒLƒ“ƒO
-    [SerializeField] GameObject m_rankingScrollView;                // ‘Sƒ†[ƒU[“à‚Å‚Ìƒ‰ƒ“ƒLƒ“ƒOƒrƒ…[
-    [SerializeField] GameObject m_followRankingScrollView;          // ƒtƒHƒ[“à‚Å‚Ìƒ‰ƒ“ƒLƒ“ƒOƒrƒ…[
-    [SerializeField] GameObject m_tabRanking;                       // ‘Sƒ†[ƒU[“à‚ğ•\¦‚·‚éƒ^ƒu
-    [SerializeField] GameObject m_tabFollowRanking;                 // ƒtƒHƒ[“à‚ğ•\¦‚·‚éƒ^ƒu
-    [SerializeField] GameObject m_buttonRankingPrefab;              // ƒ‰ƒ“ƒLƒ“ƒO‚ÌƒvƒŒƒtƒ@ƒu
-    [SerializeField] GameObject m_followRankingPrefab;              // ƒtƒHƒ[“àƒ‰ƒ“ƒLƒ“ƒO‚ÌƒvƒŒƒtƒ@ƒu
-    [SerializeField] PanelRankingUserFollow m_rankingUserFollow;    // ƒ‰ƒ“ƒLƒ“ƒO‚Ìƒ†[ƒU[‚ğƒtƒHƒ[EƒtƒHƒ[‰ğœ‚·‚éƒpƒlƒ‹
+    #region ãƒ©ãƒ³ã‚­ãƒ³ã‚°
+    [SerializeField] GameObject m_rankingScrollView;                // å…¨ãƒ¦ãƒ¼ã‚¶ãƒ¼å†…ã§ã®ãƒ©ãƒ³ã‚­ãƒ³ã‚°ãƒ“ãƒ¥ãƒ¼
+    [SerializeField] GameObject m_followRankingScrollView;          // ãƒ•ã‚©ãƒ­ãƒ¼å†…ã§ã®ãƒ©ãƒ³ã‚­ãƒ³ã‚°ãƒ“ãƒ¥ãƒ¼
+    [SerializeField] GameObject m_tabRanking;                       // å…¨ãƒ¦ãƒ¼ã‚¶ãƒ¼å†…ã‚’è¡¨ç¤ºã™ã‚‹ã‚¿ãƒ–
+    [SerializeField] GameObject m_tabFollowRanking;                 // ãƒ•ã‚©ãƒ­ãƒ¼å†…ã‚’è¡¨ç¤ºã™ã‚‹ã‚¿ãƒ–
+    [SerializeField] GameObject m_buttonRankingPrefab;              // ãƒ©ãƒ³ã‚­ãƒ³ã‚°ã®ãƒ—ãƒ¬ãƒ•ã‚¡ãƒ–
+    [SerializeField] GameObject m_followRankingPrefab;              // ãƒ•ã‚©ãƒ­ãƒ¼å†…ãƒ©ãƒ³ã‚­ãƒ³ã‚°ã®ãƒ—ãƒ¬ãƒ•ã‚¡ãƒ–
+    [SerializeField] PanelRankingUserFollow m_rankingUserFollow;    // ãƒ©ãƒ³ã‚­ãƒ³ã‚°ã®ãƒ¦ãƒ¼ã‚¶ãƒ¼ã‚’ãƒ•ã‚©ãƒ­ãƒ¼ãƒ»ãƒ•ã‚©ãƒ­ãƒ¼è§£é™¤ã™ã‚‹ãƒ‘ãƒãƒ«
     #endregion
-    #region ƒAƒ`[ƒuƒƒ“ƒgˆê——
-    [SerializeField] Text m_textTotalPoint;                 // ‡ŒvŠƒ|ƒCƒ“ƒg
-    [SerializeField] GameObject m_taskScrollView;           // ƒ^ƒXƒN‚Ìƒrƒ…[
-    [SerializeField] GameObject m_rewardScrollView;         // •ñV‚Ìƒrƒ…[
-    [SerializeField] GameObject m_tabTask;                  // ƒ^ƒXƒNˆê——‚ğ•\¦‚·‚éƒ^ƒu
-    [SerializeField] GameObject m_tabReward;                // •ñVˆê——‚ğ•\¦‚·‚éƒ^ƒu
-    [SerializeField] GameObject m_taskBarPrefab;            // ƒ^ƒXƒN‚ÌƒvƒŒƒtƒ@ƒu
-    [SerializeField] GameObject m_rewardBarPrefab;          // •ñV‚ÌƒvƒŒƒtƒ@ƒu
-    [SerializeField] PanelItemDetails m_panelItemDetails;   // ƒAƒCƒeƒ€Ú×ƒpƒlƒ‹ƒRƒ“ƒ|[ƒlƒ“ƒg
+    #region ã‚¢ãƒãƒ¼ãƒ–ãƒ¡ãƒ³ãƒˆä¸€è¦§
+    [SerializeField] Text m_textTotalPoint;                 // åˆè¨ˆæ‰€æŒãƒã‚¤ãƒ³ãƒˆ
+    [SerializeField] GameObject m_taskScrollView;           // ã‚¿ã‚¹ã‚¯ã®ãƒ“ãƒ¥ãƒ¼
+    [SerializeField] GameObject m_rewardScrollView;         // å ±é…¬ã®ãƒ“ãƒ¥ãƒ¼
+    [SerializeField] GameObject m_tabTask;                  // ã‚¿ã‚¹ã‚¯ä¸€è¦§ã‚’è¡¨ç¤ºã™ã‚‹ã‚¿ãƒ–
+    [SerializeField] GameObject m_tabReward;                // å ±é…¬ä¸€è¦§ã‚’è¡¨ç¤ºã™ã‚‹ã‚¿ãƒ–
+    [SerializeField] GameObject m_taskBarPrefab;            // ã‚¿ã‚¹ã‚¯ã®ãƒ—ãƒ¬ãƒ•ã‚¡ãƒ–
+    [SerializeField] GameObject m_rewardBarPrefab;          // å ±é…¬ã®ãƒ—ãƒ¬ãƒ•ã‚¡ãƒ–
+    [SerializeField] PanelItemDetails m_panelItemDetails;   // ã‚¢ã‚¤ãƒ†ãƒ è©³ç´°ãƒ‘ãƒãƒ«ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆ
     #endregion
-    #region ƒ[ƒ‹ƒ{ƒbƒNƒX
-    [SerializeField] Sprite m_spriteReceivedMail;           // ƒ[ƒ‹ŠJ••Ï‚İ‚ÌUI
-    [SerializeField] GameObject m_textMailEmpty;            // ‹ó‚Ì‚Æ‚«‚É•\¦‚·‚é
-    [SerializeField] GameObject m_mailScrollView;           // ƒvƒŒƒtƒ@ƒu‚ÌŠi”[æ
-    [SerializeField] GameObject m_mailPrefab;               // ƒ[ƒ‹‚ÌƒvƒŒƒtƒ@ƒu
+    #region ãƒ¡ãƒ¼ãƒ«ãƒœãƒƒã‚¯ã‚¹
+    [SerializeField] Sprite m_spriteReceivedMail;           // ãƒ¡ãƒ¼ãƒ«é–‹å°æ¸ˆã¿ã®UI
+    [SerializeField] GameObject m_textMailEmpty;            // ç©ºã®ã¨ãã«è¡¨ç¤ºã™ã‚‹
+    [SerializeField] GameObject m_mailScrollView;           // ãƒ—ãƒ¬ãƒ•ã‚¡ãƒ–ã®æ ¼ç´å…ˆ
+    [SerializeField] GameObject m_mailPrefab;               // ãƒ¡ãƒ¼ãƒ«ã®ãƒ—ãƒ¬ãƒ•ã‚¡ãƒ–
     [SerializeField] MailContent m_mailContent;
     #endregion
     #endregion
 
-    [SerializeField] GameObject m_uiMailUnread;             // –¢ŠJ••‚Ìƒ[ƒ‹‚ª‚ ‚é‚©‚Ç‚¤‚©‚ÌUI
-    [SerializeField] GameObject m_uiRewardUnclaimed;        // –¢ó‚¯æ‚è‚ÌƒAƒ`[ƒuƒƒ“ƒg•ñV‚ª‚ ‚é‚©‚Ç‚¤‚©‚ÌUI
+    [SerializeField] GameObject m_uiMailUnread;             // æœªé–‹å°ã®ãƒ¡ãƒ¼ãƒ«ãŒã‚ã‚‹ã‹ã©ã†ã‹ã®UI
+    [SerializeField] GameObject m_uiRewardUnclaimed;        // æœªå—ã‘å–ã‚Šã®ã‚¢ãƒãƒ¼ãƒ–ãƒ¡ãƒ³ãƒˆå ±é…¬ãŒã‚ã‚‹ã‹ã©ã†ã‹ã®UI
 
     /// <summary>
-    /// ƒvƒƒtƒB[ƒ‹‚Ì•ÒWƒ‚[ƒh
+    /// ãƒ—ãƒ­ãƒ•ã‚£ãƒ¼ãƒ«ã®ç·¨é›†ãƒ¢ãƒ¼ãƒ‰
     /// </summary>
     public enum EDITMODE
     {
@@ -88,21 +88,21 @@ public class UIUserManager : MonoBehaviour
     }
 
     /// <summary>
-    /// ƒtƒHƒ[ƒŠƒXƒg‚Ì•\¦ƒ‚[ƒh
+    /// ãƒ•ã‚©ãƒ­ãƒ¼ãƒªã‚¹ãƒˆã®è¡¨ç¤ºãƒ¢ãƒ¼ãƒ‰
     /// </summary>
     enum FOLLOW_LIST_MODE
     {
-        FOLLOW = 0,       // ƒtƒHƒ[ƒŠƒXƒg
-        RECOMMENDED       // ‚¨‚·‚·‚ß‚Ìƒ†[ƒU[
+        FOLLOW = 0,       // ãƒ•ã‚©ãƒ­ãƒ¼ãƒªã‚¹ãƒˆ
+        RECOMMENDED       // ãŠã™ã™ã‚ã®ãƒ¦ãƒ¼ã‚¶ãƒ¼
     }
 
     /// <summary>
-    /// ƒ‰ƒ“ƒLƒ“ƒO‚Ì•\¦ƒ‚[ƒh
+    /// ãƒ©ãƒ³ã‚­ãƒ³ã‚°ã®è¡¨ç¤ºãƒ¢ãƒ¼ãƒ‰
     /// </summary>
     enum RANKING_MODE
     {
-        USERS = 0,        // ‘Sƒ†[ƒU[“à
-        FOLLOW            // ƒtƒHƒ[“à
+        USERS = 0,        // å…¨ãƒ¦ãƒ¼ã‚¶ãƒ¼å†…
+        FOLLOW            // ãƒ•ã‚©ãƒ­ãƒ¼å†…
     }
 
     void OnEnable()
@@ -119,11 +119,11 @@ public class UIUserManager : MonoBehaviour
     }
 
     /// <summary>
-    /// –¢ó‚¯æ‚è‚Ì•ñV‚ª‚ ‚é‚©‚Ç‚¤‚©ƒ`ƒFƒbƒN
+    /// æœªå—ã‘å–ã‚Šã®å ±é…¬ãŒã‚ã‚‹ã‹ã©ã†ã‹ãƒã‚§ãƒƒã‚¯
     /// </summary>
     public void CheckRewardUnclaimed()
     {
-        // –¢ŠJ••‚ÌóMƒ[ƒ‹‚ª‚ ‚é‚©‚Ç‚¤‚©
+        // æœªé–‹å°ã®å—ä¿¡ãƒ¡ãƒ¼ãƒ«ãŒã‚ã‚‹ã‹ã©ã†ã‹
         StartCoroutine(NetworkManager.Instance.GetUserMailList(
             result =>
             {
@@ -144,7 +144,7 @@ public class UIUserManager : MonoBehaviour
                 }
             }));
 
-        // ––ó‚¯æ‚è‚ÌƒAƒ`[ƒuƒƒ“ƒg•ñV‚ª‚ ‚é‚©‚Ç‚¤‚©
+        // æœ«å—ã‘å–ã‚Šã®ã‚¢ãƒãƒ¼ãƒ–ãƒ¡ãƒ³ãƒˆå ±é…¬ãŒã‚ã‚‹ã‹ã©ã†ã‹
         StartCoroutine(NetworkManager.Instance.GetUserItem(
             6,
             result =>
@@ -199,7 +199,7 @@ public class UIUserManager : MonoBehaviour
     {
         GameObject content = scroll.transform.GetChild(0).transform.GetChild(0).gameObject;
 
-        // Œ»İ‘¶İ‚·‚éŒÃ‚¢qƒIƒuƒWƒFƒNƒg‚ğ‘S‚Äíœ‚·‚é
+        // ç¾åœ¨å­˜åœ¨ã™ã‚‹å¤ã„å­ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’å…¨ã¦å‰Šé™¤ã™ã‚‹
         foreach (Transform oldProfile in content.transform)
         {
             Destroy(oldProfile.gameObject);
@@ -217,62 +217,62 @@ public class UIUserManager : MonoBehaviour
     }
 
     /// <summary>
-    /// ƒ†[ƒU[î•ñ‚ğXV‚·‚é
+    /// ãƒ¦ãƒ¼ã‚¶ãƒ¼æƒ…å ±ã‚’æ›´æ–°ã™ã‚‹
     /// </summary>
     public void UpdateUserDataUI(bool isMoveTopUI, Sequence sequence)
     {
         m_loading.ToggleLoadingUIVisibility(1);
 
-        // ƒ†[ƒU[î•ñæ“¾ˆ—
+        // ãƒ¦ãƒ¼ã‚¶ãƒ¼æƒ…å ±å–å¾—å‡¦ç†
         StartCoroutine(NetworkManager.Instance.GetUserData(
             result =>
             {
                 m_loading.ToggleLoadingUIVisibility(-1);
 
-                // ƒ{ƒ^ƒ“‚ğ¶¬‚·‚é
-                m_stageButtonController.GenerateButtons(result.StageID);    // ƒGƒ‰[‚ª”­¶‚·‚éê‡‚Íƒ[ƒJƒ‹‚Ìƒ†[ƒU[ƒf[ƒ^íœ‚·‚é‚±‚Æ
+                // ãƒœã‚¿ãƒ³ã‚’ç”Ÿæˆã™ã‚‹
+                m_stageButtonController.GenerateButtons(result.StageID);    // ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã™ã‚‹å ´åˆã¯ãƒ­ãƒ¼ã‚«ãƒ«ã®ãƒ¦ãƒ¼ã‚¶ãƒ¼ãƒ‡ãƒ¼ã‚¿å‰Šé™¤ã™ã‚‹ã“ã¨
 
-                // ƒAƒCƒRƒ“‚ğXV‚·‚é
+                // ã‚¢ã‚¤ã‚³ãƒ³ã‚’æ›´æ–°ã™ã‚‹
                 foreach (Image img in m_icons)
                 {
                     img.sprite = TopManager.TexIcons[result.IconID - 1];
                 }
 
-                // ƒ†[ƒU[–¼‚ğXV‚·‚é
+                // ãƒ¦ãƒ¼ã‚¶ãƒ¼åã‚’æ›´æ–°ã™ã‚‹
                 m_inputUserName.enabled = true;
                 m_inputUserName.text = result.Name;
                 m_textUserName.text = result.Name;
                 m_inputUserName.enabled = false;
 
-                // ƒAƒ`[ƒuƒƒ“ƒg‚Ìƒ^ƒCƒgƒ‹XV‚·‚é
+                // ã‚¢ãƒãƒ¼ãƒ–ãƒ¡ãƒ³ãƒˆã®ã‚¿ã‚¤ãƒˆãƒ«æ›´æ–°ã™ã‚‹
                 foreach (Text text in m_textAchievementTitle)
                 {
                     text.text = result.AchievementTitle;
                 }
 
-                // ƒXƒe[ƒWID‚ğXV‚·‚é
+                // ã‚¹ãƒ†ãƒ¼ã‚¸IDã‚’æ›´æ–°ã™ã‚‹
                 m_textStageID.text = "" + result.StageID;
 
-                // ƒXƒRƒA‚ğXV‚·‚é
+                // ã‚¹ã‚³ã‚¢ã‚’æ›´æ–°ã™ã‚‹
                 m_textScore.text = "" + result.TotalScore;
 
                 if (isMoveTopUI)
                 {
-                    // •\¦‚·‚éUI‚ğƒz[ƒ€‚ÖˆÚ“®‚·‚é
+                    // è¡¨ç¤ºã™ã‚‹UIã‚’ãƒ›ãƒ¼ãƒ ã¸ç§»å‹•ã™ã‚‹
                     sequence.Play();
                 }
             }));
     }
 
     /// <summary>
-    /// ƒtƒHƒ[ƒŠƒXƒg‚ğXV‚·‚é
+    /// ãƒ•ã‚©ãƒ­ãƒ¼ãƒªã‚¹ãƒˆã‚’æ›´æ–°ã™ã‚‹
     /// </summary>
     void UpdateFollowListUI(FOLLOW_LIST_MODE mode)
     {
         m_loading.ToggleLoadingUIVisibility(2);
 
 
-        // ƒtƒHƒ[‚Å‚«‚éÅ‘å”‚ğæ“¾
+        // ãƒ•ã‚©ãƒ­ãƒ¼ã§ãã‚‹æœ€å¤§æ•°ã‚’å–å¾—
         StartCoroutine(NetworkManager.Instance.GetConstant(
             2,
             result =>
@@ -292,22 +292,22 @@ public class UIUserManager : MonoBehaviour
         {
             case FOLLOW_LIST_MODE.FOLLOW:
 
-                // ŒÃ‚¢ƒvƒƒtƒB[ƒ‹‚ğ‘S‚ÄíœAŠi”[æ‚ğæ“¾‚·‚é
+                // å¤ã„ãƒ—ãƒ­ãƒ•ã‚£ãƒ¼ãƒ«ã‚’å…¨ã¦å‰Šé™¤ã€æ ¼ç´å…ˆã‚’å–å¾—ã™ã‚‹
                 GameObject contentFollow = DestroyScrollContentChildren(m_followUserScrollView);
 
-                // ƒtƒHƒ[ƒŠƒXƒgæ“¾ˆ—
+                // ãƒ•ã‚©ãƒ­ãƒ¼ãƒªã‚¹ãƒˆå–å¾—å‡¦ç†
                 StartCoroutine(NetworkManager.Instance.GetFollowList(
                     result =>
                     {
                         m_loading.ToggleLoadingUIVisibility(-1);
 
-                        ToggleTextEmpty("ƒ†[ƒU[‚ªŒ©‚Â‚©‚è‚Ü‚¹‚ñ‚Å‚µ‚½B", result.Length == 0);
+                        ToggleTextEmpty("ãƒ¦ãƒ¼ã‚¶ãƒ¼ãŒè¦‹ã¤ã‹ã‚Šã¾ã›ã‚“ã§ã—ãŸã€‚", result.Length == 0);
                         m_followCntText.text = "" + result.Length;
 
-                        // æ“¾‚µ‚½ƒtƒHƒ[ƒŠƒXƒg‚Ìî•ñ‚ğŒ³‚ÉŠeƒ†[ƒU[‚ÌƒvƒƒtƒB[ƒ‹‚ğì¬‚·‚é
+                        // å–å¾—ã—ãŸãƒ•ã‚©ãƒ­ãƒ¼ãƒªã‚¹ãƒˆã®æƒ…å ±ã‚’å…ƒã«å„ãƒ¦ãƒ¼ã‚¶ãƒ¼ã®ãƒ—ãƒ­ãƒ•ã‚£ãƒ¼ãƒ«ã‚’ä½œæˆã™ã‚‹
                         foreach (ShowUserFollowResponse user in result)
                         {
-                            // ƒvƒƒtƒB[ƒ‹‚ğ¶¬‚·‚é
+                            // ãƒ—ãƒ­ãƒ•ã‚£ãƒ¼ãƒ«ã‚’ç”Ÿæˆã™ã‚‹
                             GameObject profile = Instantiate(m_profileFollowPrefab, contentFollow.transform);
                             profile.GetComponent<FollowingUserProfile>().UpdateProfile(transform.gameObject, user.UserID,
                                 user.Name, user.Title, user.StageID, user.TotalScore,
@@ -317,22 +317,22 @@ public class UIUserManager : MonoBehaviour
                 break;
             case FOLLOW_LIST_MODE.RECOMMENDED:
 
-                // ŒÃ‚¢ƒvƒƒtƒB[ƒ‹‚ğ‘S‚ÄíœAŠi”[æ‚ğæ“¾‚·‚é
+                // å¤ã„ãƒ—ãƒ­ãƒ•ã‚£ãƒ¼ãƒ«ã‚’å…¨ã¦å‰Šé™¤ã€æ ¼ç´å…ˆã‚’å–å¾—ã™ã‚‹
                 GameObject contentRecommended = DestroyScrollContentChildren(m_recommendedUserScrollView);
 
-                // ‚¨‚·‚·‚ß‚Ìƒ†[ƒU[ƒŠƒXƒgæ“¾ˆ—
+                // ãŠã™ã™ã‚ã®ãƒ¦ãƒ¼ã‚¶ãƒ¼ãƒªã‚¹ãƒˆå–å¾—å‡¦ç†
                 StartCoroutine(NetworkManager.Instance.GetRecommendedUserList(
                     result =>
                     {
                         m_loading.ToggleLoadingUIVisibility(-1);
 
                         m_textEmpty.SetActive(result.Length == 0);
-                        m_textEmpty.GetComponent<Text>().text = result.Length == 0 ? "ƒ†[ƒU[‚ªŒ©‚Â‚©‚è‚Ü‚¹‚ñ‚Å‚µ‚½B" : "";
+                        m_textEmpty.GetComponent<Text>().text = result.Length == 0 ? "ãƒ¦ãƒ¼ã‚¶ãƒ¼ãŒè¦‹ã¤ã‹ã‚Šã¾ã›ã‚“ã§ã—ãŸã€‚" : "";
 
-                        // æ“¾‚µ‚½ƒtƒHƒ[ƒŠƒXƒg‚Ìî•ñ‚ğŒ³‚ÉŠeƒ†[ƒU[‚ÌƒvƒƒtƒB[ƒ‹‚ğì¬‚·‚é
+                        // å–å¾—ã—ãŸãƒ•ã‚©ãƒ­ãƒ¼ãƒªã‚¹ãƒˆã®æƒ…å ±ã‚’å…ƒã«å„ãƒ¦ãƒ¼ã‚¶ãƒ¼ã®ãƒ—ãƒ­ãƒ•ã‚£ãƒ¼ãƒ«ã‚’ä½œæˆã™ã‚‹
                         foreach (ShowUserRecommendedResponse user in result)
                         {
-                            // ƒvƒƒtƒB[ƒ‹‚ğ¶¬‚·‚é
+                            // ãƒ—ãƒ­ãƒ•ã‚£ãƒ¼ãƒ«ã‚’ç”Ÿæˆã™ã‚‹
                             GameObject profile = Instantiate(m_profileRecommendedPrefab, contentRecommended.transform);
                             profile.GetComponent<FollowingUserProfile>().UpdateProfile(transform.gameObject, user.UserID,
                                 user.Name, user.Title, user.StageID, user.TotalScore,
@@ -344,7 +344,7 @@ public class UIUserManager : MonoBehaviour
     }
 
     /// <summary>
-    /// ƒ‰ƒ“ƒLƒ“ƒO‚ğXV‚·‚é
+    /// ãƒ©ãƒ³ã‚­ãƒ³ã‚°ã‚’æ›´æ–°ã™ã‚‹
     /// </summary>
     void UpdateRankingUI(RANKING_MODE mode)
     {
@@ -354,33 +354,33 @@ public class UIUserManager : MonoBehaviour
         {
             case RANKING_MODE.USERS:
 
-                // ŒÃ‚¢ƒvƒƒtƒB[ƒ‹‚ğ‘S‚ÄíœAŠi”[æ‚ğæ“¾‚·‚é
+                // å¤ã„ãƒ—ãƒ­ãƒ•ã‚£ãƒ¼ãƒ«ã‚’å…¨ã¦å‰Šé™¤ã€æ ¼ç´å…ˆã‚’å–å¾—ã™ã‚‹
                 GameObject contentRanking = DestroyScrollContentChildren(m_rankingScrollView);
 
-                // ƒ‰ƒ“ƒLƒ“ƒOæ“¾ˆ—
+                // ãƒ©ãƒ³ã‚­ãƒ³ã‚°å–å¾—å‡¦ç†
                 StartCoroutine(NetworkManager.Instance.GetRankingList(
                     result =>
                     {
                         m_loading.ToggleLoadingUIVisibility(-1);
 
-                        ToggleTextEmpty("ƒ†[ƒU[‚ªŒ©‚Â‚©‚è‚Ü‚¹‚ñ‚Å‚µ‚½B", result.Length == 0);
+                        ToggleTextEmpty("ãƒ¦ãƒ¼ã‚¶ãƒ¼ãŒè¦‹ã¤ã‹ã‚Šã¾ã›ã‚“ã§ã—ãŸã€‚", result.Length == 0);
                         m_followCntText.text = "" + result.Length;
 
                         m_rankingUserFollow.IniRankingtUserData(result);
 
-                        // æ“¾‚µ‚½ƒtƒHƒ[ƒŠƒXƒg‚Ìî•ñ‚ğŒ³‚ÉŠeƒ†[ƒU[‚ÌƒvƒƒtƒB[ƒ‹‚ğì¬‚·‚é
+                        // å–å¾—ã—ãŸãƒ•ã‚©ãƒ­ãƒ¼ãƒªã‚¹ãƒˆã®æƒ…å ±ã‚’å…ƒã«å„ãƒ¦ãƒ¼ã‚¶ãƒ¼ã®ãƒ—ãƒ­ãƒ•ã‚£ãƒ¼ãƒ«ã‚’ä½œæˆã™ã‚‹
                         int i = 0;
                         foreach (ShowRankingResponse user in result)
                         {
                             bool isMyData = NetworkManager.Instance.UserID == user.UserID ? true : false;
 
-                            // ƒvƒƒtƒB[ƒ‹‚ğ¶¬‚·‚é
+                            // ãƒ—ãƒ­ãƒ•ã‚£ãƒ¼ãƒ«ã‚’ç”Ÿæˆã™ã‚‹
                             GameObject profile = Instantiate(m_buttonRankingPrefab, contentRanking.transform);
                             profile.GetComponent<RankingUserProfile>().UpdateProfile(i + 1, isMyData,
                                 user.Name, user.Title, user.StageID, user.TotalScore,
                                 TopManager.TexIcons[user.IconID - 1], user.IsAgreement);
 
-                            // ƒtƒHƒ[EƒtƒHƒ[‰ğœƒCƒxƒ“ƒg‚ğİ’è‚·‚é
+                            // ãƒ•ã‚©ãƒ­ãƒ¼ãƒ»ãƒ•ã‚©ãƒ­ãƒ¼è§£é™¤ã‚¤ãƒ™ãƒ³ãƒˆã‚’è¨­å®šã™ã‚‹
                             int index = new int();
                             index = i;
                             profile.GetComponent<Button>().onClick.AddListener(() => 
@@ -394,24 +394,24 @@ public class UIUserManager : MonoBehaviour
                 break;
             case RANKING_MODE.FOLLOW:
 
-                // ŒÃ‚¢ƒvƒƒtƒB[ƒ‹‚ğ‘S‚ÄíœAŠi”[æ‚ğæ“¾‚·‚é
+                // å¤ã„ãƒ—ãƒ­ãƒ•ã‚£ãƒ¼ãƒ«ã‚’å…¨ã¦å‰Šé™¤ã€æ ¼ç´å…ˆã‚’å–å¾—ã™ã‚‹
                 GameObject contentRankingFollow = DestroyScrollContentChildren(m_followRankingScrollView);
 
-                // ƒtƒHƒ[“à‚Å‚Ìƒ‰ƒ“ƒLƒ“ƒOæ“¾ˆ—
+                // ãƒ•ã‚©ãƒ­ãƒ¼å†…ã§ã®ãƒ©ãƒ³ã‚­ãƒ³ã‚°å–å¾—å‡¦ç†
                 StartCoroutine(NetworkManager.Instance.GetFollowRankingList(
                     result =>
                     {
                         m_loading.ToggleLoadingUIVisibility(-1);
 
-                        ToggleTextEmpty("ƒ†[ƒU[‚ªŒ©‚Â‚©‚è‚Ü‚¹‚ñ‚Å‚µ‚½B", result.Length <= 1);
+                        ToggleTextEmpty("ãƒ¦ãƒ¼ã‚¶ãƒ¼ãŒè¦‹ã¤ã‹ã‚Šã¾ã›ã‚“ã§ã—ãŸã€‚", result.Length <= 1);
                         if (result.Length <= 1) return;
 
-                        // æ“¾‚µ‚½ƒtƒHƒ[ƒŠƒXƒg‚Ìî•ñ‚ğŒ³‚ÉŠeƒ†[ƒU[‚ÌƒvƒƒtƒB[ƒ‹‚ğì¬‚·‚é
+                        // å–å¾—ã—ãŸãƒ•ã‚©ãƒ­ãƒ¼ãƒªã‚¹ãƒˆã®æƒ…å ±ã‚’å…ƒã«å„ãƒ¦ãƒ¼ã‚¶ãƒ¼ã®ãƒ—ãƒ­ãƒ•ã‚£ãƒ¼ãƒ«ã‚’ä½œæˆã™ã‚‹
                         int i = 0;
                         foreach (ShowUserProfileResponse user in result)
                         {
                             bool isMyData = NetworkManager.Instance.UserID == user.UserID ? true : false;
-                            // ƒvƒƒtƒB[ƒ‹‚ğ¶¬‚·‚é
+                            // ãƒ—ãƒ­ãƒ•ã‚£ãƒ¼ãƒ«ã‚’ç”Ÿæˆã™ã‚‹
                             GameObject profile = Instantiate(m_followRankingPrefab, contentRankingFollow.transform);
                             profile.GetComponent<RankingUserProfile>().UpdateProfile(i + 1, isMyData,
                                 user.Name, user.Title, user.StageID, user.TotalScore,
@@ -424,18 +424,18 @@ public class UIUserManager : MonoBehaviour
     }
 
     /// <summary>
-    /// ƒAƒ`[ƒuƒƒ“ƒgˆê——‚ğXV‚·‚é(ƒAƒ`[ƒuƒƒ“ƒgˆê——•\¦ƒ{ƒ^ƒ“‚©‚çŒÄ‚Ô)
+    /// ã‚¢ãƒãƒ¼ãƒ–ãƒ¡ãƒ³ãƒˆä¸€è¦§ã‚’æ›´æ–°ã™ã‚‹(ã‚¢ãƒãƒ¼ãƒ–ãƒ¡ãƒ³ãƒˆä¸€è¦§è¡¨ç¤ºãƒœã‚¿ãƒ³ã‹ã‚‰å‘¼ã¶)
     /// </summary>
     public void UpdateAchievementUI()
     {
         m_loading.ToggleLoadingUIVisibility(1);
         m_textTotalPoint.text = "pt";
 
-        // ŒÃ‚¢ƒAƒ`[ƒuƒƒ“ƒg‚ğ‘S‚ÄíœAŠi”[æ‚ğæ“¾‚·‚é
+        // å¤ã„ã‚¢ãƒãƒ¼ãƒ–ãƒ¡ãƒ³ãƒˆã‚’å…¨ã¦å‰Šé™¤ã€æ ¼ç´å…ˆã‚’å–å¾—ã™ã‚‹
         GameObject contentTask = DestroyScrollContentChildren(m_taskScrollView);
         GameObject contentReward = DestroyScrollContentChildren(m_rewardScrollView);
 
-        // ‡Œvƒ|ƒCƒ“ƒg‚ğæ“¾‚·‚é
+        // åˆè¨ˆãƒã‚¤ãƒ³ãƒˆã‚’å–å¾—ã™ã‚‹
         StartCoroutine(NetworkManager.Instance.GetUserItem(
             6,
             result =>
@@ -444,13 +444,13 @@ public class UIUserManager : MonoBehaviour
                 if (result.Length != 0) totalPoint = result[0].Amount;
                 m_textTotalPoint.text = totalPoint + "pt";
 
-                // ƒAƒ`[ƒuƒƒ“ƒgˆê——æ“¾ˆ—
+                // ã‚¢ãƒãƒ¼ãƒ–ãƒ¡ãƒ³ãƒˆä¸€è¦§å–å¾—å‡¦ç†
                 StartCoroutine(NetworkManager.Instance.GetAchievementList(
                     result =>
                     {
                         m_loading.ToggleLoadingUIVisibility(-1);
 
-                        ToggleTextEmpty("’ÊMƒGƒ‰[‚ª”­¶‚µ‚Ü‚µ‚½B", result.Length == 0);
+                        ToggleTextEmpty("é€šä¿¡ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã—ã¾ã—ãŸã€‚", result.Length == 0);
 
                         List<GameObject> receivedAchieve = new List<GameObject>();
                         foreach (ShowAchievementResponse achieve in result)
@@ -458,14 +458,14 @@ public class UIUserManager : MonoBehaviour
                             GameObject barAchieve;
                             if (achieve.Type == 1 || achieve.Type == 2)
                             {
-                                // ƒ^ƒXƒNˆê——‚ğ¶¬‚·‚é
+                                // ã‚¿ã‚¹ã‚¯ä¸€è¦§ã‚’ç”Ÿæˆã™ã‚‹
                                 barAchieve = Instantiate(m_taskBarPrefab, contentTask.transform);
                                 barAchieve.GetComponent<TaskBar>().UpdateTask(achieve.Text, achieve.AchievedVal, achieve.ProgressVal,
                                     achieve.RewardItem.Amount, achieve.IsReceivedItem);
                             }
                             else
                             {
-                                // •ñVˆê——‚ğ¶¬‚·‚é
+                                // å ±é…¬ä¸€è¦§ã‚’ç”Ÿæˆã™ã‚‹
                                 barAchieve = Instantiate(m_rewardBarPrefab, contentReward.transform);
                                 barAchieve.GetComponent<RewardBar>().UpdateReward(m_panelItemDetails, achieve.AchievementID,
                                     achieve.RewardItem, achieve.AchievedVal, totalPoint, achieve.IsReceivedItem);
@@ -474,7 +474,7 @@ public class UIUserManager : MonoBehaviour
                             if (achieve.IsReceivedItem) receivedAchieve.Add(barAchieve);
                         }
 
-                        // •ñVóæÏ‚İ‚ÌƒIƒuƒWƒFƒNƒg‚ÌƒqƒGƒ‰ƒ‹ƒL[‡‚ğ•ÏX‚·‚é
+                        // å ±é…¬å—å–æ¸ˆã¿ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ãƒ’ã‚¨ãƒ©ãƒ«ã‚­ãƒ¼é †ã‚’å¤‰æ›´ã™ã‚‹
                         ChangeHierarchyOrder(receivedAchieve);
                     }));
 
@@ -482,7 +482,7 @@ public class UIUserManager : MonoBehaviour
     }
 
     /// <summary>
-    /// ƒ[ƒ‹ˆê——‚ğXV‚·‚é(ƒ[ƒ‹‚ÌƒVƒXƒeƒ€ƒ{ƒ^ƒ“‚©‚çŒÄ‚Ô)
+    /// ãƒ¡ãƒ¼ãƒ«ä¸€è¦§ã‚’æ›´æ–°ã™ã‚‹(ãƒ¡ãƒ¼ãƒ«ã®ã‚·ã‚¹ãƒ†ãƒ ãƒœã‚¿ãƒ³ã‹ã‚‰å‘¼ã¶)
     /// </summary>
     public void UpdateMailUI()
     {
@@ -491,10 +491,10 @@ public class UIUserManager : MonoBehaviour
         ToggleTextEmpty("", false);
         m_textMailEmpty.SetActive(false);
 
-        // ŒÃ‚¢ƒ[ƒ‹‚ğ‘S‚ÄíœAŠi”[æ‚ğæ“¾‚·‚é
+        // å¤ã„ãƒ¡ãƒ¼ãƒ«ã‚’å…¨ã¦å‰Šé™¤ã€æ ¼ç´å…ˆã‚’å–å¾—ã™ã‚‹
         GameObject content = DestroyScrollContentChildren(m_mailScrollView);
 
-        // óMƒ[ƒ‹‚ğæ“¾‚·‚é
+        // å—ä¿¡ãƒ¡ãƒ¼ãƒ«ã‚’å–å¾—ã™ã‚‹
         StartCoroutine(NetworkManager.Instance.GetUserMailList(
             result =>
             {
@@ -508,7 +508,7 @@ public class UIUserManager : MonoBehaviour
 
                 foreach (ShowUserMailResponse mail in result)
                 {
-                    // ƒ[ƒ‹ˆê——(ƒZƒŒƒNƒgƒ{ƒ^ƒ“)‚ğ¶¬‚·‚é
+                    // ãƒ¡ãƒ¼ãƒ«ä¸€è¦§(ã‚»ãƒ¬ã‚¯ãƒˆãƒœã‚¿ãƒ³)ã‚’ç”Ÿæˆã™ã‚‹
                     GameObject mailButton = Instantiate(m_mailPrefab, content.transform);
                     if (mail.IsReceived) mailButton.GetComponent<Image>().sprite = m_spriteReceivedMail;
                     mailButton.transform.GetChild(0).GetComponent<Text>().text = mail.Title;
@@ -522,7 +522,7 @@ public class UIUserManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Œ»İ‚Ì•ÒWƒ‚[ƒh‚É‚æ‚Á‚ÄUI‚ÌeƒIƒuƒWƒFƒNƒg‚ğ•\¦E”ñ•\¦‚É‚·‚é
+    /// ç¾åœ¨ã®ç·¨é›†ãƒ¢ãƒ¼ãƒ‰ã«ã‚ˆã£ã¦UIã®è¦ªã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’è¡¨ç¤ºãƒ»éè¡¨ç¤ºã«ã™ã‚‹
     /// </summary>
     public void SetActiveParents(EDITMODE currentEditMode)
     {
@@ -533,7 +533,7 @@ public class UIUserManager : MonoBehaviour
     }
 
     /// <summary>
-    /// •ÒW‰æ–Ê‚ğ•Â‚¶‚é
+    /// ç·¨é›†ç”»é¢ã‚’é–‰ã˜ã‚‹
     /// </summary>
     public void OnCloseEditWindowButton()
     {
@@ -541,19 +541,19 @@ public class UIUserManager : MonoBehaviour
     }
 
     /// <summary>
-    /// –¼‘O“ü—Í—“‚ÉƒtƒH[ƒJƒX‚ğ“–‚Ä‚é
+    /// åå‰å…¥åŠ›æ¬„ã«ãƒ•ã‚©ãƒ¼ã‚«ã‚¹ã‚’å½“ã¦ã‚‹
     /// </summary>
     public void OnEditUserNameButton()
     {
         m_inputUserName.enabled = true;
         m_inputUserName.Select();
 
-        // ‹ó•¶š‚É‚·‚é
+        // ç©ºæ–‡å­—ã«ã™ã‚‹
         m_inputUserName.text = "";
     }
 
     /// <summary>
-    /// –¼‘O•ÏX
+    /// åå‰å¤‰æ›´
     /// </summary>
     public void OnDoneUserNameButton()
     {
@@ -561,7 +561,7 @@ public class UIUserManager : MonoBehaviour
         {
             m_loading.ToggleLoadingUIVisibility(1);
 
-            // ƒ†[ƒU[XVˆ—
+            // ãƒ¦ãƒ¼ã‚¶ãƒ¼æ›´æ–°å‡¦ç†
             StartCoroutine(NetworkManager.Instance.UpdateUser(
                 m_inputUserName.text,
                 NetworkManager.Instance.TitleID,
@@ -573,7 +573,7 @@ public class UIUserManager : MonoBehaviour
 
                     if (result == null)
                     {
-                        // ³í‚Éˆ—‚ª‚Å‚«‚½ê‡Aƒ†[ƒU[–¼‚ğXV‚·‚é
+                        // æ­£å¸¸ã«å‡¦ç†ãŒã§ããŸå ´åˆã€ãƒ¦ãƒ¼ã‚¶ãƒ¼åã‚’æ›´æ–°ã™ã‚‹
                         m_inputUserName.text = NetworkManager.Instance.UserName;
                         m_textUserName.text = NetworkManager.Instance.UserName;
                         m_inputUserName.enabled = false;
@@ -581,10 +581,10 @@ public class UIUserManager : MonoBehaviour
                         return;
                     }
 
-                    // ƒGƒ‰[•¶‚ª•Ô‚Á‚Ä‚«‚½ê‡
+                    // ã‚¨ãƒ©ãƒ¼æ–‡ãŒè¿”ã£ã¦ããŸå ´åˆ
                     m_errorTextProfile.text = result.Error;
 
-                    // ƒ†[ƒU[–¼‚ğŒ³‚É–ß‚·
+                    // ãƒ¦ãƒ¼ã‚¶ãƒ¼åã‚’å…ƒã«æˆ»ã™
                     m_inputUserName.text = NetworkManager.Instance.UserName;
                     m_textUserName.text = NetworkManager.Instance.UserName;
                     m_inputUserName.enabled = false;
@@ -592,7 +592,7 @@ public class UIUserManager : MonoBehaviour
         }
         else
         {
-            // ƒ†[ƒU[–¼‚ğŒ³‚É–ß‚·
+            // ãƒ¦ãƒ¼ã‚¶ãƒ¼åã‚’å…ƒã«æˆ»ã™
             m_inputUserName.text = NetworkManager.Instance.UserName;
             m_textUserName.text = NetworkManager.Instance.UserName;
             m_inputUserName.enabled = false;
@@ -600,7 +600,7 @@ public class UIUserManager : MonoBehaviour
     }
 
     /// <summary>
-    /// ƒAƒCƒRƒ“‚ÌƒŠƒXƒg‚ğ•\¦‚·‚é
+    /// ã‚¢ã‚¤ã‚³ãƒ³ã®ãƒªã‚¹ãƒˆã‚’è¡¨ç¤ºã™ã‚‹
     /// </summary>
     public void OnEditIconButton()
     {
@@ -608,27 +608,27 @@ public class UIUserManager : MonoBehaviour
 
         SetActiveParents(EDITMODE.ICON);
 
-        // Œ»İ‘¶İ‚·‚éƒAƒCƒRƒ“‚Ì‘I‘ğƒ{ƒ^ƒ“‚ğ‘S‚Ä”jŠü‚·‚é
+        // ç¾åœ¨å­˜åœ¨ã™ã‚‹ã‚¢ã‚¤ã‚³ãƒ³ã®é¸æŠãƒœã‚¿ãƒ³ã‚’å…¨ã¦ç ´æ£„ã™ã‚‹
         foreach (Transform child in m_iconListParent.transform)
         {
             Destroy(child.gameObject);
         }
 
-        // Š‚µ‚Ä‚¢‚éƒAƒCƒRƒ“î•ñ‚ğæ“¾‚·‚é
+        // æ‰€æŒã—ã¦ã„ã‚‹ã‚¢ã‚¤ã‚³ãƒ³æƒ…å ±ã‚’å–å¾—ã™ã‚‹
         StartCoroutine(NetworkManager.Instance.GetUserItem(
             1,
             result =>
             {
                 m_loading.ToggleLoadingUIVisibility(-1);
 
-                // Š‚µ‚Ä‚¢‚éƒAƒCƒRƒ“‚Ì‚İ¶¬‚·‚é
+                // æ‰€æŒã—ã¦ã„ã‚‹ã‚¢ã‚¤ã‚³ãƒ³ã®ã¿ç”Ÿæˆã™ã‚‹
                 for (int i = 0; i < result.Length; i++)
                 {
                     GameObject button = Instantiate(m_selectIconButtonPrefab, m_iconListParent.transform);
                     button.GetComponent<Image>().sprite = TopManager.TexIcons[result[i].Effect - 1];
 
-                    // ƒAƒCƒRƒ“•ÏXƒCƒxƒ“ƒg‚ğ’Ç‰Á‚·‚é
-                    int iconID = new int();   // ƒAƒhƒŒƒXXV
+                    // ã‚¢ã‚¤ã‚³ãƒ³å¤‰æ›´ã‚¤ãƒ™ãƒ³ãƒˆã‚’è¿½åŠ ã™ã‚‹
+                    int iconID = new int();   // ã‚¢ãƒ‰ãƒ¬ã‚¹æ›´æ–°
                     iconID = result[i].Effect;
                     button.GetComponent<Button>().onClick.AddListener(() => OnDoneIconButton(iconID));
                 }
@@ -636,14 +636,14 @@ public class UIUserManager : MonoBehaviour
     }
 
     /// <summary>
-    /// ƒAƒCƒRƒ“‚ğ•ÏX‚·‚é
+    /// ã‚¢ã‚¤ã‚³ãƒ³ã‚’å¤‰æ›´ã™ã‚‹
     /// </summary>
     public void OnDoneIconButton(int iconID)
     {
         m_loading.ToggleLoadingUIVisibility(1);
 
         SEManager.Instance.PlayButtonSE();
-        // ƒ†[ƒU[XVˆ—
+        // ãƒ¦ãƒ¼ã‚¶ãƒ¼æ›´æ–°å‡¦ç†
         StartCoroutine(NetworkManager.Instance.UpdateUser(
             NetworkManager.Instance.UserName,
             NetworkManager.Instance.TitleID,
@@ -653,10 +653,10 @@ public class UIUserManager : MonoBehaviour
             {
                 m_loading.ToggleLoadingUIVisibility(-1);
 
-                // ƒGƒ‰[•¶‚ª•Ô‚Á‚Ä‚«‚½ê‡‚ÍƒŠƒ^[ƒ“
+                // ã‚¨ãƒ©ãƒ¼æ–‡ãŒè¿”ã£ã¦ããŸå ´åˆã¯ãƒªã‚¿ãƒ¼ãƒ³
                 if (result != null) return;
 
-                // ƒAƒCƒRƒ“‚ğXV‚·‚é
+                // ã‚¢ã‚¤ã‚³ãƒ³ã‚’æ›´æ–°ã™ã‚‹
                 foreach (Image img in m_icons)
                 {
                     img.sprite = TopManager.TexIcons[iconID - 1];
@@ -667,7 +667,7 @@ public class UIUserManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Ì†‚ÌƒŠƒXƒg‚ğ•\¦‚·‚é
+    /// ç§°å·ã®ãƒªã‚¹ãƒˆã‚’è¡¨ç¤ºã™ã‚‹
     /// </summary>
     public void OnEditTitleButton()
     {
@@ -675,32 +675,32 @@ public class UIUserManager : MonoBehaviour
 
         SetActiveParents(EDITMODE.TITLE);
 
-        // Œ»İ‘¶İ‚·‚éƒAƒCƒRƒ“‚Ì‘I‘ğƒ{ƒ^ƒ“‚ğ‘S‚Ä”jŠü‚·‚é
+        // ç¾åœ¨å­˜åœ¨ã™ã‚‹ã‚¢ã‚¤ã‚³ãƒ³ã®é¸æŠãƒœã‚¿ãƒ³ã‚’å…¨ã¦ç ´æ£„ã™ã‚‹
         foreach (Transform child in m_contentTitle.transform)
         {
             Destroy(child.gameObject);
         }
 
-        // Š‚µ‚Ä‚¢‚éÌ†î•ñ‚ğæ“¾‚·‚é
+        // æ‰€æŒã—ã¦ã„ã‚‹ç§°å·æƒ…å ±ã‚’å–å¾—ã™ã‚‹
         StartCoroutine(NetworkManager.Instance.GetUserItem(
             2,
             result =>
             {
                 m_loading.ToggleLoadingUIVisibility(-1);
 
-                // Ì†‚ğ‰ğœ‚·‚é€–Ú‚ğì¬
+                // ç§°å·ã‚’è§£é™¤ã™ã‚‹é …ç›®ã‚’ä½œæˆ
                 GameObject buttonRelease = Instantiate(m_selectTitleButtonPrefab, m_contentTitle.transform);
-                buttonRelease.transform.GetChild(0).GetComponent<Text>().text = "~";
+                buttonRelease.transform.GetChild(0).GetComponent<Text>().text = "Ã—";
                 buttonRelease.GetComponent<Button>().onClick.AddListener(() => OnDoneTitleButton(0, ""));
 
-                // Š‚µ‚Ä‚¢‚éÌ†‚Ì‚İ¶¬‚·‚é
+                // æ‰€æŒã—ã¦ã„ã‚‹ç§°å·ã®ã¿ç”Ÿæˆã™ã‚‹
                 for (int i = 0; i < result.Length; i++)
                 {
                     GameObject button = Instantiate(m_selectTitleButtonPrefab, m_contentTitle.transform);
                     button.transform.GetChild(0).GetComponent<Text>().text = result[i].Name;
 
-                    // Ì†•ÏXƒCƒxƒ“ƒg‚ğ’Ç‰Á‚·‚é
-                    int titleID = new int();   // ƒAƒhƒŒƒXXV
+                    // ç§°å·å¤‰æ›´ã‚¤ãƒ™ãƒ³ãƒˆã‚’è¿½åŠ ã™ã‚‹
+                    int titleID = new int();   // ã‚¢ãƒ‰ãƒ¬ã‚¹æ›´æ–°
                     string name = result[i].Name; ;
                     titleID = result[i].ItemID;
                     button.GetComponent<Button>().onClick.AddListener(() => OnDoneTitleButton(titleID, name));
@@ -709,14 +709,14 @@ public class UIUserManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Ì†‚ğ•ÏX‚·‚é
+    /// ç§°å·ã‚’å¤‰æ›´ã™ã‚‹
     /// </summary>
     public void OnDoneTitleButton(int titleID,string title)
     {
         m_loading.ToggleLoadingUIVisibility(1);
 
         SEManager.Instance.PlayButtonSE();
-        // ƒ†[ƒU[XVˆ—
+        // ãƒ¦ãƒ¼ã‚¶ãƒ¼æ›´æ–°å‡¦ç†
         StartCoroutine(NetworkManager.Instance.UpdateUser(
             NetworkManager.Instance.UserName,
             titleID,
@@ -726,10 +726,10 @@ public class UIUserManager : MonoBehaviour
             {
                 m_loading.ToggleLoadingUIVisibility(-1);
 
-                // ƒGƒ‰[•¶‚ª•Ô‚Á‚Ä‚«‚½ê‡‚ÍƒŠƒ^[ƒ“
+                // ã‚¨ãƒ©ãƒ¼æ–‡ãŒè¿”ã£ã¦ããŸå ´åˆã¯ãƒªã‚¿ãƒ¼ãƒ³
                 if (result != null) return;
 
-                // Ì†‚ğXV‚·‚é
+                // ç§°å·ã‚’æ›´æ–°ã™ã‚‹
                 foreach (Text text in m_textAchievementTitle)
                 {
                     text.text = title;
@@ -740,9 +740,9 @@ public class UIUserManager : MonoBehaviour
     }
 
     /// <summary>
-    /// ƒtƒHƒ[ƒŠƒXƒg‚Ì“à—e‚ğØ‚è‘Ö‚¦‚é
+    /// ãƒ•ã‚©ãƒ­ãƒ¼ãƒªã‚¹ãƒˆã®å†…å®¹ã‚’åˆ‡ã‚Šæ›¿ãˆã‚‹
     /// </summary>
-    /// <param name="mode">FOLLOW_LIST_MODEQÆ</param>
+    /// <param name="mode">FOLLOW_LIST_MODEå‚ç…§</param>
     public void OnFollowTabButton(int mode)
     {
         ToggleTextEmpty("", false);
@@ -750,29 +750,29 @@ public class UIUserManager : MonoBehaviour
 
         switch (mode)
         {
-            case 0: // ƒtƒHƒ[ƒŠƒXƒg‚ğ•\¦‚·‚é
+            case 0: // ãƒ•ã‚©ãƒ­ãƒ¼ãƒªã‚¹ãƒˆã‚’è¡¨ç¤ºã™ã‚‹
                 m_followUserScrollView.SetActive(true);
                 m_recommendedUserScrollView.SetActive(false);
                 m_tabFollow.GetComponent<Image>().sprite = m_texTabs[1];
                 m_tabCandidate.GetComponent<Image>().sprite = m_texTabs[0];
 
-                // ƒtƒHƒ[‚µ‚Ä‚¢‚éƒ†[ƒU[‚Ìî•ñ‚ğæ“¾‚·‚é
+                // ãƒ•ã‚©ãƒ­ãƒ¼ã—ã¦ã„ã‚‹ãƒ¦ãƒ¼ã‚¶ãƒ¼ã®æƒ…å ±ã‚’å–å¾—ã™ã‚‹
                 UpdateFollowListUI(FOLLOW_LIST_MODE.FOLLOW);
                 break;
-            case 1: // ‚¨‚·‚·‚ß‚Ìƒ†[ƒU[ƒŠƒXƒg‚ğ•\¦‚·‚é
+            case 1: // ãŠã™ã™ã‚ã®ãƒ¦ãƒ¼ã‚¶ãƒ¼ãƒªã‚¹ãƒˆã‚’è¡¨ç¤ºã™ã‚‹
                 m_followUserScrollView.SetActive(false);
                 m_recommendedUserScrollView.SetActive(true);
                 m_tabFollow.GetComponent<Image>().sprite = m_texTabs[0];
                 m_tabCandidate.GetComponent<Image>().sprite = m_texTabs[1];
 
-                // ‚¨‚·‚·‚ß‚Ìƒ†[ƒU[ƒŠƒXƒgæ“¾
+                // ãŠã™ã™ã‚ã®ãƒ¦ãƒ¼ã‚¶ãƒ¼ãƒªã‚¹ãƒˆå–å¾—
                 UpdateFollowListUI(FOLLOW_LIST_MODE.RECOMMENDED);
                 break;
         }
     }
 
     /// <summary>
-    /// ƒtƒHƒ[EƒtƒHƒ[‰ğœˆ—
+    /// ãƒ•ã‚©ãƒ­ãƒ¼ãƒ»ãƒ•ã‚©ãƒ­ãƒ¼è§£é™¤å‡¦ç†
     /// </summary>
     public void ActionFollow(bool isActive,int user_id,GameObject btnObj)
     {
@@ -780,7 +780,7 @@ public class UIUserManager : MonoBehaviour
 
         if (isActive)
         {
-            // ƒtƒHƒ[ˆ—
+            // ãƒ•ã‚©ãƒ­ãƒ¼å‡¦ç†
             StartCoroutine(NetworkManager.Instance.StoreUserFollow(
                 user_id,
                 result =>
@@ -789,14 +789,14 @@ public class UIUserManager : MonoBehaviour
 
                     if (result != null)
                     {
-                        // ƒGƒ‰[•¶‚ğ•\¦‚·‚é
+                        // ã‚¨ãƒ©ãƒ¼æ–‡ã‚’è¡¨ç¤ºã™ã‚‹
                         m_errorTextFollow.text = result.Error;
                     }
                     else
                     {
                         m_errorTextFollow.text = "";
 
-                        // ¬Œ÷‚µ‚½ê‡‚ÍƒeƒLƒXƒg‚ğXV‚·‚é
+                        // æˆåŠŸã—ãŸå ´åˆã¯ãƒ†ã‚­ã‚¹ãƒˆã‚’æ›´æ–°ã™ã‚‹
                         m_followCntText.text = "" + (int.Parse(m_followCntText.text) + 1);
                         btnObj.GetComponent<FollowActionButton>().Invert();
                     }
@@ -804,7 +804,7 @@ public class UIUserManager : MonoBehaviour
         }
         else
         {
-            // ƒtƒHƒ[‰ğœˆ—
+            // ãƒ•ã‚©ãƒ­ãƒ¼è§£é™¤å‡¦ç†
             StartCoroutine(NetworkManager.Instance.DestroyUserFollow(
                 user_id,
                 result =>
@@ -821,51 +821,51 @@ public class UIUserManager : MonoBehaviour
     }
 
     /// <summary>
-    /// ƒ‰ƒ“ƒLƒ“ƒO‚Ì“à—e‚ğØ‚è‘Ö‚¦‚é
+    /// ãƒ©ãƒ³ã‚­ãƒ³ã‚°ã®å†…å®¹ã‚’åˆ‡ã‚Šæ›¿ãˆã‚‹
     /// </summary>
-    /// <param name="mode">RANKINF_MODEQÆ</param>
+    /// <param name="mode">RANKINF_MODEå‚ç…§</param>
     public void OnRankingTabButton(int mode)
     {
         ToggleTextEmpty("", false);
         switch (mode)
         {
-            case 0: // ‘Sƒ†[ƒU[“à‚Ìƒ‰ƒ“ƒLƒ“ƒO‚ğ•\¦‚·‚é
+            case 0: // å…¨ãƒ¦ãƒ¼ã‚¶ãƒ¼å†…ã®ãƒ©ãƒ³ã‚­ãƒ³ã‚°ã‚’è¡¨ç¤ºã™ã‚‹
                 m_rankingScrollView.SetActive(true);
                 m_followRankingScrollView.SetActive(false);
                 m_tabRanking.GetComponent<Image>().sprite = m_texTabs[1];
                 m_tabFollowRanking.GetComponent<Image>().sprite = m_texTabs[0];
 
-                // ƒ‰ƒ“ƒLƒ“ƒOƒŠƒXƒg‚ğæ“¾
+                // ãƒ©ãƒ³ã‚­ãƒ³ã‚°ãƒªã‚¹ãƒˆã‚’å–å¾—
                 UpdateRankingUI(RANKING_MODE.USERS);
                 break;
-            case 1: // ƒtƒHƒ[“à‚Ìƒ‰ƒ“ƒLƒ“ƒO‚ğ•\¦‚·‚é
+            case 1: // ãƒ•ã‚©ãƒ­ãƒ¼å†…ã®ãƒ©ãƒ³ã‚­ãƒ³ã‚°ã‚’è¡¨ç¤ºã™ã‚‹
                 m_rankingScrollView.SetActive(false);
                 m_followRankingScrollView.SetActive(true);
                 m_tabRanking.GetComponent<Image>().sprite = m_texTabs[0];
                 m_tabFollowRanking.GetComponent<Image>().sprite = m_texTabs[1];
 
-                // ƒtƒHƒ[“à‚Å‚Ìƒ‰ƒ“ƒLƒ“ƒOæ“¾
+                // ãƒ•ã‚©ãƒ­ãƒ¼å†…ã§ã®ãƒ©ãƒ³ã‚­ãƒ³ã‚°å–å¾—
                 UpdateRankingUI(RANKING_MODE.FOLLOW);
                 break;
         }
     }
 
     /// <summary>
-    /// ƒAƒ`[ƒuƒƒ“ƒgˆê——‚Ì“à—e‚ğØ‚è‘Ö‚¦‚é
+    /// ã‚¢ãƒãƒ¼ãƒ–ãƒ¡ãƒ³ãƒˆä¸€è¦§ã®å†…å®¹ã‚’åˆ‡ã‚Šæ›¿ãˆã‚‹
     /// </summary>
-    /// <param name="mode">ACHIEVEMENT_MODEQÆ</param>
+    /// <param name="mode">ACHIEVEMENT_MODEå‚ç…§</param>
     public void OnAchievementTabButton(int mode)
     {
         ToggleTextEmpty("", false);
         switch (mode)
         {
-            case 0: // ƒ^ƒXƒNˆê——‚ğ•\¦‚·‚é
+            case 0: // ã‚¿ã‚¹ã‚¯ä¸€è¦§ã‚’è¡¨ç¤ºã™ã‚‹
                 m_taskScrollView.SetActive(true);
                 m_rewardScrollView.SetActive(false);
                 m_tabTask.GetComponent<Image>().sprite = m_texTabs[1];
                 m_tabReward.GetComponent<Image>().sprite = m_texTabs[0];
                 break;
-            case 1: // •ñVˆê——‚ğ•\¦‚·‚é
+            case 1: // å ±é…¬ä¸€è¦§ã‚’è¡¨ç¤ºã™ã‚‹
                 m_taskScrollView.SetActive(false);
                 m_rewardScrollView.SetActive(true);
                 m_tabTask.GetComponent<Image>().sprite = m_texTabs[0];

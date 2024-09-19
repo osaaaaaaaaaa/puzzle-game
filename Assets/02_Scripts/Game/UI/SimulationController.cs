@@ -5,18 +5,18 @@ using UnityEngine.SceneManagement;
 
 public class SimulationController : MonoBehaviour
 {
-    Scene m_simulationScene;            // ƒVƒ…ƒ~ƒŒ[ƒVƒ‡ƒ“—pƒV[ƒ“
-    PhysicsScene2D m_physicsScene;      // •¨—‰‰Z‚ÌÄ¶
-    Transform m_obstacleParent;         // ƒXƒe[ƒW‚ÌáŠQ•¨
+    Scene m_simulationScene;            // ã‚·ãƒ¥ãƒŸãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ç”¨ã‚·ãƒ¼ãƒ³
+    PhysicsScene2D m_physicsScene;      // ç‰©ç†æ¼”ç®—ã®å†ç”Ÿ
+    Transform m_obstacleParent;         // ã‚¹ãƒ†ãƒ¼ã‚¸ã®éšœå®³ç‰©
 
     [SerializeField] LineRenderer m_line;
-    const int m_iMaxPhysicsFrame = 5;    // ƒ‰ƒCƒ“‚ğ•`‰æ‚·‚éƒtƒŒ[ƒ€”
+    const int m_iMaxPhysicsFrame = 5;    // ãƒ©ã‚¤ãƒ³ã‚’æç”»ã™ã‚‹ãƒ•ãƒ¬ãƒ¼ãƒ æ•°
 
-    #region ‘§qŠÖŒW
-    [SerializeField] GameObject m_somPrefab;           // ƒVƒ…ƒ~ƒŒ[ƒVƒ‡ƒ“‘ÎÛƒIƒuƒWƒFƒNƒg
-    [SerializeField] GameObject m_rideCowPrefab;       // ƒVƒ…ƒ~ƒŒ[ƒVƒ‡ƒ“‘ÎÛƒIƒuƒWƒFƒNƒg
-    GameObject m_son;             // ‘§q
-    GameObject m_ride_cow;        // ‹‚Éæ‚Á‚½‘§q
+    #region æ¯å­é–¢ä¿‚
+    [SerializeField] GameObject m_somPrefab;           // ã‚·ãƒ¥ãƒŸãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³å¯¾è±¡ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
+    [SerializeField] GameObject m_rideCowPrefab;       // ã‚·ãƒ¥ãƒŸãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³å¯¾è±¡ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
+    GameObject m_son;             // æ¯å­
+    GameObject m_ride_cow;        // ç‰›ã«ä¹—ã£ãŸæ¯å­
     public Vector3 vecKick;
     #endregion
 
@@ -27,13 +27,13 @@ public class SimulationController : MonoBehaviour
     {
         vecKick = Vector3.zero;
 
-        // ƒIƒuƒWƒFƒNƒg‚ğæ“¾‚·‚é
+        // ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’å–å¾—ã™ã‚‹
         m_obstacleParent = GameObject.Find("ObstacleParent").transform;
         m_player = GameObject.Find("Player");
         m_son = GameObject.Find("Son");
         m_ride_cow = GameObject.Find("ride_cow");
 
-        // ƒVƒ…ƒ~ƒŒ[ƒVƒ‡ƒ“‚Åg—p‚·‚éƒV[ƒ“‚ğì¬‚·‚é
+        // ã‚·ãƒ¥ãƒŸãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ã§ä½¿ç”¨ã™ã‚‹ã‚·ãƒ¼ãƒ³ã‚’ä½œæˆã™ã‚‹
         CreatePhysicsScene();
     }
 
@@ -41,15 +41,15 @@ public class SimulationController : MonoBehaviour
     {
         if (m_isTargetGuest) return;
 
-        // ‚Ü‚¾R‚Á‚Ä‚¢‚È‚¢ && ƒxƒNƒgƒ‹‚ª0ˆÈŠO‚Ì‚Æ‚«
+        // ã¾ã è¹´ã£ã¦ã„ãªã„ && ãƒ™ã‚¯ãƒˆãƒ«ãŒ0ä»¥å¤–ã®ã¨ã
         if (!m_player.GetComponent<Player>().m_isKicked && vecKick != Vector3.zero)
         {
-            // ’ÊíƒXƒLƒ“‚Ì‘§q‚ªƒAƒNƒeƒBƒu‚Ìê‡
+            // é€šå¸¸ã‚¹ã‚­ãƒ³ã®æ¯å­ãŒã‚¢ã‚¯ãƒ†ã‚£ãƒ–ã®å ´åˆ
             if (m_son.activeSelf)
             {
                 Simulation(m_son.transform.position);
             }
-            // ‹‚Éæ‚Á‚½‘§q‚ªƒAƒNƒeƒBƒu‚Ìê‡
+            // ç‰›ã«ä¹—ã£ãŸæ¯å­ãŒã‚¢ã‚¯ãƒ†ã‚£ãƒ–ã®å ´åˆ
             else if (m_ride_cow.activeSelf)
             {
                 Simulation(m_ride_cow.transform.position);
@@ -57,17 +57,17 @@ public class SimulationController : MonoBehaviour
         }
         else
         {
-            // ‹O“¹—\‘ªü‚ğƒŠƒZƒbƒg
+            // è»Œé“äºˆæ¸¬ç·šã‚’ãƒªã‚»ãƒƒãƒˆ
             m_line.GetComponent<LineRenderer>().positionCount = 0;
         }
     }
 
     /// <summary>
-    /// ƒVƒ…ƒ~ƒŒ[ƒVƒ‡ƒ“‚Åg—p‚·‚éƒV[ƒ“‚ğì¬‚·‚é(¶¬‚µ‚½ƒV[ƒ“‚ÉƒuƒƒbƒN‚È‚ÇáŠQ•¨‚É‚È‚é‚à‚ğ¶¬‚·‚é)
+    /// ã‚·ãƒ¥ãƒŸãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ã§ä½¿ç”¨ã™ã‚‹ã‚·ãƒ¼ãƒ³ã‚’ä½œæˆã™ã‚‹(ç”Ÿæˆã—ãŸã‚·ãƒ¼ãƒ³ã«ãƒ–ãƒ­ãƒƒã‚¯ãªã©éšœå®³ç‰©ã«ãªã‚‹ã‚‚ã‚’ç”Ÿæˆã™ã‚‹)
     /// </summary>
     void CreatePhysicsScene()
     {
-        // ƒV[ƒ“‚ªŠù‚É‘¶İ‚·‚é‚©ƒ`ƒFƒbƒN
+        // ã‚·ãƒ¼ãƒ³ãŒæ—¢ã«å­˜åœ¨ã™ã‚‹ã‹ãƒã‚§ãƒƒã‚¯
         Scene scene = SceneManager.GetSceneByName("Simulation");
         if (scene.IsValid())
         {
@@ -79,45 +79,45 @@ public class SimulationController : MonoBehaviour
         m_simulationScene = SceneManager.CreateScene("Simulation", new CreateSceneParameters(LocalPhysicsMode.Physics2D));
         m_physicsScene = m_simulationScene.GetPhysicsScene2D();
 
-        // eƒIƒuƒWƒFƒNƒg‚ğ•¡»‚·‚é
+        // è¦ªã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’è¤‡è£½ã™ã‚‹
         var parent = Instantiate(m_obstacleParent.gameObject, m_obstacleParent.position, m_obstacleParent.rotation);
 
-        // ƒVƒ…ƒ~ƒŒ[ƒVƒ‡ƒ“—pƒV[ƒ“‚ÉƒIƒuƒWƒFƒNƒg(ƒuƒƒbƒN‚È‚ÇáŠQ•¨‚É‚È‚é‚à‚Ì)‚ğ¶¬‚·‚é
+        // ã‚·ãƒ¥ãƒŸãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ç”¨ã‚·ãƒ¼ãƒ³ã«ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ(ãƒ–ãƒ­ãƒƒã‚¯ãªã©éšœå®³ç‰©ã«ãªã‚‹ã‚‚ã®)ã‚’ç”Ÿæˆã™ã‚‹
         foreach (Transform tf in parent.transform)
         {
-            // ƒRƒ“ƒ|[ƒlƒ“ƒg‚ª‘¶İ‚·‚éê‡
+            // ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆãŒå­˜åœ¨ã™ã‚‹å ´åˆ
             if (tf.gameObject.GetComponent<Renderer>() != null)
             {
-                // ”ñ•\¦‚É‚·‚é
+                // éè¡¨ç¤ºã«ã™ã‚‹
                 tf.gameObject.GetComponent<Renderer>().enabled = false;
             }
         }
 
-        // eƒIƒuƒWƒFƒNƒg‚ğw’è‚µ‚½ƒV[ƒ“‚ÖˆÚ“®‚·‚é
+        // è¦ªã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’æŒ‡å®šã—ãŸã‚·ãƒ¼ãƒ³ã¸ç§»å‹•ã™ã‚‹
         SceneManager.MoveGameObjectToScene(parent, m_simulationScene);
     }
 
     /// <summary>
-    /// ‹O“¹—\‘ªü‚ğ•`‰æ‚·‚é
+    /// è»Œé“äºˆæ¸¬ç·šã‚’æç”»ã™ã‚‹
     /// </summary>
-    /// <param name="_somPrefab">ƒVƒ…ƒ~ƒŒ[ƒVƒ‡ƒ“‘ÎÛƒIƒuƒWƒFƒNƒg</param>
+    /// <param name="_somPrefab">ã‚·ãƒ¥ãƒŸãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³å¯¾è±¡ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ</param>
     /// <param name="_pos"></param>
-    /// <param name="_velocity">ˆÚ“®—Ê</param>
+    /// <param name="_velocity">ç§»å‹•é‡</param>
     public void Simulation(Vector2 _pos)
     {
         GameObject _somPrefab;
-        // ’ÊíƒXƒLƒ“‚Ì‘§q‚ªƒAƒNƒeƒBƒu‚Ìê‡
+        // é€šå¸¸ã‚¹ã‚­ãƒ³ã®æ¯å­ãŒã‚¢ã‚¯ãƒ†ã‚£ãƒ–ã®å ´åˆ
         if (m_son.activeSelf)
         {
             _somPrefab = m_somPrefab;
         }
-        // ‹‚Éæ‚Á‚½‘§q‚ªƒAƒNƒeƒBƒu‚Ìê‡
+        // ç‰›ã«ä¹—ã£ãŸæ¯å­ãŒã‚¢ã‚¯ãƒ†ã‚£ãƒ–ã®å ´åˆ
         else
         {
             _somPrefab = m_rideCowPrefab;
         }
 
-        // ‘§q‚ÌƒS[ƒXƒgì¬(”ñ•\¦‚É‚·‚é)
+        // æ¯å­ã®ã‚´ãƒ¼ã‚¹ãƒˆä½œæˆ(éè¡¨ç¤ºã«ã™ã‚‹)
         var ghost = Instantiate(_somPrefab, _pos, Quaternion.identity);
         ghost.tag = "Ghost";
         if (ghost.GetComponent<Renderer>() != null)
@@ -125,40 +125,40 @@ public class SimulationController : MonoBehaviour
             ghost.GetComponent<Renderer>().enabled = false;
         }
 
-        // ƒIƒuƒWƒFƒNƒg‚ğƒVƒ…ƒ~ƒŒ[ƒVƒ‡ƒ“—pƒV[ƒ“‚ÖˆÚ“®‚·‚é
+        // ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ã‚·ãƒ¥ãƒŸãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ç”¨ã‚·ãƒ¼ãƒ³ã¸ç§»å‹•ã™ã‚‹
         SceneManager.MoveGameObjectToScene(ghost.gameObject, m_simulationScene);
 
-        // ’ÊíƒXƒLƒ“‚Ì‘§q‚ªƒAƒNƒeƒBƒu‚Ìê‡
+        // é€šå¸¸ã‚¹ã‚­ãƒ³ã®æ¯å­ãŒã‚¢ã‚¯ãƒ†ã‚£ãƒ–ã®å ´åˆ
         if (m_son.activeSelf)
         {
-            // ¦ƒV[ƒ“‚ÉˆÚ“®‚³‚¹‚Ä‚©‚ç—Í‚ğ‰Á‚¦‚é
+            // â€»ã‚·ãƒ¼ãƒ³ã«ç§»å‹•ã•ã›ã¦ã‹ã‚‰åŠ›ã‚’åŠ ãˆã‚‹
             ghost.GetComponent<Son>().DOKick(vecKick, true);
         }
-        // ‹‚Éæ‚Á‚½‘§q‚ªƒAƒNƒeƒBƒu‚Ìê‡
+        // ç‰›ã«ä¹—ã£ãŸæ¯å­ãŒã‚¢ã‚¯ãƒ†ã‚£ãƒ–ã®å ´åˆ
         else
         {
-            // ¦ƒV[ƒ“‚ÉˆÚ“®‚³‚¹‚Ä‚©‚ç—Í‚ğ‰Á‚¦‚é
+            // â€»ã‚·ãƒ¼ãƒ³ã«ç§»å‹•ã•ã›ã¦ã‹ã‚‰åŠ›ã‚’åŠ ãˆã‚‹
             ghost.GetComponent<SonCow>().DOKick(vecKick);
         }
 
         //---------------------------------------------------------
-        // w’è‚µ‚½ƒtƒŒ[ƒ€”‚ÌŠÔ‚Å‚Ç‚Ì‚­‚ç‚¢“®‚¢‚½‚©‚Ì‹O“¹‚ğì¬
+        // æŒ‡å®šã—ãŸãƒ•ãƒ¬ãƒ¼ãƒ æ•°ã®é–“ã§ã©ã®ãã‚‰ã„å‹•ã„ãŸã‹ã®è»Œé“ã‚’ä½œæˆ
         //---------------------------------------------------------
-        m_line.positionCount = m_iMaxPhysicsFrame;  // ƒtƒŒ[ƒ€”•ª‚Ì”z—ñ‚ğ¶¬
+        m_line.positionCount = m_iMaxPhysicsFrame;  // ãƒ•ãƒ¬ãƒ¼ãƒ æ•°åˆ†ã®é…åˆ—ã‚’ç”Ÿæˆ
 
         for (int i = 0; i < m_iMaxPhysicsFrame; i++)
         {
-            // ƒS[ƒXƒg‚Ì’†SÀ•W‚ğæ“¾‚·‚é
+            // ã‚´ãƒ¼ã‚¹ãƒˆã®ä¸­å¿ƒåº§æ¨™ã‚’å–å¾—ã™ã‚‹
             var offsetCollider = ghost.GetComponent<BoxCollider2D>() != null ? ghost.GetComponent<BoxCollider2D>().offset : Vector2.zero;
             Vector3 pivot = m_son.activeSelf ? ghost.transform.position 
                 : ghost.transform.position + new Vector3(offsetCollider.x, offsetCollider.y, 0f);
 
-            // •`‰æŠJn
-            m_physicsScene.Simulate(Time.fixedDeltaTime);       // •¨—‰‰Z‚ğw’è•b”i‚ß‚é
-            m_line.SetPosition(i, pivot);    // ƒ‰ƒCƒ“ƒIƒuƒWƒFƒNƒg‚ÌÀ•W(’¸“_H)‚ğ’Ç‰Á‚·‚é
+            // æç”»é–‹å§‹
+            m_physicsScene.Simulate(Time.fixedDeltaTime);       // ç‰©ç†æ¼”ç®—ã‚’æŒ‡å®šç§’æ•°é€²ã‚ã‚‹
+            m_line.SetPosition(i, pivot);    // ãƒ©ã‚¤ãƒ³ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®åº§æ¨™(é ‚ç‚¹ï¼Ÿ)ã‚’è¿½åŠ ã™ã‚‹
         }
 
-        // ƒVƒ…ƒ~ƒŒ[ƒVƒ‡ƒ“I—¹‚ÅƒS[ƒXƒg‚ğ”jŠü
+        // ã‚·ãƒ¥ãƒŸãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³çµ‚äº†ã§ã‚´ãƒ¼ã‚¹ãƒˆã‚’ç ´æ£„
         Destroy(ghost.gameObject);
     }
 }

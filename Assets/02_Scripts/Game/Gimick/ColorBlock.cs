@@ -15,7 +15,7 @@ public class ColorBlock : MonoBehaviour
 
     private void Update()
     {
-        // カラーが一致する場合はコライダーOFF
+        // 繧ｫ繝ｩ繝ｼ縺御ｸ閾ｴ縺吶ｋ蝣ｴ蜷医�ｯ繧ｳ繝ｩ繧､繝繝ｼOFF
         m_collider2D.enabled = !(m_son.m_coloerType == m_coloerType);
     }
 }

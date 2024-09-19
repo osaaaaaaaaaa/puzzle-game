@@ -5,11 +5,11 @@ using UnityEngine.UI;
 
 public class FollowActionButton : MonoBehaviour
 {
-    [SerializeField] Sprite m_texActive;    // ƒAƒNƒeƒBƒu‚È‚Æ‚«‚Ì‰æ‘œ
-    [SerializeField] Sprite m_texPassive;   // ƒpƒbƒVƒu‚È‚Æ‚«‚Ì‰æ‘œ
+    [SerializeField] Sprite m_texActive;    // ç¹§ï½¢ç¹§ï½¯ç¹†ãã…ç¹æ‚¶â†‘ç¸ºï½¨ç¸ºé˜ª®é€•ï½»èœ’
+    [SerializeField] Sprite m_texPassive;   // ç¹ä»£ãƒ£ç¹§ï½·ç¹æ‚¶â†‘ç¸ºï½¨ç¸ºé˜ª®é€•ï½»èœ’
     GameObject m_userController;
 
-    // true:ƒAƒNƒeƒBƒuó‘Ô , false:ƒpƒbƒVƒuó‘Ô
+    // true:ç¹§ï½¢ç¹§ï½¯ç¹†ãã…ç¹ä¹Ÿæ†¾è«·‹ , false:ç¹ä»£ãƒ£ç¹§ï½·ç¹ä¹Ÿæ†¾è«·‹
     bool m_isActive;
     int m_userID;
 
@@ -18,12 +18,12 @@ public class FollowActionButton : MonoBehaviour
         m_userController = uiUserManager;
         m_userID = user_id;
 
-        // ƒAƒNƒeƒBƒu‚È‚Æ‚«‚Ì‰æ‘œ‚ğİ’è‚µ‚Ä‚¢‚éê‡
+        // ç¹§ï½¢ç¹§ï½¯ç¹†ãã…ç¹æ‚¶â†‘ç¸ºï½¨ç¸ºé˜ª®é€•ï½»èœ’ä¸Šï½’éšªï½­è³å£¹ï¼ ç¸ºï½¦ç¸º„ãï½‹è£ï½´èœ·ˆ
         if (transform.GetComponent<Image>().sprite == m_texActive)
         {
             m_isActive = true;
         }
-        // ƒpƒbƒVƒu‚È‚Æ‚«‚Ì‰æ‘œ‚ğİ’è‚µ‚Ä‚¢‚éê‡
+        // ç¹ä»£ãƒ£ç¹§ï½·ç¹æ‚¶â†‘ç¸ºï½¨ç¸ºé˜ª®é€•ï½»èœ’ä¸Šï½’éšªï½­è³å£¹ï¼ ç¸ºï½¦ç¸º„ãï½‹è£ï½´èœ·ˆ
         else
         {
             m_isActive = false;

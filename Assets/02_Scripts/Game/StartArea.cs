@@ -11,21 +11,21 @@ public class StartArea : MonoBehaviour
             if (TopSceneDirector.Instance.PlayMode == TopSceneDirector.PLAYMODE.GUEST) return;
         }
 
-        // Ši”[æ
+        // æ ¼ç´å…ˆ
         List<Vector2> points = new List<Vector2>();
 
         var lineRenderer = GetComponent<LineRenderer>();
         var transform = lineRenderer.transform;
         for (int i = 0; i < lineRenderer.positionCount; i++)
         {
-            // LineRenderer‚Ì’¸“_À•W‚ğƒ[ƒJƒ‹À•W‚É•ÏŠ·‚µ‚Äæ“¾‚·‚é
+            // LineRendererã®é ‚ç‚¹åº§æ¨™ã‚’ãƒ­ãƒ¼ã‚«ãƒ«åº§æ¨™ã«å¤‰æ›ã—ã¦å–å¾—ã™ã‚‹
             Vector3 point = transform.InverseTransformPoint(transform.TransformPoint(lineRenderer.GetPosition(i)));
             points.Add(point);
         }
 
-        // EdgeCollider2D‚Ìƒ|ƒCƒ“ƒg‚ğİ’è
+        // EdgeCollider2Dã®ãƒã‚¤ãƒ³ãƒˆã‚’è¨­å®š
         GetComponent<EdgeCollider2D>().SetPoints(points);
-        // PolygonCollider2D‚ÌƒpƒX‚ğİ’è
+        // PolygonCollider2Dã®ãƒ‘ã‚¹ã‚’è¨­å®š
         GetComponent<PolygonCollider2D>().SetPath(0, points);
     }
 }

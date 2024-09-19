@@ -6,12 +6,12 @@ using UnityEngine.UI;
 
 public class SignalBar : MonoBehaviour
 {
-    [SerializeField] Image m_icon;                        // ƒAƒCƒRƒ“
-    [SerializeField] GameObject m_heart;                  // ‘ŠŒİƒtƒHƒ[‚Ìƒ}[ƒN
-    [SerializeField] Text m_textStageID;                  // ƒXƒe[ƒWID
-    [SerializeField] Text m_textHostName;                 // ƒzƒXƒg–¼
-    [SerializeField] Text m_textGuestCnt;                 // ƒQƒXƒg‚ÌQ‰Ál”
-    [SerializeField] Text m_textDays;                     // Œo‰ß“ú”
+    [SerializeField] Image m_icon;                        // ã‚¢ã‚¤ã‚³ãƒ³
+    [SerializeField] GameObject m_heart;                  // ç›¸äº’ãƒ•ã‚©ãƒ­ãƒ¼ã®ãƒãƒ¼ã‚¯
+    [SerializeField] Text m_textStageID;                  // ã‚¹ãƒ†ãƒ¼ã‚¸ID
+    [SerializeField] Text m_textHostName;                 // ãƒ›ã‚¹ãƒˆå
+    [SerializeField] Text m_textGuestCnt;                 // ã‚²ã‚¹ãƒˆã®å‚åŠ äººæ•°
+    [SerializeField] Text m_textDays;                     // çµŒéæ—¥æ•°
     LoadingContainer m_loading;
     UISignalManager m_signalManager;
     int m_signalID;
@@ -24,22 +24,22 @@ public class SignalBar : MonoBehaviour
         m_signalID = signalID;
         m_stageID = stageID;
 
-        m_textDays.text = elapsed_days + "“ú‘O";
+        m_textDays.text = elapsed_days + "æ—¥å‰";
         m_icon.sprite = icon;
         m_heart.SetActive(isAgreement);
         m_textHostName.text = hostName;
-        m_textStageID.text = "ƒXƒe[ƒW  " + stageID;
+        m_textStageID.text = "ã‚¹ãƒ†ãƒ¼ã‚¸  " + stageID;
         m_textGuestCnt.text = "" + guestCnt;
     }
 
     /// <summary>
-    /// ‹~“ïM†‚Ìƒ{ƒ^ƒ“‚ğ‰Ÿ‚µ‚ÄAƒQƒXƒg‚Æ‚µ‚ÄQ‰Á‚·‚éˆ—
+    /// æ•‘é›£ä¿¡å·ã®ãƒœã‚¿ãƒ³ã‚’æŠ¼ã—ã¦ã€ã‚²ã‚¹ãƒˆã¨ã—ã¦å‚åŠ ã™ã‚‹å‡¦ç†
     /// </summary>
     public void OnSignalBarButton()
     {
         m_loading.ToggleLoadingUIVisibility(1);
 
-        // ƒQƒXƒg“o˜^(‹~“ïM†Q‰Á)ˆ—
+        // ã‚²ã‚¹ãƒˆç™»éŒ²(æ•‘é›£ä¿¡å·å‚åŠ )å‡¦ç†
         StartCoroutine(NetworkManager.Instance.UpdateSignalGuest(
             m_signalID,
             Vector3.zero.ToString(),
@@ -54,7 +54,7 @@ public class SignalBar : MonoBehaviour
                     return;
                 };
 
-                // ¬Œ÷‚µ‚½ê‡
+                // æˆåŠŸã—ãŸå ´åˆ
                 var signalManager = GameObject.Find("UIDistressSignalManager").GetComponent<UISignalManager>();
                 var managerTop = GameObject.Find("TopManager").GetComponent<TopManager>();
                 signalManager.OnSignalTabButton(0);

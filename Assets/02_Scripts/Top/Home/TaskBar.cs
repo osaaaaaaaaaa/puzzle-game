@@ -5,20 +5,20 @@ using UnityEngine.UI;
 
 public class TaskBar : MonoBehaviour
 {
-    [SerializeField] Text m_textAchievedText;             // ’B¬ğŒ
-    [SerializeField] Text m_textProgressValue;            // ’B¬ó‹µ’l
-    [SerializeField] Slider m_sliderAchievement;          // ’B¬ó‹µ‚ğ•\‚·ƒ[ƒ^[
-    [SerializeField] Text m_textReaardPoint;              // Šl“¾‰Â”\ƒ|ƒCƒ“ƒg
+    [SerializeField] Text m_textAchievedText;             // é”æˆæ¡ä»¶
+    [SerializeField] Text m_textProgressValue;            // é”æˆçŠ¶æ³å€¤
+    [SerializeField] Slider m_sliderAchievement;          // é”æˆçŠ¶æ³ã‚’è¡¨ã™ãƒ¡ãƒ¼ã‚¿ãƒ¼
+    [SerializeField] Text m_textReaardPoint;              // ç²å¾—å¯èƒ½ãƒã‚¤ãƒ³ãƒˆ
 
     public void UpdateTask(string achievedText, float achievedValue, float progressVal, int amountItem, bool isReceived)
     {
         m_textAchievedText.text = achievedText;
         m_textProgressValue.text = "<size=30>" + progressVal + "</size><size=25>/" + achievedValue + "</size>";
-        m_sliderAchievement.value = progressVal == 0 ? 0 : progressVal / achievedValue;   // ƒXƒ‰ƒCƒ_[ŒÀŠE’l‚ª0~1‚É‚È‚Á‚Ä‚¢‚é
+        m_sliderAchievement.value = progressVal == 0 ? 0 : progressVal / achievedValue;   // ã‚¹ãƒ©ã‚¤ãƒ€ãƒ¼é™ç•Œå€¤ãŒ0~1ã«ãªã£ã¦ã„ã‚‹
         if(isReceived)
         {
             transform.GetComponent<Image>().color = new Color(0.8f, 0.8f, 0.8f, 1f);
-            m_textReaardPoint.text = "’B¬";
+            m_textReaardPoint.text = "é”æˆ";
             m_textReaardPoint.color = new Color(1f, 0f, 0.3f, 1f);
         }
         else
