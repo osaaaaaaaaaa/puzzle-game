@@ -84,7 +84,6 @@ public class TopManager : MonoBehaviour
         isUseItem = false;
 
         // ユーザー情報を取得済の場合
-        Debug.Log(NetworkManager.Instance.UserID);
         if (NetworkManager.Instance.UserID != 0) m_characterController = Instantiate(m_characterControllerPrefab, transform.parent.transform);
     }
 

@@ -29,6 +29,7 @@ public class NetworkManager : MonoBehaviour
     }
 
     #region API接続情報
+    //const string API_BASE_URL = "http://localhost:8000/api/";
     const string API_BASE_URL = "https://api-tikokukaihi.japaneast.cloudapp.azure.com/api/";
     #endregion
 
