@@ -7,6 +7,6 @@ public class DistressSignalGuestRequest
 {
     [JsonProperty("d_signal_id")]
     public int SignalID { get; set; }
-    [JsonProperty("user_id")]
-    public int UserID { get; set; }
+    [JsonProperty("destroy_user_id")]
+    public int DestroyUserID { get; set; }
 }

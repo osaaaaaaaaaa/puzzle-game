@@ -70,7 +70,6 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-        Debug.Log(TopManager.stageMax);
         m_guestList = new List<GameObject>();
 
         // ゲームモードの初期化
@@ -272,7 +271,7 @@ public class GameManager : MonoBehaviour
 
         m_isEndAnim = true;
 
-        if (TopManager.stageID == 1) m_UiController.OnTutorialButton(true);
+        if (TopManager.stageID <= 2) m_UiController.OnTutorialButton(true);
     }
 
     /// <summary>
@@ -308,7 +307,6 @@ public class GameManager : MonoBehaviour
 
         // 現在のステージが上限以下＆＆最新のステージをクリアしたかどうか
         bool isUpdateStageID = NetworkManager.Instance.StageID < TopManager.stageMax && NetworkManager.Instance.StageID == TopManager.stageID;
-        Debug.Log(isUpdateStageID + "," + NetworkManager.Instance.StageID + ","+ TopManager.stageMax + "," + TopManager.stageID);
 
         // メダルを初獲得した||ハイスコアを上回ったかどうかチェック
         bool isUpdateResult = false;
@@ -549,7 +547,6 @@ public class GameManager : MonoBehaviour
         return new UpdateSignalGuestRequest()
         {
             SignalID = TopSceneDirector.Instance.DistressSignalID,
-            UserID = NetworkManager.Instance.UserID,
             Pos = m_player.transform.position.ToString(),
             Vector = m_player.GetComponent<Player>().VectorKick.ToString()
         };

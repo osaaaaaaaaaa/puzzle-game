@@ -217,7 +217,7 @@ public class UIUserManager : MonoBehaviour
     }
 
     /// <summary>
-    /// ユーザー情報を更新する
+    /// ユーザープロフィールを更新する
     /// </summary>
     public void UpdateUserDataUI(bool isMoveTopUI, Sequence sequence)
     {

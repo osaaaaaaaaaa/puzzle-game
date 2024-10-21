@@ -7,6 +7,7 @@ public class SceneLoader : MonoBehaviour
 {
     private void Awake()
     {
+        // デバック用
         //SceneManager.LoadScene("02_UIScene", LoadSceneMode.Additive);
     }
 }

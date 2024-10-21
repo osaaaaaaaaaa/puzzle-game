@@ -7,4 +7,6 @@ public class StoreUserResponse
 {
     [JsonProperty("user_id")]
     public int UserID { get; set; }
+    [JsonProperty("token")]
+    public string Token { get; set; }
 }

@@ -198,7 +198,6 @@ public class Player : MonoBehaviour
         uiController.SetInteractableButtonReset(true);
 
         // 息子を蹴り飛ばす処理
-        Debug.Log("ベクトル：" + new Vector3(dir.x * power, dir.y * power).ToString());
         if (m_son.activeSelf)
         {
             m_son.GetComponent<Son>().DOKick(dir, power, true);

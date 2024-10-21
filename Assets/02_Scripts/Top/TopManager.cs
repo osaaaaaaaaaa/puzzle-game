@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 
 public class TopManager : MonoBehaviour
 {
+    [SerializeField] GameObject m_nullAuthTokenPanel;
     [SerializeField] Text m_textEmpty;
     [SerializeField] LoadingContainer m_loading;
 
@@ -116,7 +117,6 @@ public class TopManager : MonoBehaviour
             1,
             result =>
             {
-                Debug.Log(result.Constant);
                 stageMax = result.Constant;
                 m_loading.ToggleLoadingUIVisibility(-1);
             }
@@ -137,35 +137,64 @@ public class TopManager : MonoBehaviour
         }
         else
         {
-            m_loading.ToggleLoadingUIVisibility(3);
+            // APIトークンの存在チェック
+            if (NetworkManager.Instance.AuthToken == null || NetworkManager.Instance.AuthToken == "")
+            {
+                m_loading.ToggleLoadingUIVisibility(1);
 
-            // 所持アイテムを取得する
-            StartCoroutine(NetworkManager.Instance.GetUserItem(
-                3,
-                result => { m_loading.ToggleLoadingUIVisibility(-1); }
-                ));
+                // トークン生成処理
+                StartCoroutine(NetworkManager.Instance.CreateToken(
+                    result => {
 
-            // 自分が募集中の救難信号を取得する
-            StartCoroutine(NetworkManager.Instance.GetDistressSignalList(
-                result => { m_loading.ToggleLoadingUIVisibility(-1); }
-                ));
+                        m_loading.ToggleLoadingUIVisibility(-1);
 
-            // ユーザー情報を取得する
-            StartCoroutine(NetworkManager.Instance.GetUserData(
-                result => 
-                {
-                    if(m_characterController == null) m_characterController = Instantiate(m_characterControllerPrefab, transform.parent.transform);
+                        if (!result)
+                        {
+                            m_nullAuthTokenPanel.SetActive(true);
+                            return;
+                        }
+                        GetUserDatas();
+                    }
+                    ));
+            }
+            else
+            {
+                GetUserDatas();
+            }
+        }
+    }
+
+    void GetUserDatas()
+    {
+        m_loading.ToggleLoadingUIVisibility(3);
+
+        // 所持アイテムを取得する
+        StartCoroutine(NetworkManager.Instance.GetUserItem(
+            3,
+            result => { m_loading.ToggleLoadingUIVisibility(-1); }
+            ));
+
+        // 自分が募集中の救難信号を取得する
+        StartCoroutine(NetworkManager.Instance.GetDistressSignalList(
+            result => { m_loading.ToggleLoadingUIVisibility(-1); }
+            ));
+
+        // ユーザー情報を取得する
+        StartCoroutine(NetworkManager.Instance.GetUserData(
+            result =>
+            {
+                    // キャラクターコントローラーを生成する
+                    if (m_characterController == null) m_characterController = Instantiate(m_characterControllerPrefab, transform.parent.transform);
 
                     // ステージのリザルト情報を取得する
                     StartCoroutine(NetworkManager.Instance.GetStageResults(
-                        result =>
-                        {
-                            m_loading.ToggleLoadingUIVisibility(-1);
-                            OnClickTitleWindow();
-                        }));
-                }
-                ));
-        }
+                    result =>
+                    {
+                        m_loading.ToggleLoadingUIVisibility(-1);
+                        OnClickTitleWindow();
+                    }));
+            }
+            ));
     }
 
     /// <summary>
@@ -191,6 +220,7 @@ public class TopManager : MonoBehaviour
         if (isOnStageButton) return;
 
         stageID = id == 0 ? stageID : id;   // ソロで遊ぶ場合(id=0)は更新しない
+        Debug.Log(stageID);
         TopSceneDirector.Instance.SetPlayMode(playMode, signalID, isStageClear);
         isOnStageButton = true;
         isUseItem = m_boxStage.GetComponent<StageBox>().m_isUseItem;

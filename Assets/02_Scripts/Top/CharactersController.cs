@@ -50,14 +50,20 @@ public class CharactersController : MonoBehaviour
         float time = 20;
 
         var sequence = DOTween.Sequence();
-        sequence.Append(m_sonCow.transform.DOMoveX(14.89f, time).SetEase(Ease.Linear).OnComplete(() => { m_sonCow.GetComponent<Animator>().Play("IdleAnimation"); }))
-            .AppendInterval(2f)
-            .Append(m_sonCow.transform.DOLocalRotate(Vector3.zero,0f).OnComplete(()=> {
-                m_sonCow.GetComponent<Animator>().Play("TopWalkAnimation");
-                m_sonCow.transform.localScale = new Vector3(1.3f, 1.3f, 1f); 
+        sequence.Append(m_sonCow.transform.DOMoveX(14.89f, time).SetEase(Ease.Linear)
+            .OnComplete(() => { 
+                m_sonCow.GetComponent<Animator>().Play("IdleAnimation");
+                Invoke("InvertCow", 2f);
             }))
-            .Join(m_sonCow.transform.DOMoveX(41.76f, time).SetEase(Ease.Linear).OnComplete(() => { m_sonCow.transform.localScale = new Vector3(-1.3f, 1.3f, 1f); }));
+            .AppendInterval(2f)
+            .Append(m_sonCow.transform.DOMoveX(41.76f, time).SetEase(Ease.Linear).OnComplete(() => { m_sonCow.transform.localScale = new Vector3(-1.3f, 1.3f, 1f); }));
         sequence.SetLoops(-1,LoopType.Restart);
         sequence.Play();
+    }
+
+    void InvertCow()
+    {
+        m_sonCow.transform.localScale = new Vector3(1.3f, 1.3f, 1f);
+        m_sonCow.GetComponent<Animator>().Play("TopWalkAnimation");
     }
 }

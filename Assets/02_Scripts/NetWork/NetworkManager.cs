@@ -29,11 +29,12 @@ public class NetworkManager : MonoBehaviour
     }
 
     #region API接続情報
-    //const string API_BASE_URL = "http://localhost:8000/api/";
-    const string API_BASE_URL = "https://api-tikokukaihi.japaneast.cloudapp.azure.com/api/";
+    const string API_BASE_URL = "http://localhost:8000/api/";
+    //const string API_BASE_URL = "https://api-tikokukaihi.japaneast.cloudapp.azure.com/api/";
     #endregion
 
     #region ユーザー情報
+    public string AuthToken { get; private set; } = "";
     public bool IsDistressSignalTutrial { get; private set; } = false;
     public int UserID { get; private set; } = 0;
     public string UserName { get; private set; } = "";
@@ -110,6 +111,7 @@ public class NetworkManager : MonoBehaviour
             StoreUserResponse response = JsonConvert.DeserializeObject<StoreUserResponse>(resultJson);
             // ファイルにユーザー情報を保存する
             this.UserName = name;
+            this.AuthToken = response.Token;
             this.UserID = response.UserID;
             this.IsDistressSignalTutrial = false;
             SaveUserData();
@@ -126,6 +128,7 @@ public class NetworkManager : MonoBehaviour
     void SaveUserData()
     {
         SaveData saveData = new SaveData();
+        saveData.AuthToken = this.AuthToken;
         saveData.Name = this.UserName;
         saveData.UserID = this.UserID;
         saveData.IsDistressSignalTutrial = this.IsDistressSignalTutrial;
@@ -152,6 +155,8 @@ public class NetworkManager : MonoBehaviour
         this.UserID = saveData.UserID;
         this.UserName = saveData.Name;
         this.IsDistressSignalTutrial = saveData.IsDistressSignalTutrial;
+        this.AuthToken = saveData.AuthToken;
+        Debug.Log(AuthToken);
         return true;
     }
 
@@ -195,7 +200,6 @@ public class NetworkManager : MonoBehaviour
     {
         // サーバーに送信するオブジェクトを作成
         UpdateUserData requestData = new UpdateUserData();
-        requestData.UserID = UserID;
         requestData.Name = name;
         requestData.TitleID = title_id;
         requestData.StageID = stage_id;
@@ -204,6 +208,7 @@ public class NetworkManager : MonoBehaviour
         string json = JsonConvert.SerializeObject(requestData);
         // 送信
         UnityWebRequest request = UnityWebRequest.Post(API_BASE_URL + "users/update", json, "application/json");
+        request.SetRequestHeader("Authorization", "Bearer " + AuthToken);    // Authorizationヘッダにトークン設定
 
         // 結果を受信するまで待機
         yield return request.SendWebRequest();
@@ -239,7 +244,6 @@ public class NetworkManager : MonoBehaviour
     {
         // サーバーに送信するオブジェクトを作成
         UpdateUserItemRequest requestData = new UpdateUserItemRequest();
-        requestData.UserID = UserID;
         requestData.ItemID = itemID;
         requestData.OptionID = optionID;
         requestData.AllieAmount = allieAmount;
@@ -247,6 +251,7 @@ public class NetworkManager : MonoBehaviour
         string json = JsonConvert.SerializeObject(requestData);
         // 送信
         UnityWebRequest request = UnityWebRequest.Post(API_BASE_URL + "users/item/update", json, "application/json");
+        request.SetRequestHeader("Authorization", "Bearer " + AuthToken);    // Authorizationヘッダにトークン設定
 
         // 結果を受信するまで待機
         yield return request.SendWebRequest();
@@ -357,12 +362,12 @@ public class NetworkManager : MonoBehaviour
     {
         // サーバーに送信するオブジェクトを作成
         UserFollowRequest requestData = new UserFollowRequest();
-        requestData.UserID = UserID;
         requestData.FollowingUserID = following_user_id;
         // サーバーに送信オブジェクトをJSONに変換
         string json = JsonConvert.SerializeObject(requestData);
         // 送信
         UnityWebRequest request = UnityWebRequest.Post(API_BASE_URL + "users/follow/store", json, "application/json");
+        request.SetRequestHeader("Authorization", "Bearer " + AuthToken);    // Authorizationヘッダにトークン設定
 
         // 結果を受信するまで待機
         yield return request.SendWebRequest();
@@ -391,12 +396,12 @@ public class NetworkManager : MonoBehaviour
     {
         // サーバーに送信するオブジェクトを作成
         UserFollowRequest requestData = new UserFollowRequest();
-        requestData.UserID = UserID;
         requestData.FollowingUserID = following_user_id;
         // サーバーに送信オブジェクトをJSONに変換
         string json = JsonConvert.SerializeObject(requestData);
         // 送信
         UnityWebRequest request = UnityWebRequest.Post(API_BASE_URL + "users/follow/destroy", json, "application/json");
+        request.SetRequestHeader("Authorization", "Bearer " + AuthToken);    // Authorizationヘッダにトークン設定
 
         // 結果を受信するまで待機
         yield return request.SendWebRequest();
@@ -449,7 +454,6 @@ public class NetworkManager : MonoBehaviour
     {
         // サーバーに送信するオブジェクトを作成
         UpdateStageClearRequest requestData = new UpdateStageClearRequest();
-        requestData.UserID = this.UserID;
         requestData.StageID = clearData.StageID;
         requestData.IsMedal1 = clearData.IsMedal1;
         requestData.IsMedal2 = clearData.IsMedal2;
@@ -459,6 +463,7 @@ public class NetworkManager : MonoBehaviour
         string json = JsonConvert.SerializeObject(requestData);
         // 送信
         UnityWebRequest request = UnityWebRequest.Post(API_BASE_URL + "users/stage/clear/update", json, "application/json");
+        request.SetRequestHeader("Authorization", "Bearer " + AuthToken);    // Authorizationヘッダにトークン設定
 
         // 結果を受信するまで待機
         yield return request.SendWebRequest();
@@ -585,13 +590,13 @@ public class NetworkManager : MonoBehaviour
     {
         // サーバーに送信するオブジェクトを作成
         UpdateUserAchievementRequest requestData = new UpdateUserAchievementRequest();
-        requestData.UserID = UserID;
         requestData.Type = type;
         requestData.AllieVal = allieVal;
         // サーバーに送信オブジェクトをJSONに変換
         string json = JsonConvert.SerializeObject(requestData);
         // 送信
         UnityWebRequest request = UnityWebRequest.Post(API_BASE_URL + "users/achievements/update", json, "application/json");
+        request.SetRequestHeader("Authorization", "Bearer " + AuthToken);    // Authorizationヘッダにトークン設定
 
         // 結果を受信するまで待機
         yield return request.SendWebRequest();
@@ -612,12 +617,12 @@ public class NetworkManager : MonoBehaviour
     {
         // サーバーに送信するオブジェクトを作成
         ReceiveRewardAchievementRequest requestData = new ReceiveRewardAchievementRequest();
-        requestData.UserID = UserID;
         requestData.AchievementID = achievement_id;
         // サーバーに送信オブジェクトをJSONに変換
         string json = JsonConvert.SerializeObject(requestData);
         // 送信
         UnityWebRequest request = UnityWebRequest.Post(API_BASE_URL + "users/achievements/receive", json, "application/json");
+        request.SetRequestHeader("Authorization", "Bearer " + AuthToken);    // Authorizationヘッダにトークン設定
 
         // 結果を受信するまで待機
         yield return request.SendWebRequest();
@@ -672,12 +677,12 @@ public class NetworkManager : MonoBehaviour
     {
         // サーバーに送信するオブジェクトを作成
         UpdateUserMailRequest requestData = new UpdateUserMailRequest();
-        requestData.UserID = UserID;
         requestData.UserMailID = userMailID;
         // サーバーに送信オブジェクトをJSONに変換
         string json = JsonConvert.SerializeObject(requestData);
         // 送信
         UnityWebRequest request = UnityWebRequest.Post(API_BASE_URL + "users/mail/update", json, "application/json");
+        request.SetRequestHeader("Authorization", "Bearer " + AuthToken);    // Authorizationヘッダにトークン設定
 
         // 結果を受信するまで待機
         yield return request.SendWebRequest();
@@ -711,12 +716,12 @@ public class NetworkManager : MonoBehaviour
     {
         // サーバーに送信するオブジェクトを作成
         UpdateUserMailRequest requestData = new UpdateUserMailRequest();
-        requestData.UserID = UserID;
         requestData.UserMailID = userMailID;
         // サーバーに送信オブジェクトをJSONに変換
         string json = JsonConvert.SerializeObject(requestData);
         // 送信
         UnityWebRequest request = UnityWebRequest.Post(API_BASE_URL + "users/mail/destroy", json, "application/json");
+        request.SetRequestHeader("Authorization", "Bearer " + AuthToken);    // Authorizationヘッダにトークン設定
 
         // 結果を受信するまで待機
         yield return request.SendWebRequest();
@@ -768,12 +773,12 @@ public class NetworkManager : MonoBehaviour
     {
         // サーバーに送信するオブジェクトを作成
         StoreDistressSignalRequest requestData = new StoreDistressSignalRequest();
-        requestData.UserID = UserID;
         requestData.StageID = stage_id;
         // サーバーに送信オブジェクトをJSONに変換
         string json = JsonConvert.SerializeObject(requestData);
         // 送信
         UnityWebRequest request = UnityWebRequest.Post(API_BASE_URL + "distress_signals/store", json, "application/json");
+        request.SetRequestHeader("Authorization", "Bearer " + AuthToken);    // Authorizationヘッダにトークン設定
 
         // 結果を受信するまで待機
         yield return request.SendWebRequest();
@@ -809,13 +814,13 @@ public class NetworkManager : MonoBehaviour
         // サーバーに送信するオブジェクトを作成
         UpdateSignalGuestRequest requestData = new UpdateSignalGuestRequest();
         requestData.SignalID = signalID;
-        requestData.UserID = UserID;
         requestData.Pos = pos;
         requestData.Vector = vec;
         // サーバーに送信オブジェクトをJSONに変換
         string json = JsonConvert.SerializeObject(requestData);
         // 送信
         UnityWebRequest request = UnityWebRequest.Post(API_BASE_URL + "distress_signals/guest/update", json, "application/json");
+        request.SetRequestHeader("Authorization", "Bearer " + AuthToken);    // Authorizationヘッダにトークン設定
 
         // 結果を受信するまで待機
         yield return request.SendWebRequest();
@@ -851,6 +856,7 @@ public class NetworkManager : MonoBehaviour
         string json = JsonConvert.SerializeObject(requestData);
         // 送信
         UnityWebRequest request = UnityWebRequest.Post(API_BASE_URL + "distress_signals/destroy", json, "application/json");
+        request.SetRequestHeader("Authorization", "Bearer " + AuthToken);    // Authorizationヘッダにトークン設定
 
         // 結果を受信するまで待機
         yield return request.SendWebRequest();
@@ -878,11 +884,12 @@ public class NetworkManager : MonoBehaviour
         // サーバーに送信するオブジェクトを作成
         DistressSignalGuestRequest requestData = new DistressSignalGuestRequest();
         requestData.SignalID = signalID;
-        requestData.UserID = userID;
+        requestData.DestroyUserID = userID;
         // サーバーに送信オブジェクトをJSONに変換
         string json = JsonConvert.SerializeObject(requestData);
         // 送信
         UnityWebRequest request = UnityWebRequest.Post(API_BASE_URL + "distress_signals/guest/destroy", json, "application/json");
+        request.SetRequestHeader("Authorization", "Bearer " + AuthToken);    // Authorizationヘッダにトークン設定
 
         // 結果を受信するまで待機
         yield return request.SendWebRequest();
@@ -966,6 +973,7 @@ public class NetworkManager : MonoBehaviour
         string json = JsonConvert.SerializeObject(requestData);
         // 送信
         UnityWebRequest request = UnityWebRequest.Post(API_BASE_URL + "distress_signals/update", json, "application/json");
+        request.SetRequestHeader("Authorization", "Bearer " + AuthToken);    // Authorizationヘッダにトークン設定
 
         // 結果を受信するまで待機
         yield return request.SendWebRequest();
@@ -1032,6 +1040,7 @@ public class NetworkManager : MonoBehaviour
         string json = JsonConvert.SerializeObject(requestData);
         // 送信
         UnityWebRequest request = UnityWebRequest.Post(API_BASE_URL + "distress_signals/replay/update", json, "application/json");
+        request.SetRequestHeader("Authorization", "Bearer " + AuthToken);    // Authorizationヘッダにトークン設定
 
         // 結果を受信するまで待機
         yield return request.SendWebRequest();
@@ -1138,12 +1147,12 @@ public class NetworkManager : MonoBehaviour
         // サーバーに送信するオブジェクトを作成
         DistressSignalGuestRequest requestData = new DistressSignalGuestRequest();
         requestData.SignalID = signalID;
-        requestData.UserID = this.UserID;
 
         // サーバーに送信オブジェクトをJSONに変換
         string json = JsonConvert.SerializeObject(requestData);
         // 送信
         UnityWebRequest request = UnityWebRequest.Post(API_BASE_URL + "distress_signals/reward/update", json, "application/json");
+        request.SetRequestHeader("Authorization", "Bearer " + AuthToken);    // Authorizationヘッダにトークン設定
 
         // 結果を受信するなで待機
         yield return request.SendWebRequest();
@@ -1193,4 +1202,36 @@ public class NetworkManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// APIトークン生成処理
+    /// </summary>
+    public IEnumerator CreateToken(Action<bool> result)
+    {
+        // サーバーに送信するオブジェクトを作成
+        StoreTokenRequest requestData = new StoreTokenRequest();
+        requestData.UserID = this.UserID;
+        // サーバーに送信オブジェクトをJSONに変換
+        string json = JsonConvert.SerializeObject(requestData);
+        // 送信
+        UnityWebRequest request = UnityWebRequest.Post(API_BASE_URL + "users/token/store", json, "application/json");
+
+        // 結果を受信するまで待機
+        yield return request.SendWebRequest();
+
+        bool isSuccess = false;
+        if (request.result == UnityWebRequest.Result.Success
+            && request.responseCode == 200)
+        {
+            // 通信が成功した場合、ファイルにユーザー情報を保存する
+            string resultJson = request.downloadHandler.text;
+            StoreTokenResponse response = JsonConvert.DeserializeObject<StoreTokenResponse>(resultJson);
+            this.AuthToken = response.Token;
+            SaveUserData();
+
+            isSuccess = true;
+        }
+
+        // 呼び出し元のresult処理を呼び出す
+        result?.Invoke(isSuccess);
+    }
 }

@@ -5,8 +5,6 @@ using Newtonsoft.Json;
 
 public class UpdateStageClearRequest
 {
-    [JsonProperty("user_id")]
-    public int UserID { get; set; }
     [JsonProperty("stage_id")]
     public int StageID { get; set; }
     [JsonProperty("is_medal1")]

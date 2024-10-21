@@ -52,7 +52,6 @@ public class GuestProfile : MonoBehaviour
             result =>
             {
                 if (!result) return;
-                //SEManager.Instance.PlayCanselSE();
                 if (m_guestObj != null) Destroy(m_guestObj);
                 Destroy(gameObject);
             }));

@@ -5,8 +5,6 @@ using Newtonsoft.Json;
 
 public class UpdateUserData
 {
-    [JsonProperty("user_id")]
-    public int UserID { get; set; }
     [JsonProperty("name")]
     public string Name { get; set; }
     [JsonProperty("title_id")]

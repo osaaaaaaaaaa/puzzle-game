@@ -7,6 +7,4 @@ public class UpdateUserMailRequest
 {
     [JsonProperty("user_mail_id")]
     public int UserMailID { get; set; }
-    [JsonProperty("user_id")]
-    public int UserID { get; set; }
 }
